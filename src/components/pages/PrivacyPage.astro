@@ -1,0 +1,226 @@
+---
+import { t, tf, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+interface Section {
+  h: string;
+  body: string[];
+}
+
+const SECTIONS: Record<Locale, Section[]> = {
+  en: [
+    {
+      h: 'The short version',
+      body: [
+        "We don't collect your data. Every tool on this site runs entirely in your browser, so the text you paste and the files you open never reach us. We couldn't see your data even if we wanted to — we don't operate any server that processes it.",
+      ],
+    },
+    {
+      h: 'What we do not collect',
+      body: [
+        'No user accounts. No uploads. No form submissions to a backend. No cookies for tracking. No advertising pixels. The calculations, conversions and image processing you perform are executed locally by JavaScript inside your own browser tab.',
+      ],
+    },
+    {
+      h: 'Browser local storage',
+      body: [
+        'The site stores two small preferences in your browser\'s localStorage: your chosen language and your recently used tools, so the site feels familiar when you return. This data never leaves your device and is never transmitted anywhere. You can delete it at any time from your browser\'s site-data settings.',
+      ],
+    },
+    {
+      h: 'Analytics',
+      body: [
+        'We use Cloudflare Web Analytics to understand overall traffic (for example, which tools are popular). It is a privacy-friendly, cookieless measurement service: it does not collect personal data, does not fingerprint your device, and does not track you across other websites.',
+      ],
+    },
+    {
+      h: 'Third-party resources',
+      body: [
+        'Fonts are loaded from Google Fonts; as with any CDN request, Google may see your IP address when serving the font files. The site itself is hosted on GitHub Pages. Beyond that, tool pages make no third-party requests while you use them.',
+      ],
+    },
+    {
+      h: 'Email',
+      body: [
+        'If you contact us by email, we use your address only to reply to your message. We never share it, sell it, or add you to any mailing list.',
+      ],
+    },
+    {
+      h: 'Changes to this policy',
+      body: ['If this policy changes, the updated version will be posted on this page with a new revision date.'],
+    },
+    {
+      h: 'Contact',
+      body: [
+        'Questions about this policy? Email <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>.',
+      ],
+    },
+  ],
+  zh: [
+    {
+      h: '简而言之',
+      body: [
+        '我们不收集你的数据。本站所有工具完全在你的浏览器中运行,你粘贴的文本和打开的文件永远不会到达我们。即使我们想看也看不到——我们根本没有任何处理你数据的服务器。',
+      ],
+    },
+    {
+      h: '我们不收集什么',
+      body: [
+        '没有用户账号。没有上传。没有提交到后端的表单。没有追踪 Cookie。没有广告像素。你执行的计算、转换和图像处理,全部在你自己浏览器标签页内的 JavaScript 中本地完成。',
+      ],
+    },
+    {
+      h: '浏览器本地存储',
+      body: [
+        '本站仅在你浏览器的 localStorage 中保存两项偏好设置:你选择的语言和最近使用的工具,以便你下次访问时体验一致。这些数据永远不会离开你的设备,也不会被传输到任何地方。你可以随时在浏览器的站点数据设置中删除它们。',
+      ],
+    },
+    {
+      h: '统计分析',
+      body: [
+        '我们使用 Cloudflare Web Analytics 来了解整体流量情况(例如哪些工具更受欢迎)。这是一项注重隐私、不使用 Cookie 的统计服务:不收集个人数据,不进行设备指纹追踪,也不会跨网站跟踪你。',
+      ],
+    },
+    {
+      h: '第三方资源',
+      body: [
+        '字体文件从 Google Fonts 加载;与任何 CDN 请求一样,Google 在提供字体文件时可能看到你的 IP 地址。本站托管于 GitHub Pages。除此之外,工具页面在你使用过程中不会发起任何第三方请求。',
+      ],
+    },
+    {
+      h: '电子邮件',
+      body: [
+        '如果你通过电子邮件联系我们,我们仅使用你的邮箱地址回复你的消息。我们绝不会分享、出售你的地址,也不会把你加入任何邮件列表。',
+      ],
+    },
+    {
+      h: '本政策的变更',
+      body: ['如本政策发生变更,更新版本将发布在本页面,并标注新的修订日期。'],
+    },
+    {
+      h: '联系我们',
+      body: [
+        '对本政策有疑问?发邮件至 <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>。',
+      ],
+    },
+  ],
+  es: [
+    {
+      h: 'En resumen',
+      body: [
+        'No recopilamos tus datos. Todas las herramientas de este sitio funcionan completamente en tu navegador, así que el texto que pegas y los archivos que abres nunca llegan a nosotros. No podríamos ver tus datos ni aunque quisiéramos — no operamos ningún servidor que los procese.',
+      ],
+    },
+    {
+      h: 'Lo que no recopilamos',
+      body: [
+        'Sin cuentas de usuario. Sin subidas. Sin formularios enviados a un backend. Sin cookies de seguimiento. Sin píxeles publicitarios. Los cálculos, conversiones y procesamiento de imágenes que realizas se ejecutan localmente con JavaScript dentro de tu propia pestaña del navegador.',
+      ],
+    },
+    {
+      h: 'Almacenamiento local del navegador',
+      body: [
+        'El sitio guarda dos pequeñas preferencias en el localStorage de tu navegador: el idioma elegido y las herramientas usadas recientemente, para que el sitio te resulte familiar al volver. Estos datos nunca salen de tu dispositivo ni se transmiten a ningún lugar. Puedes eliminarlos en cualquier momento desde la configuración de datos de sitios de tu navegador.',
+      ],
+    },
+    {
+      h: 'Analítica',
+      body: [
+        'Usamos Cloudflare Web Analytics para entender el tráfico general (por ejemplo, qué herramientas son populares). Es un servicio de medición respetuoso con la privacidad y sin cookies: no recopila datos personales, no toma huellas digitales de tu dispositivo y no te rastrea en otros sitios web.',
+      ],
+    },
+    {
+      h: 'Recursos de terceros',
+      body: [
+        'Las fuentes se cargan desde Google Fonts; como con cualquier petición a una CDN, Google puede ver tu dirección IP al servir los archivos de fuentes. El sitio está alojado en GitHub Pages. Más allá de eso, las páginas de herramientas no hacen peticiones a terceros mientras las usas.',
+      ],
+    },
+    {
+      h: 'Correo electrónico',
+      body: [
+        'Si nos contactas por correo electrónico, usamos tu dirección solo para responder a tu mensaje. Nunca la compartimos, la vendemos ni te añadimos a ninguna lista de correo.',
+      ],
+    },
+    {
+      h: 'Cambios en esta política',
+      body: ['Si esta política cambia, la versión actualizada se publicará en esta página con una nueva fecha de revisión.'],
+    },
+    {
+      h: 'Contacto',
+      body: [
+        '¿Preguntas sobre esta política? Escribe a <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>.',
+      ],
+    },
+  ],
+  ja: [
+    {
+      h: '要約',
+      body: [
+        '私たちはあなたのデータを収集しません。本サイトのすべてのツールはブラウザ内だけで動作するため、貼り付けたテキストや開いたファイルが私たちに届くことはありません。仮に見たくても見られません — データを処理するサーバーを運営していないからです。',
+      ],
+    },
+    {
+      h: '収集しないもの',
+      body: [
+        'ユーザーアカウントなし。アップロードなし。バックエンドへのフォーム送信なし。トラッキング Cookie なし。広告ピクセルなし。あなたが行う計算・変換・画像処理は、すべて自分のブラウザタブ内の JavaScript によってローカルで実行されます。',
+      ],
+    },
+    {
+      h: 'ブラウザのローカルストレージ',
+      body: [
+        '本サイトは、選択した言語と最近使用したツールという 2 つの小さな設定のみをブラウザの localStorage に保存します。再訪時に使い慣れた状態で利用できるようにするためです。このデータがデバイスから出ることはなく、どこにも送信されません。ブラウザのサイトデータ設定からいつでも削除できます。',
+      ],
+    },
+    {
+      h: 'アクセス解析',
+      body: [
+        '全体のトラフィック(例:どのツールが人気か)を把握するために Cloudflare Web Analytics を使用しています。これはプライバシーに配慮した Cookie レスの計測サービスで、個人データを収集せず、デバイスのフィンガープリントも行わず、他のサイトをまたいであなたを追跡することもありません。',
+      ],
+    },
+    {
+      h: 'サードパーティのリソース',
+      body: [
+        'フォントは Google Fonts から読み込まれます。あらゆる CDN リクエストと同様に、Google はフォントファイルを配信する際にあなたの IP アドレスを見る可能性があります。本サイトは GitHub Pages でホスティングされています。それ以外に、ツールページは使用中にサードパーティへのリクエストを行いません。',
+      ],
+    },
+    {
+      h: 'メール',
+      body: [
+        'メールでご連絡いただいた場合、あなたのアドレスは返信のためだけに使用します。共有・販売することはなく、メーリングリストに追加することもありません。',
+      ],
+    },
+    {
+      h: '本ポリシーの変更',
+      body: ['本ポリシーに変更があった場合は、新しい改訂日とともに更新版をこのページに掲載します。'],
+    },
+    {
+      h: 'お問い合わせ',
+      body: [
+        '本ポリシーについてのご質問は、<a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a> までメールでお知らせください。',
+      ],
+    },
+  ],
+};
+---
+
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+  <h1 class="font-display text-3xl font-bold tracking-tight text-ink">{t(lang, 'pages.privacy.title')}</h1>
+  <p class="mt-2 text-sm text-ink-soft">{tf(lang, 'pages.updated', { date: '2026-07-29' })}</p>
+  <div class="mt-10 space-y-9">
+    {
+      SECTIONS[lang].map((s) => (
+        <section>
+          <h2 class="mb-2.5 font-display text-lg font-bold text-ink">{s.h}</h2>
+          {s.body.map((p) => (
+            <p class="mt-2.5 leading-relaxed text-ink-soft" set:html={p} />
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</div>

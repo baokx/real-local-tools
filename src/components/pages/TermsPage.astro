@@ -1,0 +1,228 @@
+---
+import { t, tf, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+interface Section {
+  h: string;
+  body: string[];
+}
+
+const SECTIONS: Record<Locale, Section[]> = {
+  en: [
+    {
+      h: 'Acceptance of terms',
+      body: [
+        'By accessing or using Real Local Tools ("the site"), you agree to these Terms of Service. If you do not agree, please do not use the site.',
+      ],
+    },
+    {
+      h: 'The service',
+      body: [
+        'The site provides free online tools — calculators, converters, generators, formatters and image utilities — that run in your browser. The service is provided "as is" and "as available", without warranties of any kind, express or implied. We may add, change or remove tools at any time without notice.',
+      ],
+    },
+    {
+      h: 'Accuracy of results',
+      body: [
+        'We work hard to make every tool correct, but results are provided for convenience and general information only. Do not rely on them for financial, medical, legal or other critical decisions — verify important results with a qualified professional or an authoritative source.',
+      ],
+    },
+    {
+      h: 'Acceptable use',
+      body: [
+        'You agree not to misuse the site: do not attempt to disrupt the service, probe or breach its infrastructure, or scrape it at a volume that degrades service for others.',
+      ],
+    },
+    {
+      h: 'Intellectual property',
+      body: [
+        'The site\'s design, text content and branding are the property of Real Local Tools. Output you create with the tools (hashes, converted images, generated codes and so on) belongs to you, and you may use it freely for any purpose.',
+      ],
+    },
+    {
+      h: 'Limitation of liability',
+      body: [
+        'To the maximum extent permitted by law, Real Local Tools and its operators shall not be liable for any indirect, incidental, special or consequential damages, or any loss of data, profits or revenue, arising from your use of or inability to use the site.',
+      ],
+    },
+    {
+      h: 'Changes to these terms',
+      body: [
+        'We may revise these terms from time to time. The current version will always be posted on this page; continued use of the site after changes take effect constitutes acceptance of the revised terms.',
+      ],
+    },
+    {
+      h: 'Contact',
+      body: [
+        'Questions about these terms? Email <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>.',
+      ],
+    },
+  ],
+  zh: [
+    {
+      h: '条款的接受',
+      body: ['访问或使用 Real Local Tools("本站")即表示你同意本服务条款。如不同意,请勿使用本站。'],
+    },
+    {
+      h: '服务内容',
+      body: [
+        '本站提供免费在线工具——计算器、转换器、生成器、格式化工具与图像工具——全部在你的浏览器中运行。本服务按"现状"和"可用"基础提供,不作任何明示或默示的保证。我们可能随时添加、修改或移除工具,恕不另行通知。',
+      ],
+    },
+    {
+      h: '结果的准确性',
+      body: [
+        '我们努力确保每个工具正确无误,但所有结果仅为便利和一般参考之用。请勿将其作为财务、医疗、法律或其他关键决策的依据——重要结果请向合格专业人士或权威来源核实。',
+      ],
+    },
+    {
+      h: '可接受的使用',
+      body: ['你同意不滥用本站:不得试图干扰服务、探测或入侵其基础设施,或以损害他人使用的规模进行抓取。'],
+    },
+    {
+      h: '知识产权',
+      body: [
+        '本站的设计、文字内容与品牌标识归 Real Local Tools 所有。你使用工具产生的输出(哈希值、转换后的图片、生成的代码等)归你所有,可自由用于任何目的。',
+      ],
+    },
+    {
+      h: '责任限制',
+      body: [
+        '在法律允许的最大范围内,Real Local Tools 及其运营方不对因你使用或无法使用本站而引起的任何间接、附带、特殊或后果性损害,或任何数据、利润或收入损失承担责任。',
+      ],
+    },
+    {
+      h: '条款的变更',
+      body: ['我们可能不时修订本条款。当前版本将始终发布在本页面;变更生效后继续使用本站即视为接受修订后的条款。'],
+    },
+    {
+      h: '联系我们',
+      body: [
+        '对本条款有疑问?发邮件至 <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>。',
+      ],
+    },
+  ],
+  es: [
+    {
+      h: 'Aceptación de los términos',
+      body: [
+        'Al acceder o usar Real Local Tools ("el sitio"), aceptas estos Términos del servicio. Si no estás de acuerdo, por favor no uses el sitio.',
+      ],
+    },
+    {
+      h: 'El servicio',
+      body: [
+        'El sitio ofrece herramientas online gratuitas — calculadoras, conversores, generadores, formateadores y utilidades de imagen — que funcionan en tu navegador. El servicio se proporciona "tal cual" y "según disponibilidad", sin garantías de ningún tipo, expresas o implícitas. Podemos añadir, cambiar o eliminar herramientas en cualquier momento sin previo aviso.',
+      ],
+    },
+    {
+      h: 'Precisión de los resultados',
+      body: [
+        'Trabajamos duro para que cada herramienta sea correcta, pero los resultados se ofrecen solo por conveniencia e información general. No te bases en ellos para decisiones financieras, médicas, legales u otras decisiones críticas — verifica los resultados importantes con un profesional cualificado o una fuente autorizada.',
+      ],
+    },
+    {
+      h: 'Uso aceptable',
+      body: [
+        'Aceptas no hacer un mal uso del sitio: no intentes interrumpir el servicio, sondear o vulnerar su infraestructura, ni extraerlo a un volumen que degrade el servicio para otros.',
+      ],
+    },
+    {
+      h: 'Propiedad intelectual',
+      body: [
+        'El diseño, el contenido de texto y la marca del sitio son propiedad de Real Local Tools. Los resultados que creas con las herramientas (hashes, imágenes convertidas, códigos generados, etc.) te pertenecen y puedes usarlos libremente para cualquier fin.',
+      ],
+    },
+    {
+      h: 'Limitación de responsabilidad',
+      body: [
+        'En la máxima medida permitida por la ley, Real Local Tools y sus operadores no serán responsables de ningún daño indirecto, incidental, especial o consecuente, ni de ninguna pérdida de datos, beneficios o ingresos, derivada del uso o la imposibilidad de uso del sitio.',
+      ],
+    },
+    {
+      h: 'Cambios en estos términos',
+      body: [
+        'Podemos revisar estos términos de vez en cuando. La versión vigente estará siempre publicada en esta página; el uso continuado del sitio tras la entrada en vigor de los cambios constituye la aceptación de los términos revisados.',
+      ],
+    },
+    {
+      h: 'Contacto',
+      body: [
+        '¿Preguntas sobre estos términos? Escribe a <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>.',
+      ],
+    },
+  ],
+  ja: [
+    {
+      h: '規約への同意',
+      body: [
+        'Real Local Tools(以下「本サイト」)へのアクセスまたは利用をもって、本利用規約に同意したものとみなします。同意いただけない場合は、本サイトをご利用にならないでください。',
+      ],
+    },
+    {
+      h: 'サービス内容',
+      body: [
+        '本サイトは、ブラウザ内で動作する無料のオンラインツール(計算機、変換、ジェネレーター、フォーマッター、画像ユーティリティ)を提供します。本サービスは「現状のまま」および「提供可能な範囲で」提供され、明示・黙示を問わずいかなる保証も行いません。ツールの追加・変更・削除を予告なく行う場合があります。',
+      ],
+    },
+    {
+      h: '結果の正確性',
+      body: [
+        'すべてのツールの正確性には努めていますが、結果は利便性および一般的な情報提供のみを目的としています。金融・医療・法律その他の重要な判断の根拠としないでください — 重要な結果は、資格を持つ専門家または信頼できる情報源で確認してください。',
+      ],
+    },
+    {
+      h: '許容される利用',
+      body: [
+        '本サイトの悪用に同意しないものとします:サービスの妨害、インフラの調査・侵害の試み、他の利用者のサービス品質を低下させる規模でのスクレイピングは行わないでください。',
+      ],
+    },
+    {
+      h: '知的財産',
+      body: [
+        '本サイトのデザイン・テキストコンテンツ・ブランドは Real Local Tools に帰属します。ツールで作成した出力(ハッシュ、変換画像、生成コードなど)はあなたのものであり、どのような目的にも自由に使用できます。',
+      ],
+    },
+    {
+      h: '責任の制限',
+      body: [
+        '法律で認められる最大限の範囲において、Real Local Tools およびその運営者は、本サイトの利用または利用不能に起因する間接的・付随的・特別・結果的損害、ならびにデータ・利益・収入の損失について一切責任を負いません。',
+      ],
+    },
+    {
+      h: '規約の変更',
+      body: [
+        '本規約は随時改訂される場合があります。最新版は常にこのページに掲載されます。変更の発効後も本サイトを継続して利用された場合、改訂後の規約に同意したものとみなします。',
+      ],
+    },
+    {
+      h: 'お問い合わせ',
+      body: [
+        '本規約についてのご質問は、<a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a> までメールでお知らせください。',
+      ],
+    },
+  ],
+};
+---
+
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+  <h1 class="font-display text-3xl font-bold tracking-tight text-ink">{t(lang, 'pages.terms.title')}</h1>
+  <p class="mt-2 text-sm text-ink-soft">{tf(lang, 'pages.updated', { date: '2026-07-29' })}</p>
+  <div class="mt-10 space-y-9">
+    {
+      SECTIONS[lang].map((s) => (
+        <section>
+          <h2 class="mb-2.5 font-display text-lg font-bold text-ink">{s.h}</h2>
+          {s.body.map((p) => (
+            <p class="mt-2.5 leading-relaxed text-ink-soft" set:html={p} />
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</div>

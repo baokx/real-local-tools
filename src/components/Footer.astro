@@ -7,6 +7,12 @@ interface Props {
 
 const { lang } = Astro.props;
 const year = new Date().getFullYear();
+const prefix = lang === 'en' ? '' : `/${lang}`;
+const links = [
+  { href: `${prefix}/about/`, label: t(lang, 'pages.about.title') },
+  { href: `${prefix}/privacy/`, label: t(lang, 'pages.privacy.title') },
+  { href: `${prefix}/terms/`, label: t(lang, 'pages.terms.title') },
+];
 ---
 
 <footer class="mt-16 border-t border-line">
@@ -23,6 +29,15 @@ const year = new Date().getFullYear();
           contact@real-local-tools.com
         </a>
       </p>
+      <nav class="mt-2.5 flex flex-wrap gap-x-4 gap-y-1" aria-label="Site pages">
+        {
+          links.map((l) => (
+            <a href={l.href} class="underline-offset-2 transition-colors hover:text-ink hover:underline">
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
     </div>
     <p class="font-mono text-xs">© {year} {t(lang, 'site.name')}</p>
   </div>

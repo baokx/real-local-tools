@@ -1,0 +1,163 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+interface Section {
+  h: string;
+  body: string[];
+}
+
+const SECTIONS: Record<Locale, Section[]> = {
+  en: [
+    {
+      h: 'What is Real Local Tools',
+      body: [
+        'Real Local Tools is a collection of free online utilities for developers, designers and everyday work — formatters, encoders, generators, calculators and image tools. Every single tool runs entirely in your browser.',
+      ],
+    },
+    {
+      h: 'Why "local"?',
+      body: [
+        'Most online tools send your input to a server to be processed. We think that is unnecessary and bad for privacy. Here, the code comes to your data instead of the other way around: once a page has loaded, you could disconnect from the internet and every tool would keep working.',
+        'Your text, files and images never leave your device — which also makes the tools fast, with no network round-trips.',
+      ],
+    },
+    {
+      h: 'How it is built',
+      body: [
+        'The site is 100% static: HTML, CSS and JavaScript generated ahead of time and served from a CDN. There is no application server, no database and no user accounts. The source code is public on <a href="https://github.com/baokx/real-local-tools" class="text-pine underline-offset-2 hover:underline">GitHub</a>.',
+      ],
+    },
+    {
+      h: 'Languages',
+      body: [
+        'The site is available in English, 中文, Español and 日本語. If a translation looks off, we would love to hear about it.',
+      ],
+    },
+    {
+      h: 'Contact',
+      body: [
+        'Questions, suggestions, or a tool you would like us to add? Email <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>.',
+      ],
+    },
+  ],
+  zh: [
+    {
+      h: 'Real Local Tools 是什么',
+      body: [
+        'Real Local Tools 是一个免费在线工具集,面向开发者、设计师与日常办公场景——格式化、编解码、生成器、计算器与图像工具。每一个工具都完全在你的浏览器中运行。',
+      ],
+    },
+    {
+      h: '为什么强调"本地"?',
+      body: [
+        '大多数在线工具会把你的输入发送到服务器处理。我们认为这既无必要也不利于隐私。在这里,是代码来到你的数据这一边:页面加载完成后,即使断开网络,所有工具依然可用。',
+        '你的文本、文件和图片永远不会离开你的设备——这也让工具更快,没有网络往返。',
+      ],
+    },
+    {
+      h: '技术实现',
+      body: [
+        '本站是 100% 静态站点:HTML、CSS 与 JavaScript 预先生成,通过 CDN 分发。没有应用服务器、没有数据库、没有用户账号。源代码在 <a href="https://github.com/baokx/real-local-tools" class="text-pine underline-offset-2 hover:underline">GitHub</a> 上公开。',
+      ],
+    },
+    {
+      h: '多语言',
+      body: ['本站提供 English、中文、Español 与 日本語 版本。如果发现翻译不妥,欢迎告诉我们。'],
+    },
+    {
+      h: '联系我们',
+      body: [
+        '有疑问、建议,或希望我们新增某个工具?发邮件至 <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>。',
+      ],
+    },
+  ],
+  es: [
+    {
+      h: 'Qué es Real Local Tools',
+      body: [
+        'Real Local Tools es una colección de utilidades online gratuitas para desarrolladores, diseñadores y el trabajo diario: formateadores, codificadores, generadores, calculadoras y herramientas de imagen. Cada herramienta funciona completamente en tu navegador.',
+      ],
+    },
+    {
+      h: '¿Por qué "local"?',
+      body: [
+        'La mayoría de las herramientas online envían tu entrada a un servidor para procesarla. Creemos que es innecesario y malo para la privacidad. Aquí, el código va hacia tus datos y no al revés: una vez cargada la página, podrías desconectarte de internet y todas las herramientas seguirían funcionando.',
+        'Tus textos, archivos e imágenes nunca abandonan tu dispositivo — lo que también hace las herramientas más rápidas, sin idas y vueltas por la red.',
+      ],
+    },
+    {
+      h: 'Cómo está construido',
+      body: [
+        'El sitio es 100% estático: HTML, CSS y JavaScript generados con antelación y servidos desde una CDN. No hay servidor de aplicaciones, ni base de datos, ni cuentas de usuario. El código fuente es público en <a href="https://github.com/baokx/real-local-tools" class="text-pine underline-offset-2 hover:underline">GitHub</a>.',
+      ],
+    },
+    {
+      h: 'Idiomas',
+      body: [
+        'El sitio está disponible en English, 中文, Español y 日本語. Si una traducción no suena bien, nos encantaría saberlo.',
+      ],
+    },
+    {
+      h: 'Contacto',
+      body: [
+        '¿Preguntas, sugerencias o una herramienta que te gustaría que añadiéramos? Escribe a <a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a>.',
+      ],
+    },
+  ],
+  ja: [
+    {
+      h: 'Real Local Tools とは',
+      body: [
+        'Real Local Tools は、開発者・デザイナー・日常業務のための無料オンラインユーティリティ集です — フォーマッター、エンコーダー、ジェネレーター、計算機、画像ツール。すべてのツールがブラウザ内だけで動作します。',
+      ],
+    },
+    {
+      h: 'なぜ「ローカル」なのか',
+      body: [
+        '多くのオンラインツールは入力をサーバーに送信して処理します。私たちはそれを不要であり、プライバシー上も好ましくないと考えます。ここでは、データをコードの元へ送るのではなく、コードがデータの元へやってきます:ページが読み込まれた後なら、インターネットを切断してもすべてのツールが動き続けます。',
+        'テキスト・ファイル・画像がデバイスから出ることはありません — ネットワークの往復がない分、高速でもあります。',
+      ],
+    },
+    {
+      h: '技術構成',
+      body: [
+        '本サイトは 100% 静的サイトです:HTML・CSS・JavaScript を事前生成し、CDN から配信しています。アプリケーションサーバーもデータベースもユーザーアカウントもありません。ソースコードは <a href="https://github.com/baokx/real-local-tools" class="text-pine underline-offset-2 hover:underline">GitHub</a> で公開しています。',
+      ],
+    },
+    {
+      h: '対応言語',
+      body: [
+        '本サイトは English、中文、Español、日本語 で利用できます。翻訳に違和感があれば、ぜひお知らせください。',
+      ],
+    },
+    {
+      h: 'お問い合わせ',
+      body: [
+        'ご質問・ご提案、追加してほしいツールがあれば、<a href="mailto:contact@real-local-tools.com" class="font-mono text-pine underline-offset-2 hover:underline">contact@real-local-tools.com</a> までメールでお知らせください。',
+      ],
+    },
+  ],
+};
+---
+
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+  <h1 class="font-display text-3xl font-bold tracking-tight text-ink">{t(lang, 'pages.about.title')}</h1>
+  <div class="mt-10 space-y-9">
+    {
+      SECTIONS[lang].map((s) => (
+        <section>
+          <h2 class="mb-2.5 font-display text-lg font-bold text-ink">{s.h}</h2>
+          {s.body.map((p) => (
+            <p class="mt-2.5 leading-relaxed text-ink-soft" set:html={p} />
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</div>

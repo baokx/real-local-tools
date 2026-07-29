@@ -38,6 +38,21 @@
     "swap": "Swap",
     "recentlyUsed": "Recently used"
   },
+  "pages": {
+    "about": {
+      "title": "About",
+      "desc": "What Real Local Tools is, why everything runs locally in your browser, and how to reach us."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "desc": "How Real Local Tools handles your data — short version: it doesn't. Every tool runs locally in your browser."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "desc": "The terms for using Real Local Tools — free browser-based tools provided as-is."
+    },
+    "updated": "Last updated {date}"
+  },
   "footer": {
     "tagline": "Your data never leaves your device.",
     "note": "A fully static site with zero servers and zero trackers.",

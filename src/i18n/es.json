@@ -38,6 +38,21 @@
     "swap": "Intercambiar",
     "recentlyUsed": "Usados recientemente"
   },
+  "pages": {
+    "about": {
+      "title": "Acerca de",
+      "desc": "Qué es Real Local Tools, por qué todo funciona localmente en tu navegador y cómo contactarnos."
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "desc": "Cómo Real Local Tools maneja tus datos — en resumen: no lo hace. Cada herramienta funciona localmente en tu navegador."
+    },
+    "terms": {
+      "title": "Términos del servicio",
+      "desc": "Los términos de uso de Real Local Tools — herramientas gratuitas basadas en el navegador, proporcionadas tal cual."
+    },
+    "updated": "Última actualización: {date}"
+  },
   "footer": {
     "tagline": "Tus datos nunca abandonan tu dispositivo.",
     "note": "Un sitio completamente estático, sin servidores ni rastreadores.",

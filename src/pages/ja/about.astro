@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AboutPage from '../../components/pages/AboutPage.astro';
+import { t } from '../../i18n/utils';
+
+const lang = 'ja';
+---
+
+<BaseLayout lang={lang} title={t(lang, 'pages.about.title')} description={t(lang, 'pages.about.desc')}>
+  <AboutPage lang={lang} />
+</BaseLayout>
