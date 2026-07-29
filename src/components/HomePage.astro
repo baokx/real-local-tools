@@ -12,34 +12,38 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
 ---
 
 <section class="border-b border-line bg-mist/60">
-  <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-20">
-    <p class="mb-4 font-mono text-xs font-medium uppercase tracking-[0.18em] text-pine">
-      {t(lang, 'hero.eyebrow')}
-    </p>
-    <h1 class="max-w-2xl font-display text-4xl font-bold leading-[1.1] tracking-tight text-ink sm:text-5xl">
-      {t(lang, 'hero.title')}
-    </h1>
-    <p class="mt-5 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
-      {t(lang, 'hero.subtitle')}
-    </p>
+  <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
+    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
+      <div class="max-w-xl">
+        <p class="mb-2 font-mono text-xs font-medium uppercase tracking-[0.18em] text-pine">
+          {t(lang, 'hero.eyebrow')}
+        </p>
+        <h1 class="font-display text-3xl font-bold leading-[1.12] tracking-tight text-ink sm:text-4xl">
+          {t(lang, 'hero.title')}
+        </h1>
+        <p class="mt-2.5 text-sm leading-relaxed text-ink-soft sm:text-base">
+          {t(lang, 'hero.subtitle')}
+        </p>
+      </div>
 
-    <div class="mt-8 max-w-md">
-      <label for="tool-search" class="sr-only">{t(lang, 'search.label')}</label>
-      <div class="relative">
-        <svg
-          class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="7"></circle>
-          <path d="m21 21-4.3-4.3" stroke-linecap="round"></path>
-        </svg>
-        <input
-          id="tool-search"
-          type="search"
-          placeholder={t(lang, 'search.placeholder')}
-          autocomplete="off"
-          class="w-full rounded-lg border border-line bg-white py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft/60 focus:border-pine"
-        />
+      <div class="w-full max-w-xs shrink-0">
+        <label for="tool-search" class="sr-only">{t(lang, 'search.label')}</label>
+        <div class="relative">
+          <svg
+            class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3" stroke-linecap="round"></path>
+          </svg>
+          <input
+            id="tool-search"
+            type="search"
+            placeholder={t(lang, 'search.placeholder')}
+            autocomplete="off"
+            class="w-full rounded-lg border border-line bg-white py-2 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft/60 focus:border-pine"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -49,8 +53,8 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
   <p id="search-empty" class="hidden py-16 text-center text-ink-soft">{t(lang, 'search.empty')}</p>
   {
     activeCategories.map((cat) => (
-      <section class="category-section py-10" data-category={cat}>
-        <h2 class="mb-5 flex items-baseline gap-3 font-display text-xl font-bold tracking-tight text-ink">
+      <section class="category-section py-7" data-category={cat}>
+        <h2 class="mb-4 flex items-baseline gap-3 font-display text-xl font-bold tracking-tight text-ink">
           {t(lang, `categories.${cat}`)}
           <span class="font-mono text-xs font-normal text-ink-soft">{toolsByCategory(cat).length}</span>
         </h2>
