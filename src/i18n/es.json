@@ -64,7 +64,9 @@
     "sample": "Cargar ejemplo",
     "swap": "Intercambiar",
     "recentlyUsed": "Usados recientemente",
-    "moreCategories": "Más categorías"
+    "moreCategories": "Más categorías",
+    "relatedTools": "Herramientas relacionadas",
+    "viewAll": "Ver todas"
   },
   "pages": {
     "about": {

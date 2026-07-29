@@ -64,7 +64,9 @@
     "sample": "サンプルを読み込む",
     "swap": "入れ替え",
     "recentlyUsed": "最近使ったツール",
-    "moreCategories": "他のカテゴリー"
+    "moreCategories": "他のカテゴリー",
+    "relatedTools": "関連ツール",
+    "viewAll": "すべて見る"
   },
   "pages": {
     "about": {

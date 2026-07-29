@@ -1,6 +1,7 @@
 ---
 import { t, localePath, type Locale } from '../i18n/utils';
-import type { ToolDef } from '../tools/registry';
+import { toolsByCategory, type ToolDef } from '../tools/registry';
+import ToolCard from './ToolCard.astro';
 
 interface Props {
   tool: ToolDef;
@@ -11,6 +12,17 @@ const { tool, lang } = Astro.props;
 const name = t(lang, `tools.${tool.slug}.name`);
 const categoryName = t(lang, `categories.${tool.category}`);
 const seoText = t(lang, `tools.${tool.slug}.seo`);
+
+// Related tools: up to 6 siblings in the same category, rotating forward from
+// the current tool so links spread evenly across the category instead of
+// always pointing at the first few entries.
+const siblings = toolsByCategory(tool.category);
+const currentIndex = siblings.findIndex((s) => s.slug === tool.slug);
+const relatedCount = Math.min(6, siblings.length - 1);
+const related = Array.from(
+  { length: relatedCount },
+  (_, k) => siblings[(currentIndex + 1 + k) % siblings.length]
+);
 ---
 
 <div id="tool-shell" data-slug={tool.slug} class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -36,6 +48,18 @@ const seoText = t(lang, `tools.${tool.slug}.seo`);
   <div class="rounded-xl border border-line bg-white/70 p-4 shadow-[0_1px_2px_rgba(27,30,28,0.04)] sm:p-6">
     <slot />
   </div>
+
+  <section class="mt-10" aria-label={t(lang, 'common.relatedTools')}>
+    <div class="mb-4 flex items-baseline justify-between gap-3">
+      <h2 class="font-display text-lg font-bold tracking-tight text-ink">{t(lang, 'common.relatedTools')}</h2>
+      <a href={localePath(lang, `/${tool.category}/`)} class="shrink-0 text-sm text-pine underline-offset-2 hover:underline">
+        {t(lang, 'common.viewAll')} ({siblings.length})
+      </a>
+    </div>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {related.map((sibling) => <ToolCard tool={sibling} lang={lang} />)}
+    </div>
+  </section>
 
   <p class="mt-10 max-w-3xl text-sm leading-relaxed text-ink-soft">{seoText}</p>
 </div>

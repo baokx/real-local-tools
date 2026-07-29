@@ -64,7 +64,9 @@
     "sample": "Load sample",
     "swap": "Swap",
     "recentlyUsed": "Recently used",
-    "moreCategories": "More categories"
+    "moreCategories": "More categories",
+    "relatedTools": "Related tools",
+    "viewAll": "View all"
   },
   "pages": {
     "about": {
