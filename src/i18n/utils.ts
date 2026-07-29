@@ -37,6 +37,25 @@ export function tf(lang: Locale, path: string, vars: Record<string, string | num
   return t(lang, path).replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? `{${k}}`));
 }
 
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+/** FAQ entries for a tool (tools.<slug>.faq), with English fallback. */
+export function getFaq(lang: Locale, toolSlug: string): FaqItem[] {
+  const from = (dict: unknown): FaqItem[] => {
+    const faq = (dict as { tools?: Record<string, { faq?: unknown }> })?.tools?.[toolSlug]?.faq;
+    if (!Array.isArray(faq)) return [];
+    return faq.filter(
+      (item): item is FaqItem =>
+        !!item && typeof (item as FaqItem).q === 'string' && typeof (item as FaqItem).a === 'string'
+    );
+  };
+  const local = from(dictionaries[lang]);
+  return local.length > 0 ? local : from(dictionaries[defaultLocale]);
+}
+
 export function getLocaleFromUrl(url: URL): Locale {
   const [, first] = url.pathname.split('/');
   return (locales as readonly string[]).includes(first) && first !== defaultLocale

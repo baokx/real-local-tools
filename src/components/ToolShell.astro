@@ -1,5 +1,5 @@
 ---
-import { t, localePath, type Locale } from '../i18n/utils';
+import { t, localePath, getFaq, type Locale } from '../i18n/utils';
 import { toolsByCategory, type ToolDef } from '../tools/registry';
 import ToolCard from './ToolCard.astro';
 
@@ -23,6 +23,7 @@ const related = Array.from(
   { length: relatedCount },
   (_, k) => siblings[(currentIndex + 1 + k) % siblings.length]
 );
+const faq = getFaq(lang, tool.slug);
 ---
 
 <div id="tool-shell" data-slug={tool.slug} class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -62,6 +63,34 @@ const related = Array.from(
   </section>
 
   <p class="mt-10 max-w-3xl text-sm leading-relaxed text-ink-soft">{seoText}</p>
+
+  {
+    faq.length > 0 && (
+      <section class="mt-10" aria-label={t(lang, 'common.faq')}>
+        <h2 class="mb-4 font-display text-lg font-bold tracking-tight text-ink">{t(lang, 'common.faq')}</h2>
+        <div class="space-y-2.5">
+          {faq.map((item) => (
+            <details class="group rounded-lg border border-line bg-white/70 px-4 py-3">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-[15px] font-medium text-ink [&::-webkit-details-marker]:hidden">
+                {item.q}
+                <svg
+                  class="h-4 w-4 shrink-0 text-ink-soft transition-transform group-open:rotate-180"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </summary>
+              <p class="mt-2.5 text-sm leading-relaxed text-ink-soft">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )
+  }
 </div>
 
 <script>

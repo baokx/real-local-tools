@@ -2,7 +2,7 @@
  * JSON-LD structured data builders. Every page gets schema.org markup:
  * home pages get WebSite, tool pages get WebApplication + BreadcrumbList.
  */
-import { t, localePath, htmlLang, type Locale } from '../i18n/utils';
+import { t, localePath, htmlLang, getFaq, type Locale } from '../i18n/utils';
 import type { ToolDef, CategorySlug } from '../tools/registry';
 
 const SITE = 'https://real-local-tools.com';
@@ -55,7 +55,8 @@ export function categorySchemas(lang: Locale, category: CategorySlug): Record<st
 export function toolSchemas(lang: Locale, tool: ToolDef): Record<string, unknown>[] {
   const homeUrl = siteUrl(localePath(lang, '/'));
   const name = t(lang, `tools.${tool.slug}.name`);
-  return [
+  const faq = getFaq(lang, tool.slug);
+  const schemas: Record<string, unknown>[] = [
     {
       '@type': 'WebApplication',
       name,
@@ -82,4 +83,15 @@ export function toolSchemas(lang: Locale, tool: ToolDef): Record<string, unknown
       ],
     },
   ];
+  if (faq.length > 0) {
+    schemas.push({
+      '@type': 'FAQPage',
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.q,
+        acceptedAnswer: { '@type': 'Answer', text: item.a },
+      })),
+    });
+  }
+  return schemas;
 }

@@ -66,7 +66,8 @@
     "recentlyUsed": "Usados recientemente",
     "moreCategories": "Más categorías",
     "relatedTools": "Herramientas relacionadas",
-    "viewAll": "Ver todas"
+    "viewAll": "Ver todas",
+    "faq": "Preguntas frecuentes"
   },
   "pages": {
     "about": {
@@ -109,7 +110,21 @@
         "unitItems": "elementos",
         "kindObject": "objeto",
         "kindArray": "array"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué opciones de formato hay?",
+          "a": "Puedes formatear con 2 o 4 espacios, o minificar todo en una sola línea. El resultado se actualiza al instante y muestra un resumen de la estructura de primer nivel."
+        },
+        {
+          "q": "¿Qué pasa si mi JSON tiene un error de sintaxis?",
+          "a": "El validador marca el JSON como inválido y señala la posición exacta del error, para que vayas directo a la coma o el corchete que falta."
+        },
+        {
+          "q": "¿Se sube mi JSON a algún sitio?",
+          "a": "No. El análisis usa el motor JSON integrado de tu navegador, así que ni siquiera las cargas con claves de API o datos personales salen de tu dispositivo."
+        }
+      ]
     },
     "base64-converter": {
       "name": "Codificador / decodificador Base64",
@@ -123,7 +138,21 @@
         "base64Placeholder": "Pega Base64…",
         "invalid": "Eso no parece un Base64 válido.",
         "encodeToUrlSafe": "Salida segura para URL"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Maneja texto Unicode como chino o emoji?",
+          "a": "Sí. El texto se codifica en UTF-8 antes de la conversión, así que los caracteres chinos, los emoji y las letras acentuadas sobreviven intactos al proceso."
+        },
+        {
+          "q": "¿Qué es la opción de salida URL-safe?",
+          "a": "El Base64 estándar usa + y /, que se rompen dentro de las URLs. La variante URL-safe los cambia por - y _, haciendo el resultado seguro para parámetros de consulta y nombres de archivo."
+        },
+        {
+          "q": "¿El texto que convierto se envía a un servidor?",
+          "a": "No. La codificación y decodificación se ejecutan por completo en tu navegador: nada de lo que pegues se transmite ni se almacena."
+        }
+      ]
     },
     "password-generator": {
       "name": "Generador de contraseñas",
@@ -145,7 +174,21 @@
         "excellent": "Excelente",
         "needOne": "Selecciona al menos un conjunto de caracteres.",
         "placeholder": "Pulsa regenerar para crear una contraseña"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué tan aleatorias son las contraseñas?",
+          "a": "Se construyen con crypto.getRandomValues(), la fuente aleatoria criptográficamente segura del navegador, no Math.random(). La estimación de entropía muestra exactamente qué tan fuerte es cada configuración."
+        },
+        {
+          "q": "¿Qué longitud debo elegir?",
+          "a": "16+ caracteres con todos los juegos activados basta para la mayoría de las cuentas; usa 20+ para lo crítico. El control cubre 8–64, y excluir caracteres parecidos ayuda cuando vas a leer la contraseña en voz alta."
+        },
+        {
+          "q": "¿Las contraseñas se almacenan o envían a algún sitio?",
+          "a": "No. Todo ocurre en la memoria de tu navegador: nada se registra, transmite o guarda. Cerrar la pestaña borra todo rastro."
+        }
+      ]
     },
     "url-converter": {
       "name": "Codificador / decodificador URL",
@@ -159,7 +202,21 @@
         "outputLabel": "Codificado / decodificado",
         "inputPlaceholder": "Escribe o pega texto, o una cadena codificada…",
         "invalid": "Eso no parece una cadena codificada con porcentajes."
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Cuál es la diferencia entre el modo componente y URL completa?",
+          "a": "El modo componente codifica todos los caracteres inseguros, ideal para valores de parámetros. El modo URL completa mantiene intactos los caracteres estructurales como :, / y ? para que los enlaces sigan siendo válidos."
+        },
+        {
+          "q": "¿Cuándo necesito la codificación porcentual?",
+          "a": "Siempre que texto con espacios, ampersands o caracteres no ASCII vaya en una URL: sin codificar, los enlaces y las cadenas de consulta pueden romperse o malinterpretarse."
+        },
+        {
+          "q": "¿El texto que codifico va a algún sitio?",
+          "a": "No. La conversión se ejecuta localmente con las funciones estándar encodeURI y encodeURIComponent de tu navegador."
+        }
+      ]
     },
     "uuid-generator": {
       "name": "Generador de UUID",
@@ -172,7 +229,21 @@
         "uppercase": "Mayúsculas",
         "noDashes": "Sin guiones",
         "copyAll": "Copiar todo"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué versión de UUID se genera?",
+          "a": "La versión 4 (totalmente aleatoria), siguiendo RFC 4122, producida por la fuente aleatoria criptográficamente segura de tu navegador mediante crypto.randomUUID()."
+        },
+        {
+          "q": "¿Puedo generar UUIDs en masa?",
+          "a": "Sí, hasta 100 a la vez. También puedes cambiar a mayúsculas o quitar los guiones, y luego copiar todo el lote con un clic."
+        },
+        {
+          "q": "¿Los UUIDs se registran en algún sitio?",
+          "a": "No. Se crean localmente en tu navegador y nunca se transmiten: al cerrar la pestaña desaparecen."
+        }
+      ]
     },
     "timestamp-converter": {
       "name": "Conversor de marcas de tiempo Unix",
@@ -190,7 +261,21 @@
         "localLabel": "Local",
         "utcLabel": "UTC",
         "invalid": "Timestamp inválido"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Debo pegar segundos o milisegundos?",
+          "a": "Cualquiera. La herramienta detecta la unidad automáticamente, la convierte en una fecha legible en tu zona horaria local y en UTC, y también puede convertir una fecha elegida de vuelta a timestamp."
+        },
+        {
+          "q": "¿Qué zonas horarias se muestran?",
+          "a": "La hora local de tu dispositivo y UTC una junto a la otra, para que no tengas que convertir mentalmente. Un reloj en vivo también muestra el tiempo Unix actual."
+        },
+        {
+          "q": "¿Se envía algo a un servidor?",
+          "a": "No. Toda la conversión usa el manejo de Date de tu navegador localmente."
+        }
+      ]
     },
     "html-entity-converter": {
       "name": "Codificador / decodificador de entidades HTML",
@@ -202,7 +287,21 @@
         "encodedLabel": "Entidades",
         "textPlaceholder": "Pega texto o código…",
         "encodedPlaceholder": "Pega entidades…"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Para qué sirven las entidades HTML?",
+          "a": "Permiten que caracteres reservados como <, >, & y las comillas se muestren como texto en una página en lugar de interpretarse como marcado: esencial al incrustar fragmentos de código en HTML."
+        },
+        {
+          "q": "¿Produce entidades nombradas o numéricas?",
+          "a": "Se usan entidades nombradas como &lt; cuando existen porque son legibles; todo lo demás recurre a la forma numérica. La decodificación maneja ambas."
+        },
+        {
+          "q": "¿Se sube mi texto?",
+          "a": "No. La codificación y decodificación ocurren por completo en tu navegador."
+        }
+      ]
     },
     "color-converter": {
       "name": "Conversor de colores",
@@ -212,7 +311,21 @@
       "ui": {
         "pick": "Elige un color",
         "invalid": "Color inválido"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué formatos de color se admiten?",
+          "a": "HEX, RGB y HSL. Pega un valor en cualquier formato —o usa el selector visual— y los otros dos se actualizan en sincronía, cada uno con copia de un clic."
+        },
+        {
+          "q": "¿Por qué mi HEX se ve diferente en HSL?",
+          "a": "Son el mismo color en notaciones distintas: HEX y RGB describen los canales rojo/verde/azul, mientras que HSL describe tono, saturación y luminosidad, a menudo más fácil de ajustar sistemáticamente."
+        },
+        {
+          "q": "¿Se envía algo a algún sitio?",
+          "a": "No. Toda la conversión se ejecuta localmente en tu navegador."
+        }
+      ]
     },
     "number-base-converter": {
       "name": "Conversor de bases numéricas",
@@ -227,7 +340,21 @@
         "decimal": "Decimal (10)",
         "hex": "Hexadecimal (16)",
         "invalid": "Dígitos inválidos para la base seleccionada"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Entre qué bases puedo convertir?",
+          "a": "Cualquier base del 2 al 36 como entrada, con salida instantánea en binario, octal, decimal y hexadecimal."
+        },
+        {
+          "q": "¿Maneja números muy grandes?",
+          "a": "Sí. Se usan enteros de precisión arbitraria internamente, así que valores de 64 bits y mayores se convierten con exactitud, sin redondeos de punto flotante."
+        },
+        {
+          "q": "¿Se sube mi entrada?",
+          "a": "No. La conversión es aritmética puramente local en tu navegador."
+        }
+      ]
     },
     "word-counter": {
       "name": "Contador de palabras y caracteres",
@@ -244,7 +371,21 @@
         "readingTime": "Tiempo de lectura",
         "readingMin": "≈ {min} min",
         "placeholder": "Empieza a escribir o pega tu texto…"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Cómo se cuentan los textos en chino o japonés?",
+          "a": "Cada carácter CJK cuenta como una palabra, mientras que el texto latino cuenta por palabra: el texto mixto obtiene un total combinado exacto, junto con caracteres, oraciones, párrafos y líneas."
+        },
+        {
+          "q": "¿Cómo se estima el tiempo de lectura?",
+          "a": "A partir del conteo de palabras a una velocidad de lectura adulta promedio. Es una guía aproximada: el material técnico se lee más lento que la ficción."
+        },
+        {
+          "q": "¿Se sube mi texto?",
+          "a": "No. El conteo ocurre en tu navegador mientras escribes."
+        }
+      ]
     },
     "case-converter": {
       "name": "Conversor de mayúsculas y minúsculas",
@@ -261,7 +402,21 @@
         "snake": "snake_case",
         "kebab": "kebab-case",
         "placeholder": "Escribe o pega texto…"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿A qué formatos puedo convertir?",
+          "a": "minúsculas, MAYÚSCULAS, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case y kebab-case: un clic cada uno."
+        },
+        {
+          "q": "¿Maneja caracteres acentuados?",
+          "a": "Sí. La conversión es consciente de Unicode, así que é se convierte en É y ß en SS exactamente como debe ser, no solo ASCII."
+        },
+        {
+          "q": "¿Se sube mi texto?",
+          "a": "No. La conversión se ejecuta localmente en tu navegador."
+        }
+      ]
     },
     "text-reverser": {
       "name": "Inversor de texto",
@@ -273,7 +428,21 @@
         "byWords": "Invertir palabras",
         "byLines": "Invertir líneas",
         "placeholder": "Escribe o pega texto…"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Cuáles son los tres modos de inversión?",
+          "a": "Invertir cada carácter, invertir el orden de las palabras o invertir el orden de las líneas: cubre desde palíndromos hasta voltear un archivo de log."
+        },
+        {
+          "q": "¿Se romperán los emoji o caracteres acentuados?",
+          "a": "No. La inversión itera por punto de código Unicode en lugar de unidades UTF-16 crudas, así que los emoji y los caracteres combinados quedan intactos."
+        },
+        {
+          "q": "¿Se sube mi texto?",
+          "a": "No. Todo se ejecuta localmente en tu navegador."
+        }
+      ]
     },
     "remove-duplicate-lines": {
       "name": "Eliminar líneas duplicadas",
@@ -286,7 +455,21 @@
         "removeEmpty": "Quitar líneas vacías",
         "summary": "{kept} líneas conservadas · {removed} eliminadas",
         "placeholder": "Pega líneas, una por línea…"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Mantiene el orden original?",
+          "a": "Sí. La primera aparición de cada línea se queda en su lugar y solo se eliminan los duplicados posteriores; o cambia a ordenación A→Z si quieres el resultado alfabetizado."
+        },
+        {
+          "q": "¿También puede quitar líneas en blanco?",
+          "a": "Sí: marca la opción de líneas en blanco y también desaparecen. El resumen en vivo muestra exactamente cuántas líneas se conservaron y eliminaron."
+        },
+        {
+          "q": "¿Se sube mi texto?",
+          "a": "No. El procesamiento se ejecuta localmente en tu navegador."
+        }
+      ]
     },
     "percentage-calculator": {
       "name": "Calculadora de porcentajes",
@@ -302,7 +485,21 @@
         "result": "Resultado",
         "increase": "aumento",
         "decrease": "disminución"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué tres preguntas responde?",
+          "a": "Cuánto es el X% de Y (propinas, descuentos), X es qué porcentaje de Y (puntajes, tasas) y el cambio porcentual de X a Y (crecimiento, movimientos de precio)."
+        },
+        {
+          "q": "¿Cómo calculo un descuento?",
+          "a": "Usa el primer modo: el 20% de 80 es 16, ese es tu ahorro, así que pagas 64. Para un recargo, usa el cambio porcentual del precio viejo al nuevo."
+        },
+        {
+          "q": "¿Funciona sin conexión?",
+          "a": "Sí. Una vez cargada la página, cada cálculo se ejecuta en tu navegador: no se necesita conexión."
+        }
+      ]
     },
     "bmi-calculator": {
       "name": "Calculadora de IMC",
@@ -320,7 +517,21 @@
         "overweight": "Sobrepeso",
         "obese": "Obesidad",
         "healthyRange": "Peso saludable para tu altura: {range}"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué significan las categorías de IMC?",
+          "a": "Clases de la OMS: menos de 18.5 bajo peso, 18.5–24.9 normal, 25–29.9 sobrepeso, 30 y más obesidad. La herramienta también muestra el rango de peso saludable para tu altura."
+        },
+        {
+          "q": "¿El IMC es exacto para todos?",
+          "a": "Es un atajo de cribado, no un diagnóstico: no distingue músculo de grasa, así que atletas, embarazadas y adultos mayores deberían interpretarlo con cautela."
+        },
+        {
+          "q": "¿Métrico o imperial?",
+          "a": "Ambos. Ingresa cm/kg o ft-in/lb, y nada de lo que escribas se almacena ni se envía a ningún sitio."
+        }
+      ]
     },
     "date-difference": {
       "name": "Calculadora de diferencia de fechas",
@@ -337,7 +548,21 @@
         "years": "años",
         "businessDays": "días laborables",
         "inDays": "= {n} días"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿En qué unidades se muestra la diferencia?",
+          "a": "Días, semanas, meses y años, además de un conteo de días hábiles que omite fines de semana. Puedes elegir si se incluye la fecha final."
+        },
+        {
+          "q": "¿Los años bisiestos se cuentan correctamente?",
+          "a": "Sí. El cálculo usa aritmética de calendario real, así que el 29 de febrero y los meses de distinta longitud salen bien."
+        },
+        {
+          "q": "¿Se ejecuta localmente?",
+          "a": "Sí: la aritmética de fechas ocurre por completo en tu navegador."
+        }
+      ]
     },
     "random-number-generator": {
       "name": "Generador de números aleatorios",
@@ -352,7 +577,21 @@
         "sort": "Ordenar resultados",
         "generate": "Generar",
         "invalid": "No se pueden elegir tantos valores únicos de este rango"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué tan aleatorios son los números?",
+          "a": "Provienen de crypto.getRandomValues(), la fuente criptográficamente segura del navegador: aptos para sorteos, juegos y muestreo, a diferencia de Math.random()."
+        },
+        {
+          "q": "¿Puedo evitar repeticiones?",
+          "a": "Sí. Elige rango y cantidad, marca 'Sin repeticiones' para muestrear sin reemplazo, y opcionalmente ordena los resultados."
+        },
+        {
+          "q": "¿Se envía algo a un servidor?",
+          "a": "No. Los números se generan por completo en tu dispositivo."
+        }
+      ]
     },
     "qr-code-generator": {
       "name": "Generador de códigos QR",
@@ -370,7 +609,21 @@
         "levelH": "H — 30%",
         "download": "Descargar PNG",
         "capacity": "{chars} caracteres"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué contenido puedo poner en un código QR?",
+          "a": "Cualquier texto corto: URLs, credenciales Wi-Fi, datos de contacto, mensajes. El contador de caracteres muestra cuánto espacio te queda con el nivel de corrección de errores actual."
+        },
+        {
+          "q": "¿Qué es la corrección de errores y qué nivel elegir?",
+          "a": "Permite que un código siga siendo escaneable aunque esté parcialmente dañado o cubierto. L recupera el 7% de los datos, M el 15%, Q el 25% y H el 30%: elige H si vas a superponer un logo, M para uso diario."
+        },
+        {
+          "q": "¿Se sube mi contenido?",
+          "a": "No. El código se renderiza localmente en tu navegador y se descarga como PNG: lo que codifiques nunca sale de tu dispositivo."
+        }
+      ]
     },
     "qr-code-scanner": {
       "name": "Lector de códigos QR",
@@ -383,7 +636,21 @@
         "noCode": "No se encontró ningún código QR en esta imagen. Prueba con una imagen más nítida o grande.",
         "result": "Contenido decodificado",
         "scanAnother": "Escanear otro"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Cómo escaneo un código QR aquí?",
+          "a": "Suelta una imagen en el área, haz clic para examinar, o pega una captura de pantalla directamente del portapapeles. El contenido se decodifica al instante."
+        },
+        {
+          "q": "¿Por qué no lee mi código?",
+          "a": "Las causas habituales son desenfoque, baja resolución o mucha distorsión de perspectiva. Prueba con una imagen más nítida, grande y de frente: la corrección de errores del QR se encarga del resto."
+        },
+        {
+          "q": "¿Se sube la imagen para decodificar?",
+          "a": "No. La decodificación se ejecuta localmente en tu navegador con la librería jsQR: la imagen nunca sale de tu dispositivo."
+        }
+      ]
     },
     "regex-tester": {
       "name": "Probador de expresiones regulares",
@@ -413,7 +680,21 @@
         "cheatHex": "Color hexadecimal",
         "cheatUuid": "UUID",
         "cheatNumber": "Número"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué sintaxis de regex usa?",
+          "a": "La de JavaScript: el motor exacto que trae tu navegador, incluidas las banderas (g, i, m, s, u, y), lookaheads y grupos de captura nombrados. La hoja de referencia integrada ofrece patrones comunes."
+        },
+        {
+          "q": "¿Puedo probar reemplazos, no solo coincidencias?",
+          "a": "Sí. Escribe una cadena de reemplazo con retroreferencias estilo $1, $& y verás el resultado junto a las coincidencias resaltadas y los grupos de captura."
+        },
+        {
+          "q": "¿Se sube mi texto de prueba?",
+          "a": "No. Las coincidencias se ejecutan localmente en el motor RegExp de tu navegador."
+        }
+      ]
     },
     "image-compressor": {
       "name": "Compresor de imágenes",
@@ -431,7 +712,21 @@
         "tooBig": "El archivo comprimido es más grande que el original — prueba con una calidad menor.",
         "losslessNote": "PNG es un formato sin pérdida: el control de calidad no tiene efecto sobre él. Elige WebP o JPEG para reducir el archivo de verdad.",
         "autoWebpNote": "Los PNG son sin pérdida, así que el resultado se exporta como WebP para que la compresión funcione."
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Cuánto se reducirá mi imagen?",
+          "a": "Las fotos suelen reducirse entre 60 y 90% como WebP o JPEG con calidad alrededor de 80 sin pérdida visible. Arrastra el control de calidad y observa cómo los tamaños antes/después se actualizan en vivo."
+        },
+        {
+          "q": "¿Por qué el control de calidad no afecta al PNG?",
+          "a": "PNG es sin pérdida: no hay perilla de calidad que girar. Por eso las fuentes PNG se exportan como WebP por defecto; elige JPEG o WebP para reducir realmente el archivo."
+        },
+        {
+          "q": "¿Se suben mis imágenes?",
+          "a": "No. La compresión se ejecuta en el canvas de tu navegador, así que los archivos nunca salen de tu dispositivo, lo que también lo hace rápido con fotos grandes."
+        }
+      ]
     },
     "image-converter": {
       "name": "Conversor de formato de imagen",
@@ -445,7 +740,21 @@
         "outputSize": "Convertida",
         "download": "Descargar",
         "quality": "Calidad"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Entre qué formatos puedo convertir?",
+          "a": "PNG, JPEG y WebP en cualquier dirección, con ajuste de calidad para los formatos con pérdida y tamaños de archivo mostrados antes de descargar."
+        },
+        {
+          "q": "¿Qué pasa con la transparencia al convertir a JPEG?",
+          "a": "JPEG no admite transparencia, así que las áreas transparentes se aplanan sobre blanco. Elige PNG o WebP si necesitas conservar el canal alfa."
+        },
+        {
+          "q": "¿Mis imágenes van a un servidor?",
+          "a": "No. La conversión ocurre por completo en tu navegador."
+        }
+      ]
     },
     "image-to-base64": {
       "name": "Conversor imagen ⇄ Base64",
@@ -459,7 +768,21 @@
         "sizeLabel": "{size} · {chars} caracteres",
         "invalid": "Eso no parece un data URI de imagen Base64.",
         "preview": "Vista previa decodificada"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Para qué sirve un data URI en Base64?",
+          "a": "Para incrustar una imagen directamente en HTML, CSS o JSON: iconos en hojas de estilo, plantillas de correo, demos de un solo archivo, sin un archivo separado que alojar."
+        },
+        {
+          "q": "¿Debería codificar fotos grandes en Base64?",
+          "a": "No. Base64 infla los datos alrededor de un 33% y el resultado no se puede cachear por separado, así que es mejor reservarlo para recursos pequeños como iconos y logos."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. La codificación y decodificación se ejecutan localmente en tu navegador."
+        }
+      ]
     },
     "image-resizer": {
       "name": "Redimensionador de imágenes",
@@ -476,7 +799,21 @@
         "quality": "Calidad",
         "outputSize": "Salida: {w} × {h} · {size}",
         "download": "Descargar imagen redimensionada"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Puedo fijar dimensiones exactas en píxeles?",
+          "a": "Sí: escribe el ancho y alto objetivo, con un bloqueo opcional de proporción para que la imagen no se deforme. El formato y la calidad de salida también son ajustables."
+        },
+        {
+          "q": "¿Ampliar una imagen se verá nítida?",
+          "a": "Ningún redimensionador puede inventar detalle: reducir se mantiene nítido, pero ampliar una imagen pequeña se verá borrosa. Empieza con la fuente más grande que tengas."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. El redimensionado ocurre localmente en el canvas de tu navegador."
+        }
+      ]
     },
     "exif-viewer": {
       "name": "Visor de metadatos EXIF",
@@ -489,7 +826,21 @@
         "tag": "Etiqueta",
         "value": "Valor",
         "viewOnMap": "Ver ubicación en el mapa"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué son los datos EXIF?",
+          "a": "Metadatos que cámaras y teléfonos incrustan en las fotos JPEG: marca y modelo, lente, velocidad de obturación, apertura, ISO, distancia focal, marcas de tiempo y, a menudo, coordenadas GPS del lugar exacto."
+        },
+        {
+          "q": "¿Puedo ver dónde se tomó una foto?",
+          "a": "Si la foto contiene etiquetas GPS, las coordenadas se muestran con un enlace para ver la ubicación en un mapa. Muchas plataformas sociales eliminan estos datos al subir, por eso algunas fotos no muestran nada."
+        },
+        {
+          "q": "¿Se sube la foto para leer sus metadatos?",
+          "a": "No. El archivo se analiza localmente en tu navegador. Para eliminar los metadatos antes de compartir, usa la herramienta EXIF & Metadata Remover."
+        }
+      ]
     },
     "image-watermark": {
       "name": "Herramienta de marca de agua",
@@ -506,7 +857,21 @@
         "position": "Posición",
         "tile": "Mosaico (repetir)",
         "download": "Descargar imagen con marca de agua"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué puedo personalizar de la marca de agua?",
+          "a": "El texto, tamaño, color y opacidad, además de una de nueve posiciones, o en mosaico por toda la imagen. La vista previa se actualiza en vivo antes de descargar como PNG."
+        },
+        {
+          "q": "¿Marca de agua única o en mosaico?",
+          "a": "Una marca única en la esquina es discreta para pruebas y portafolios; el mosaico es mucho más difícil de recortar, así que disuade mejor la reutilización."
+        },
+        {
+          "q": "¿Se sube mi foto?",
+          "a": "No. La marca de agua se dibuja localmente en tu navegador: la imagen nunca sale de tu dispositivo."
+        }
+      ]
     },
     "image-color-picker": {
       "name": "Selector de color de imagen",
@@ -518,7 +883,21 @@
         "hint": "Pasa el cursor para previsualizar · haz clic para elegir",
         "picked": "Colores elegidos",
         "clear": "Limpiar"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Cómo tomo un color de una imagen?",
+          "a": "Abre la imagen, pasa el cursor para previsualizar con la lupa y haz clic para tomar el color. Los colores se acumulan en una tira de historial con copia de un clic como HEX, RGB o HSL."
+        },
+        {
+          "q": "¿Para qué sirve la lupa?",
+          "a": "Amplía los píxeles bajo tu cursor para que tomes exactamente el píxel que quieres y no su vecino: útil con líneas finas y degradados."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. El muestreo ocurre localmente en tu navegador."
+        }
+      ]
     },
     "favicon-generator": {
       "name": "Generador de favicon",
@@ -531,7 +910,21 @@
         "downloadIco": "Descargar favicon.ico",
         "downloadPng": "PNG {size}px",
         "note": "Las imágenes cuadradas funcionan mejor — la imagen se recorta centrada a un cuadrado."
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué incluye el paquete generado?",
+          "a": "Un favicon.ico multiresolución (16, 32 y 48 px) más iconos PNG de 180, 192 y 512 px: cubre pestañas de navegador, Apple touch icons y manifests de PWA."
+        },
+        {
+          "q": "¿Qué imagen de origen funciona mejor?",
+          "a": "Una imagen cuadrada de al menos 512×512 con una forma simple y audaz y buen contraste: los detalles finos desaparecen a 16×16. Las imágenes no cuadradas se recortan al centro."
+        },
+        {
+          "q": "¿Se sube mi logo?",
+          "a": "No. Todos los tamaños se generan localmente en tu navegador."
+        }
+      ]
     },
     "image-cropper": {
       "name": "Recortador de imágenes",
@@ -546,7 +939,21 @@
         "crop": "Recortar",
         "download": "Descargar imagen recortada",
         "dragHint": "Arrastra sobre la imagen para seleccionar el área de recorte"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Puedo recortar a una proporción exacta?",
+          "a": "Sí: arrastra libremente o bloquea un preset como 1:1, 4:3, 3:2 o 16:9. La lectura en pantalla muestra el tamaño de la selección en píxeles."
+        },
+        {
+          "q": "¿Recortar reduce la calidad?",
+          "a": "No. La región recortada mantiene su resolución original: estás eliminando los píxeles de alrededor, no remuestreando los que conservas."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. El recorte se hace localmente en tu navegador."
+        }
+      ]
     },
     "image-filters": {
       "name": "Filtros de imagen y editor de fotos",
@@ -571,7 +978,21 @@
         "presetWarm": "Cálido",
         "presetCold": "Frío",
         "download": "Descargar imagen editada"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué ajustes hay disponibles?",
+          "a": "Brillo, contraste, saturación, escala de grises, sepia, desenfoque, rotación de tono e inversión, además de presets de un clic como B&W, Vintage, Warm y Cold."
+        },
+        {
+          "q": "¿Las ediciones son destructivas?",
+          "a": "No. Los controles y presets se re-renderizan desde la imagen original cada vez, así que puedes ajustar o pulsar Reset sin volver a subir. La descarga es a resolución completa."
+        },
+        {
+          "q": "¿Se sube mi foto?",
+          "a": "No. Los filtros se aplican localmente en tu navegador."
+        }
+      ]
     },
     "image-to-ascii": {
       "name": "Imagen a arte ASCII",
@@ -587,7 +1008,21 @@
         "blocks": "Bloques",
         "copy": "Copiar texto",
         "download": "Descargar PNG"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué es el arte ASCII?",
+          "a": "Tu imagen redibujada con caracteres de texto: glifos densos como @ para las zonas oscuras y dispersos como . para las claras. El ancho y el juego de caracteres (simple, detallado, bloques) son ajustables."
+        },
+        {
+          "q": "¿Cómo llevo el resultado a un documento?",
+          "a": "Copia el texto y pégalo en cualquier lugar compatible con monoespaciada —editores de código, READMEs, terminales— o descárgalo renderizado como PNG."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. La conversión se ejecuta localmente en tu navegador."
+        }
+      ]
     },
     "image-rotator": {
       "name": "Rotador de imágenes",
@@ -603,7 +1038,21 @@
         "flipV": "Voltear ↕",
         "angle": "Ángulo personalizado",
         "download": "Descargar imagen girada"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Puedo rotar cualquier ángulo o solo pasos de 90°?",
+          "a": "Ambos. Usa los botones de 90° horario, antihorario o 180° para correcciones rápidas, o marca cualquier ángulo personalizado, además de volteos horizontal y vertical."
+        },
+        {
+          "q": "¿Por qué las fotos de mi teléfono salen de lado?",
+          "a": "Los teléfonos a menudo guardan la orientación en EXIF en lugar de rotar los píxeles. Rotar aquí fija la orientación en los píxeles, para que la imagen se vea correctamente en todas partes."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. La rotación ocurre localmente en tu navegador."
+        }
+      ]
     },
     "metadata-remover": {
       "name": "Eliminador de metadatos EXIF",
@@ -618,7 +1067,21 @@
         "stripped": "Limpiada",
         "download": "Descargar imagen limpia",
         "keptQuality": "Formato y calidad preservados"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué metadatos elimina?",
+          "a": "Etiquetas EXIF como modelo de cámara, marcas de tiempo y ubicación GPS, además de otros bloques de metadatos incrustados: primero ves cuántas entradas lleva la foto y luego descargas una copia limpia."
+        },
+        {
+          "q": "¿La imagen se verá diferente después?",
+          "a": "No. Los píxeles se conservan con el formato y la calidad intactos: solo se eliminan los metadatos ocultos."
+        },
+        {
+          "q": "¿Por qué molestarse en quitar metadatos antes de compartir?",
+          "a": "Una sola foto puede revelar tu casa u oficina mediante etiquetas GPS. Eliminar metadatos es una victoria de privacidad barata, y aquí ocurre por completo en tu propio dispositivo."
+        }
+      ]
     },
     "color-extractor": {
       "name": "Extractor de paleta de colores",
@@ -630,7 +1093,21 @@
         "count": "Colores",
         "extract": "Extraer paleta",
         "hint": "Haz clic en cualquier color para copiar su código HEX"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué hace esta herramienta?",
+          "a": "Encuentra los colores dominantes de una imagen y construye una paleta con códigos HEX y RGB: útil para combinar un diseño con una foto, logo o ilustración."
+        },
+        {
+          "q": "¿Puedo elegir cuántos colores obtengo?",
+          "a": "Sí. Elige el tamaño de la paleta, extrae y haz clic en cualquier muestra para copiar su código HEX."
+        },
+        {
+          "q": "¿Se sube mi imagen?",
+          "a": "No. La extracción se ejecuta localmente en tu navegador."
+        }
+      ]
     },
     "unit-converter": {
       "name": "Conversor de unidades",
@@ -643,7 +1120,21 @@
         "swap": "Intercambiar unidades",
         "result": "Resultado",
         "placeholder": "Introduce un valor"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué categorías cubre?",
+          "a": "Longitud, peso, temperatura, área, volumen, velocidad y almacenamiento digital, con unidades métricas, imperiales y estadounidenses."
+        },
+        {
+          "q": "¿Qué tan exactos son los resultados?",
+          "a": "Las conversiones usan factores exactos por definición (1 pulgada = 2.54 cm exactamente, por ejemplo) con una precisión de visualización sensata."
+        },
+        {
+          "q": "¿Se ejecuta localmente?",
+          "a": "Sí: toda la conversión ocurre en tu navegador."
+        }
+      ]
     },
     "scientific-calculator": {
       "name": "Calculadora científica",
@@ -655,7 +1146,21 @@
         "clearHistory": "Limpiar",
         "error": "Error",
         "emptyHistory": "Aún no hay cálculos"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué funciones incluye?",
+          "a": "Trigonometría en grados o radianes, ln y log, potencias, raíces, factoriales, π y e, paréntesis, teclas de memoria y un historial tocable, con soporte completo de teclado."
+        },
+        {
+          "q": "¿Grados o radianes?",
+          "a": "Ambos: cambia la unidad angular de las funciones trigonométricas según tu curso o campo."
+        },
+        {
+          "q": "¿Se envía algo a algún sitio?",
+          "a": "No. Es una calculadora totalmente local: tus cálculos nunca salen de la página."
+        }
+      ]
     },
     "hash-generator": {
       "name": "Generador de hash — MD5, SHA-1, SHA-256",
@@ -669,7 +1174,21 @@
         "copy": "Copiar",
         "copied": "¡Copiado!",
         "note": "MD5 y SHA-1 se consideran rotos para fines de seguridad — prefiere SHA-256 o superior."
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué algoritmos se admiten?",
+          "a": "MD5, SHA-1, SHA-256, SHA-384 y SHA-512: los cinco se calculan mientras escribes, en hexadecimal, con copia de un clic y opción de mayúsculas."
+        },
+        {
+          "q": "¿Puedo usar MD5 o SHA-1 para contraseñas?",
+          "a": "No. MD5 y SHA-1 sirven como sumas de verificación pero se consideran rotos para uso de seguridad. Para contraseñas usa un KDF dedicado como bcrypt, scrypt o Argon2 en lugar de cualquier hash rápido de propósito general."
+        },
+        {
+          "q": "¿Mi entrada se envía a algún sitio?",
+          "a": "No. Los resúmenes se calculan localmente con la Web Crypto API más un MD5 en JavaScript puro."
+        }
+      ]
     },
     "jwt-decoder": {
       "name": "Decodificador JWT",
@@ -700,7 +1219,21 @@
         "nbf": "No válido antes de",
         "iat": "Emitido en",
         "jti": "ID del JWT"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Verifica la firma?",
+          "a": "No, y deliberadamente: la verificación requiere el secreto de firma o la clave privada, que nunca deberían escribirse en un sitio web. Esta herramienta solo decodifica el header y el payload."
+        },
+        {
+          "q": "¿Qué puedo ver tras pegar un token?",
+          "a": "El header y el payload decodificados, una explicación de los claims registrados (iss, sub, exp, iat…), marcas de tiempo legibles y el estado de expiración en vivo."
+        },
+        {
+          "q": "¿Es seguro pegar un token real aquí?",
+          "a": "La decodificación es análisis Base64URL puramente local: el token nunca sale de tu dispositivo. Aun así, trata los tokens como contraseñas: prefiere usar tokens de prueba o expirados en cualquier sitio web."
+        }
+      ]
     },
     "text-diff": {
       "name": "Comparador de textos (Diff)",
@@ -719,7 +1252,21 @@
         "ignoreWs": "Recortar espacios de línea",
         "phOriginal": "Pega el texto original…",
         "phModified": "Pega el texto modificado…"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué resalta la comparación?",
+          "a": "Adiciones en verde y eliminaciones en rojo, línea por línea, usando el mismo algoritmo de Myers que las herramientas diff clásicas. Las opciones permiten ignorar mayúsculas y recortar espacios finales."
+        },
+        {
+          "q": "¿Puedo comparar textos grandes?",
+          "a": "Sí: el diff se ejecuta localmente, así que no hay límite de subida. Para archivos muy grandes, la memoria del navegador es el único límite práctico."
+        },
+        {
+          "q": "¿Se sube mi texto?",
+          "a": "No. La comparación ocurre por completo en tu navegador."
+        }
+      ]
     },
     "mortgage-calculator": {
       "name": "Calculadora de hipoteca",
@@ -749,7 +1296,21 @@
         "colInterest": "Interés",
         "colBalance": "Saldo",
         "invalid": "Introduce un importe positivo, un tipo no negativo y un plazo de 1–100 años."
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Anualidad o capital fijo: cuál es la diferencia?",
+          "a": "La anualidad mantiene la cuota mensual constante (mayoría de interés al principio); el capital fijo paga el mismo capital cada mes, así que las cuotas empiezan más altas pero bajan, y el interés total es menor. Puedes comparar ambos."
+        },
+        {
+          "q": "¿Qué incluyen los resultados?",
+          "a": "La cuota mensual, el interés total y el pago total, además de un calendario de amortización completo mes a mes con capital, interés y saldo restante."
+        },
+        {
+          "q": "¿Se suben mis datos financieros?",
+          "a": "No. Todos los cálculos se ejecutan localmente en tu navegador."
+        }
+      ]
     },
     "age-calculator": {
       "name": "Calculadora de edad",
@@ -811,7 +1372,21 @@
           "dog": "Perro",
           "pig": "Cerdo"
         }
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué tan preciso es el resultado?",
+          "a": "Exacto al día: años, meses y días, además de totales en semanas, días, horas y minutos, e incluso una cuenta regresiva para tu próximo cumpleaños."
+        },
+        {
+          "q": "¿Puedo consultar la edad en una fecha distinta a hoy?",
+          "a": "Sí: cambia el campo 'Edad a fecha' para ver cuántos años tenía o tendrá alguien en cualquier día, pasado o futuro. También muestra el día de la semana de nacimiento y ambos signos del zodíaco."
+        },
+        {
+          "q": "¿Se sube mi fecha de nacimiento?",
+          "a": "No. Todo se calcula localmente en tu navegador."
+        }
+      ]
     },
     "tip-calculator": {
       "name": "Calculadora de propinas",
@@ -827,7 +1402,21 @@
         "total": "Total",
         "perPerson": "Por persona",
         "summary": "{pct}% de propina sobre {bill} · dividido entre {people}"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Puede dividir la cuenta entre varias personas?",
+          "a": "Sí: ingresa la cuenta, elige un porcentaje de propina preestablecido o personalizado, fija el número de personas, y verás la propina, el total y la parte de cada uno."
+        },
+        {
+          "q": "¿Cuánta propina debería dar?",
+          "a": "En EE. UU., 15–20% en restaurantes con servicio de mesa es lo habitual; las costumbres varían por país y servicio. La calculadora acepta el porcentaje que decidas."
+        },
+        {
+          "q": "¿Se ejecuta localmente?",
+          "a": "Sí: los cálculos ocurren por completo en tu navegador."
+        }
+      ]
     },
     "compound-interest-calculator": {
       "name": "Calculadora de interés compuesto",
@@ -858,7 +1447,21 @@
         "colInterest": "Intereses",
         "colBalance": "Saldo",
         "invalid": "Introduce un tipo no negativo, 1–100 años, y un capital o aportación positivos."
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Qué frecuencias de capitalización puedo usar?",
+          "a": "Anual, semestral, trimestral, mensual o diaria. A la misma tasa nominal, una capitalización más frecuente genera un poco más."
+        },
+        {
+          "q": "¿Puedo incluir aportes regulares?",
+          "a": "Sí: agrega un aporte por período para modelar la inversión mensual. La tabla anual y el gráfico separan depósitos de intereses, para que veas cómo el interés compuesto despega."
+        },
+        {
+          "q": "¿Se suben mis datos financieros?",
+          "a": "No. Todo se calcula localmente en tu navegador."
+        }
+      ]
     },
     "markdown-editor": {
       "name": "Editor de Markdown",
@@ -892,7 +1495,21 @@
         "downloadHtml": "Descargar .html",
         "clear": "Limpiar",
         "sample": "# ¡Hola, Markdown!\n\nEscribe a la izquierda, previsualiza a la derecha.\n\n- **Negrita**, *cursiva*, ~~tachado~~\n- `código en línea`\n\n> Una cita.\n\n| Función | Estado |\n| --- | --- |\n| Tablas | ✓ |\n"
-      }
+      },
+      "faq": [
+        {
+          "q": "¿Puedo exportar mi trabajo?",
+          "a": "Sí: copia el HTML renderizado, o descarga el fuente .md o un archivo .html independiente. Tu borrador también se guarda automáticamente en local, así que cerrar la pestaña no lo pierde."
+        },
+        {
+          "q": "¿La vista previa está protegida contra scripts inyectados?",
+          "a": "Sí. El HTML renderizado se desinfecta con DOMPurify antes de mostrarse, así que los scripts incrustados y los manejadores de eventos no pueden ejecutarse."
+        },
+        {
+          "q": "¿Dónde se almacena mi texto?",
+          "a": "Solo en el almacenamiento local de tu propio navegador en tu dispositivo: nada se sube a ningún servidor."
+        }
+      ]
     }
   }
 }
