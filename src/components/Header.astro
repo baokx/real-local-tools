@@ -11,17 +11,42 @@ const { lang, altUrl, altLang } = Astro.props;
 ---
 
 <header class="border-b border-line bg-paper/90 backdrop-blur-sm sticky top-0 z-20">
-  <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-    <a href={localePath(lang, '/')} class="flex items-center gap-2.5 font-display font-bold text-ink">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5 sm:h-14 sm:flex-nowrap sm:px-6 sm:py-0">
+    <a href={localePath(lang, '/')} class="flex shrink-0 items-center gap-2.5 font-display font-bold text-ink">
       <svg width="24" height="24" viewBox="0 0 64 64" aria-hidden="true" class="shrink-0">
         <rect width="64" height="64" rx="14" fill="#14532d"></rect>
-        <path d="M32 14c-7.2 0-13 5.8-13 13 0 9.8 13 23 13 23s13-13.2 13-23c0-7.2-5.8-13-13-13z" fill="#fbfaf7"></path>
-        <circle cx="32" cy="27" r="5.5" fill="#14532d"></circle>
+        <path
+          d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"
+          fill="#fbfaf7"
+          transform="translate(8 8) scale(2)"
+        ></path>
       </svg>
       <span class="text-[15px] tracking-tight">{t(lang, 'site.name')}</span>
     </a>
-    <nav class="flex items-center gap-5 text-sm">
-      <span class="hidden items-center gap-1.5 text-ink-soft sm:flex" title={t(lang, 'common.runsLocally')}>
+
+    <div class="order-last w-full sm:order-none sm:mx-auto sm:w-auto sm:max-w-xs sm:flex-1 lg:max-w-sm">
+      <label for="tool-search" class="sr-only">{t(lang, 'search.label')}</label>
+      <div class="relative">
+        <svg
+          class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m21 21-4.3-4.3" stroke-linecap="round"></path>
+        </svg>
+        <input
+          id="tool-search"
+          type="search"
+          placeholder={t(lang, 'search.placeholder')}
+          autocomplete="off"
+          data-home={localePath(lang, '/')}
+          class="w-full rounded-lg border border-line bg-white py-1.5 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft/60 focus:border-pine"
+        />
+      </div>
+    </div>
+
+    <nav class="flex shrink-0 items-center gap-5 text-sm">
+      <span class="hidden items-center gap-1.5 text-ink-soft md:flex" title={t(lang, 'common.runsLocally')}>
         <span class="inline-block h-2 w-2 rounded-full bg-pine"></span>
         {t(lang, 'common.runsLocally')}
       </span>
@@ -35,3 +60,14 @@ const { lang, altUrl, altLang } = Astro.props;
     </nav>
   </div>
 </header>
+
+<script>
+  const headerSearch = document.getElementById('tool-search') as HTMLInputElement | null;
+  headerSearch?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const q = headerSearch.value.trim();
+    if (!q || document.querySelector('.tool-card')) return;
+    const home = headerSearch.dataset.home || '/';
+    window.location.href = `${home}?q=${encodeURIComponent(q)}`;
+  });
+</script>

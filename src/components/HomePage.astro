@@ -12,40 +12,16 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
 ---
 
 <section class="border-b border-line bg-mist/60">
-  <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
-    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-5">
-      <div class="max-w-xl">
-        <p class="mb-2 font-mono text-xs font-medium uppercase tracking-[0.18em] text-pine">
-          {t(lang, 'hero.eyebrow')}
-        </p>
-        <h1 class="font-display text-3xl font-bold leading-[1.12] tracking-tight text-ink sm:text-4xl">
-          {t(lang, 'hero.title')}
-        </h1>
-        <p class="mt-2.5 text-sm leading-relaxed text-ink-soft sm:text-base">
-          {t(lang, 'hero.subtitle')}
-        </p>
-      </div>
-
-      <div class="w-full max-w-xs shrink-0">
-        <label for="tool-search" class="sr-only">{t(lang, 'search.label')}</label>
-        <div class="relative">
-          <svg
-            class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="m21 21-4.3-4.3" stroke-linecap="round"></path>
-          </svg>
-          <input
-            id="tool-search"
-            type="search"
-            placeholder={t(lang, 'search.placeholder')}
-            autocomplete="off"
-            class="w-full rounded-lg border border-line bg-white py-2 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft/60 focus:border-pine"
-          />
-        </div>
-      </div>
-    </div>
+  <div class="mx-auto max-w-5xl px-4 py-7 sm:px-6 sm:py-9">
+    <p class="mb-2 font-mono text-xs font-medium uppercase tracking-[0.18em] text-pine">
+      {t(lang, 'hero.eyebrow')}
+    </p>
+    <h1 class="max-w-2xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-ink sm:text-4xl">
+      {t(lang, 'hero.title')}
+    </h1>
+    <p class="mt-2.5 max-w-xl text-sm leading-relaxed text-ink-soft sm:text-base">
+      {t(lang, 'hero.subtitle')}
+    </p>
   </div>
 </section>
 
@@ -88,4 +64,10 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
     }
     emptyMsg?.classList.toggle('hidden', visible > 0);
   });
+
+  const preset = new URLSearchParams(window.location.search).get('q');
+  if (preset && input) {
+    input.value = preset;
+    input.dispatchEvent(new Event('input'));
+  }
 </script>
