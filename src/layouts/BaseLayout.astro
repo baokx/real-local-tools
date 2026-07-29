@@ -10,9 +10,11 @@ interface Props {
   description?: string;
   /** JSON-LD schema.org object(s), rendered into a single script tag. */
   schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** Emit robots noindex (e.g. the 404 page). */
+  noindex?: boolean;
 }
 
-const { lang, title, description, schema } = Astro.props;
+const { lang, title, description, schema, noindex } = Astro.props;
 const pageTitle = title ? `${title} | ${t(lang, 'site.name')}` : t(lang, 'site.title');
 const pageDescription = description ?? t(lang, 'site.description');
 
@@ -47,9 +49,14 @@ const jsonLd = schema
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+    <link rel="manifest" href={`${base}manifest.webmanifest`} />
+    <meta name="theme-color" content="#14532d" />
 
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     {locales.map((l) => (
       <link rel="alternate" hreflang={htmlLang[l]} href={new URL(alternateUrl(Astro.url, l), Astro.site)} />
@@ -86,6 +93,15 @@ const jsonLd = schema
       <slot />
     </main>
     <Footer lang={lang} />
+    <!-- Offline support: production origin only, so dev and previews stay
+         free of cached-asset staleness. -->
+    <script is:inline>
+      if ('serviceWorker' in navigator && window.location.hostname === 'real-local-tools.com') {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+      }
+    </script>
     <!-- Cloudflare Web Analytics: cookieless, no personal data collected -->
     <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4b7e81251e054b71a1093eaf820d79c2"}'></script>
   </body>

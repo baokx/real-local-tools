@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prebuild": "node scripts/check-i18n.mjs && node scripts/build-og.mjs"
+    "prebuild": "node scripts/check-i18n.mjs && node scripts/build-og.mjs && node scripts/build-icons.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

@@ -91,6 +91,12 @@
     "tools": "Herramientas",
     "pages": "Sitio"
   },
+  "notFound": {
+    "title": "Página no encontrada",
+    "heading": "Esta página no está aquí.",
+    "description": "El enlace puede estar roto o la página se ha movido. Las herramientas siguen ejecutándose por completo en tu navegador.",
+    "backHome": "Volver a todas las herramientas"
+  },
   "tools": {
     "json-formatter": {
       "name": "Formateador y validador JSON",

@@ -91,6 +91,12 @@
     "tools": "工具",
     "pages": "站点"
   },
+  "notFound": {
+    "title": "页面未找到",
+    "heading": "这个页面不存在。",
+    "description": "链接可能已失效,或页面已被移动。不过工具本身仍完全在你的浏览器中运行。",
+    "backHome": "返回全部工具"
+  },
   "tools": {
     "json-formatter": {
       "name": "JSON 格式化与校验",

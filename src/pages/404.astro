@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NotFoundPage from '../components/pages/NotFoundPage.astro';
+import { t } from '../i18n/utils';
+
+const lang = 'en';
+---
+
+<BaseLayout lang={lang} title={t(lang, 'notFound.title')} noindex>
+  <!-- GitHub Pages serves this single 404.html for every missing path, so
+       locale-prefixed misses bounce to their localized 404 page. Keep the
+       list in sync with the non-default locales in src/i18n/utils.ts. -->
+  <script is:inline>
+    (function () {
+      var m = window.location.pathname.match(/^\/(zh|es|ja)(\/|$)/);
+      if (m) window.location.replace('/' + m[1] + '/404/');
+    })();
+  </script>
+  <NotFoundPage lang={lang} />
+</BaseLayout>
