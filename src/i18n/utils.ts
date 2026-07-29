@@ -1,25 +1,35 @@
 import en from './en.json';
 import zh from './zh.json';
+import es from './es.json';
+import ja from './ja.json';
 
-export const locales = ['en', 'zh'] as const;
+export const locales = ['en', 'zh', 'es', 'ja'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en';
 
-const dictionaries: Record<Locale, unknown> = { en, zh };
+const dictionaries: Record<Locale, unknown> = { en, zh, es, ja };
 
 type DictNode = string | { [key: string]: DictNode };
 
-/** Look up a dotted key like "tools.json-formatter.name". Falls back to the key itself. */
-export function t(lang: Locale, path: string): string {
-  let cur: DictNode | undefined = dictionaries[lang] as DictNode;
+function lookup(dict: DictNode, path: string): string | undefined {
+  let cur: DictNode | undefined = dict;
   for (const key of path.split('.')) {
     if (cur && typeof cur === 'object') {
       cur = (cur as Record<string, DictNode>)[key];
     } else {
-      return path;
+      return undefined;
     }
   }
-  return typeof cur === 'string' ? cur : path;
+  return typeof cur === 'string' ? cur : undefined;
+}
+
+/** Look up a dotted key like "tools.json-formatter.name". Falls back to English, then to the key itself. */
+export function t(lang: Locale, path: string): string {
+  return (
+    lookup(dictionaries[lang] as DictNode, path) ??
+    lookup(dictionaries[defaultLocale] as DictNode, path) ??
+    path
+  );
 }
 
 /** Interpolate {placeholders} in a dictionary string. */
@@ -35,6 +45,8 @@ export function getLocaleFromUrl(url: URL): Locale {
 }
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nonDefault = locales.filter((l) => l !== defaultLocale).join('|');
+const prefixRe = new RegExp(`^/(${nonDefault})(?=/|$)`);
 
 /** Prefix a path with the locale (default locale stays unprefixed). */
 export function localePath(lang: Locale, path: string): string {
@@ -46,20 +58,30 @@ export function localePath(lang: Locale, path: string): string {
 
 export function stripLocalePrefix(url: URL): string {
   const withoutBase = base ? url.pathname.replace(new RegExp(`^${base}`), '') : url.pathname;
-  const stripped = withoutBase.replace(/^\/zh(?=\/|$)/, '');
+  const stripped = withoutBase.replace(prefixRe, '');
   return stripped === '' ? '/' : stripped;
 }
 
-/** URL of the current page in the other locale. */
+/** URL of the current page in another locale. */
 export function alternateUrl(url: URL, target: Locale): string {
   return localePath(target, stripLocalePrefix(url));
 }
 
-export function otherLocale(lang: Locale): Locale {
-  return lang === defaultLocale ? 'zh' : 'en';
+export function otherLocales(lang: Locale): Locale[] {
+  return locales.filter((l) => l !== lang);
 }
 
 export const localeNames: Record<Locale, string> = {
   en: 'English',
   zh: '中文',
+  es: 'Español',
+  ja: '日本語',
+};
+
+/** BCP-47 tags for the <html lang> attribute. */
+export const htmlLang: Record<Locale, string> = {
+  en: 'en',
+  zh: 'zh-CN',
+  es: 'es',
+  ja: 'ja',
 };

@@ -7,10 +7,17 @@ export default defineConfig({
   trailingSlash: 'always',
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh'],
+    locales: ['en', 'zh', 'es', 'ja'],
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', zh: 'zh-CN', es: 'es', ja: 'ja' },
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

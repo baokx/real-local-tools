@@ -1,13 +1,12 @@
 ---
-import { t, localePath, localeNames, type Locale } from '../i18n/utils';
+import { t, localePath, localeNames, alternateUrl, otherLocales, type Locale } from '../i18n/utils';
 
 interface Props {
   lang: Locale;
-  altUrl: URL;
-  altLang: Locale;
 }
 
-const { lang, altUrl, altLang } = Astro.props;
+const { lang } = Astro.props;
+const alts = otherLocales(lang).map((l) => ({ l, url: alternateUrl(Astro.url, l) }));
 ---
 
 <header class="border-b border-line bg-paper/90 backdrop-blur-sm sticky top-0 z-20">
@@ -50,16 +49,35 @@ const { lang, altUrl, altLang } = Astro.props;
         <span class="inline-block h-2 w-2 rounded-full bg-pine"></span>
         {t(lang, 'common.runsLocally')}
       </span>
-      <a
-        href={altUrl}
-        hreflang={altLang}
-        class="rounded-md border border-line px-2.5 py-1 text-ink-soft transition-colors hover:border-pine hover:text-pine"
-      >
-        {localeNames[altLang]}
-      </a>
+      <details id="lang-menu" class="relative">
+        <summary class="flex cursor-pointer list-none items-center gap-1 rounded-md border border-line px-2.5 py-1 text-ink-soft transition-colors hover:border-pine hover:text-pine [&::-webkit-details-marker]:hidden">
+          {localeNames[lang]}
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </summary>
+        <div class="absolute right-0 z-30 mt-1.5 min-w-28 overflow-hidden rounded-lg border border-line bg-white py-1 shadow-lg">
+          {alts.map((a) => (
+            <a
+              href={a.url}
+              hreflang={a.l}
+              class="block px-3.5 py-1.5 text-ink-soft transition-colors hover:bg-mist hover:text-pine"
+            >
+              {localeNames[a.l]}
+            </a>
+          ))}
+        </div>
+      </details>
     </nav>
   </div>
 </header>
+
+<script>
+  const menu = document.getElementById('lang-menu') as HTMLDetailsElement | null;
+  document.addEventListener('click', (e) => {
+    if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
+  });
+</script>
 
 <script>
   const headerSearch = document.getElementById('tool-search') as HTMLInputElement | null;

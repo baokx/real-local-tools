@@ -1,0 +1,676 @@
+{
+  "site": {
+    "name": "Real Local Tools",
+    "title": "Real Local Tools — herramientas gratuitas que funcionan en tu navegador",
+    "description": "Una colección creciente de herramientas online gratuitas para desarrolladores, diseñadores y todos los demás. Sin subidas, sin registros, sin rastreo: cada herramienta funciona localmente en tu navegador.",
+    "tagline": "Sin subidas. Sin registros. Sin rastreo. Cada herramienta funciona completamente en tu navegador — incluso sin conexión."
+  },
+  "nav": {
+    "home": "Todas las herramientas"
+  },
+  "hero": {
+    "eyebrow": "Sin subidas · Sin registro · Sin rastreo",
+    "title": "Herramientas que nunca salen de tu navegador",
+    "subtitle": "Utilidades rápidas y gratuitas para desarrolladores y el trabajo diario — procesadas 100% localmente en tu dispositivo. Desconecta internet y siguen funcionando."
+  },
+  "search": {
+    "label": "Buscar herramientas",
+    "placeholder": "Buscar herramientas…",
+    "empty": "Ninguna herramienta coincide con tu búsqueda."
+  },
+  "categories": {
+    "developer": "Herramientas para desarrolladores",
+    "image": "Herramientas de imagen",
+    "calculator": "Calculadoras",
+    "security": "Herramientas de seguridad",
+    "text": "Herramientas de texto"
+  },
+  "common": {
+    "copy": "Copiar",
+    "copied": "Copiado al portapapeles",
+    "download": "Descargar",
+    "clear": "Limpiar",
+    "input": "Entrada",
+    "output": "Salida",
+    "runsLocally": "Funciona localmente",
+    "home": "Inicio",
+    "sample": "Cargar ejemplo",
+    "swap": "Intercambiar"
+  },
+  "footer": {
+    "tagline": "Tus datos nunca abandonan tu dispositivo.",
+    "note": "Un sitio completamente estático, sin servidores ni rastreadores."
+  },
+  "tools": {
+    "json-formatter": {
+      "name": "Formateador y validador JSON",
+      "description": "Formatea, valida, embellece o minifica JSON al instante — directamente en tu navegador.",
+      "seoTitle": "Formateador y validador JSON — gratis, local, sin subidas",
+      "seo": "Pega cualquier JSON y obténlo formateado con la indentación que elijas, minificado para producción o validado con posiciones de error precisas. El análisis usa el motor JSON de tu propio navegador, así que incluso los datos sensibles permanecen en tu dispositivo.",
+      "ui": {
+        "format2": "Formatear · 2 espacios",
+        "format4": "Formatear · 4 espacios",
+        "minify": "Minificar",
+        "inputPlaceholder": "Pega el JSON aquí…",
+        "outputPlaceholder": "La salida formateada aparece aquí…",
+        "valid": "JSON válido",
+        "invalid": "JSON inválido",
+        "statsTop": "{kind} de nivel superior con {count} {unit}",
+        "unitKeys": "claves",
+        "unitItems": "elementos",
+        "kindObject": "objeto",
+        "kindArray": "array"
+      }
+    },
+    "base64-converter": {
+      "name": "Codificador / decodificador Base64",
+      "description": "Convierte texto a Base64 y viceversa, con soporte Unicode completo — todo en tu navegador.",
+      "seoTitle": "Codificador y decodificador Base64 — compatible con Unicode, funciona localmente",
+      "seo": "Codifica texto plano a Base64 o decodifica Base64 a texto legible. A diferencia de los conversores básicos, esta herramienta maneja correctamente todo el rango Unicode: caracteres chinos, emoji y letras acentuadas sobreviven al proceso. La conversión se realiza completamente en tu navegador.",
+      "ui": {
+        "textLabel": "Texto",
+        "base64Label": "Base64",
+        "textPlaceholder": "Escribe o pega texto…",
+        "base64Placeholder": "Pega Base64…",
+        "invalid": "Eso no parece un Base64 válido.",
+        "encodeToUrlSafe": "Salida segura para URL"
+      }
+    },
+    "password-generator": {
+      "name": "Generador de contraseñas",
+      "description": "Genera contraseñas aleatorias fuertes con el motor criptográfico de tu navegador — nada se envía a ningún lugar.",
+      "seoTitle": "Generador de contraseñas — criptográficamente seguro, 100% offline",
+      "seo": "Las contraseñas se generan con crypto.getRandomValues(), la misma fuente aleatoria criptográficamente segura que los navegadores usan para las claves TLS. Elige longitud y conjuntos de caracteres, observa la estimación de entropía en tiempo real y copia con un clic. La contraseña nunca abandona esta página.",
+      "ui": {
+        "length": "Longitud",
+        "uppercase": "Mayúsculas (A-Z)",
+        "lowercase": "Minúsculas (a-z)",
+        "numbers": "Números (0-9)",
+        "symbols": "Símbolos (!@#$…)",
+        "excludeAmbiguous": "Excluir parecidos (l 1 I O 0)",
+        "regenerate": "Regenerar",
+        "entropy": "{bits} bits de entropía",
+        "weak": "Débil",
+        "fair": "Aceptable",
+        "strong": "Fuerte",
+        "excellent": "Excelente",
+        "needOne": "Selecciona al menos un conjunto de caracteres.",
+        "placeholder": "Pulsa regenerar para crear una contraseña"
+      }
+    },
+    "url-converter": {
+      "name": "Codificador / decodificador URL",
+      "description": "Codifica y decodifica URLs y componentes URI de forma segura — al instante, en tu navegador.",
+      "seoTitle": "Codificador y decodificador URL — gratis, funciona localmente",
+      "seo": "Codifica caracteres especiales para que sobrevivan dentro de URLs y parámetros de consulta, o decodifica cadenas con porcentajes a texto legible. Elige el modo componente para valores de parámetros o el modo URL completa para enlaces enteros. Todo funciona localmente en tu navegador.",
+      "ui": {
+        "modeComponent": "Componente (valores de consulta)",
+        "modeFull": "URL completa",
+        "inputLabel": "Texto",
+        "outputLabel": "Codificado / decodificado",
+        "inputPlaceholder": "Escribe o pega texto, o una cadena codificada…",
+        "invalid": "Eso no parece una cadena codificada con porcentajes."
+      }
+    },
+    "uuid-generator": {
+      "name": "Generador de UUID",
+      "description": "Genera UUIDs v4 aleatorios en masa — aleatoriedad criptográfica, directamente en tu navegador.",
+      "seoTitle": "Generador de UUID / GUID — v4 en masa, aleatoriedad criptográfica",
+      "seo": "Genera hasta 100 UUIDs versión 4 (RFC 4122) con un clic, usando la fuente aleatoria criptográficamente segura de tu navegador. Activa mayúsculas o quita los guiones, y luego cópialos todos. Nada se envía a ningún lugar.",
+      "ui": {
+        "count": "Cuántos",
+        "generate": "Generar UUIDs",
+        "uppercase": "Mayúsculas",
+        "noDashes": "Sin guiones",
+        "copyAll": "Copiar todo"
+      }
+    },
+    "timestamp-converter": {
+      "name": "Conversor de marcas de tiempo Unix",
+      "description": "Convierte marcas de tiempo Unix a fechas legibles y viceversa — con la hora actual en vivo.",
+      "seoTitle": "Conversor de timestamp Unix — epoch a fecha, local y UTC",
+      "seo": "Pega una marca de tiempo Unix (segundos o milisegundos — detección automática) para ver la fecha correspondiente en tu zona horaria local y en UTC, o elige una fecha para obtener su timestamp. Un reloj en vivo muestra el tiempo epoch actual. Toda la conversión ocurre en tu navegador.",
+      "ui": {
+        "now": "Tiempo Unix actual",
+        "seconds": "s",
+        "milliseconds": "ms",
+        "tsToDate": "Timestamp → Fecha",
+        "dateToTs": "Fecha → Timestamp",
+        "timestamp": "Timestamp Unix",
+        "dateTime": "Fecha y hora",
+        "localLabel": "Local",
+        "utcLabel": "UTC",
+        "invalid": "Timestamp inválido"
+      }
+    },
+    "html-entity-converter": {
+      "name": "Codificador / decodificador de entidades HTML",
+      "description": "Codifica caracteres especiales a entidades HTML y decodifícalos — seguro para pegar código en páginas.",
+      "seoTitle": "Codificador y decodificador de entidades HTML — funciona localmente",
+      "seo": "Convierte caracteres como <, >, & y comillas a sus entidades HTML equivalentes para que los fragmentos de código se muestren de forma segura en páginas web, o decodifica entidades a texto plano. Se usan entidades con nombre cuando existen. Funciona completamente en tu navegador.",
+      "ui": {
+        "textLabel": "Texto",
+        "encodedLabel": "Entidades",
+        "textPlaceholder": "Pega texto o código…",
+        "encodedPlaceholder": "Pega entidades…"
+      }
+    },
+    "color-converter": {
+      "name": "Conversor de colores",
+      "description": "Convierte colores entre HEX, RGB y HSL — con selector visual y copia con un clic.",
+      "seoTitle": "Conversor de colores — HEX, RGB, HSL con selector visual",
+      "seo": "Elige un color visualmente o pega un valor HEX, RGB o HSL y observa cómo todos los formatos se actualizan en sincronía. Copia cualquier representación con un clic para tu CSS. Todo funciona localmente.",
+      "ui": {
+        "pick": "Elige un color",
+        "invalid": "Color inválido"
+      }
+    },
+    "number-base-converter": {
+      "name": "Conversor de bases numéricas",
+      "description": "Convierte números entre binario, octal, decimal, hexadecimal y cualquier base de 2 a 36.",
+      "seoTitle": "Conversor de bases numéricas — binario, octal, hex, base 2-36",
+      "seo": "Introduce un número en cualquier base de 2 a 36 y míralo al instante en binario, octal, decimal y hexadecimal. Los valores grandes se manejan con exactitud gracias a enteros de precisión arbitraria. Funciona completamente en tu navegador.",
+      "ui": {
+        "valueLabel": "Número",
+        "baseLabel": "Desde la base",
+        "binary": "Binario (2)",
+        "octal": "Octal (8)",
+        "decimal": "Decimal (10)",
+        "hex": "Hexadecimal (16)",
+        "invalid": "Dígitos inválidos para la base seleccionada"
+      }
+    },
+    "word-counter": {
+      "name": "Contador de palabras y caracteres",
+      "description": "Cuenta caracteres, palabras, oraciones y párrafos en tiempo real — con estimación de tiempo de lectura.",
+      "seoTitle": "Contador de palabras y caracteres — estadísticas de texto en tiempo real",
+      "seo": "Pega o escribe texto y observa los conteos actualizarse al instante: caracteres con y sin espacios, palabras, oraciones, párrafos y líneas, además de una estimación del tiempo de lectura. Las reglas de conteo funcionan para texto en inglés y en chino. Todo permanece en tu navegador.",
+      "ui": {
+        "characters": "Caracteres",
+        "charactersNoSpaces": "Sin espacios",
+        "words": "Palabras",
+        "sentences": "Oraciones",
+        "paragraphs": "Párrafos",
+        "lines": "Líneas",
+        "readingTime": "Tiempo de lectura",
+        "readingMin": "≈ {min} min",
+        "placeholder": "Empieza a escribir o pega tu texto…"
+      }
+    },
+    "case-converter": {
+      "name": "Conversor de mayúsculas y minúsculas",
+      "description": "Convierte texto entre minúsculas, MAYÚSCULAS, Title Case, camelCase, snake_case y más.",
+      "seoTitle": "Conversor de mayúsculas — camelCase, snake_case, Title Case y más",
+      "seo": "Un clic convierte tu texto a minúsculas, MAYÚSCULAS, Title Case, Sentence case, camelCase, PascalCase, snake_case o kebab-case. Útil al alternar entre convenciones de código y prosa. Funciona localmente en tu navegador.",
+      "ui": {
+        "lower": "minúsculas",
+        "upper": "MAYÚSCULAS",
+        "title": "Title Case",
+        "sentence": "Sentence case",
+        "camel": "camelCase",
+        "pascal": "PascalCase",
+        "snake": "snake_case",
+        "kebab": "kebab-case",
+        "placeholder": "Escribe o pega texto…"
+      }
+    },
+    "text-reverser": {
+      "name": "Inversor de texto",
+      "description": "Invierte texto carácter por carácter, palabra por palabra o línea por línea — al instante.",
+      "seoTitle": "Inversor de texto — invierte caracteres, palabras o líneas",
+      "seo": "Invierte tu texto de tres maneras: cada carácter, el orden de las palabras o el orden de las líneas. Compatible con Unicode, así que los emoji y los caracteres acentuados permanecen intactos. Todo funciona localmente.",
+      "ui": {
+        "byChars": "Invertir caracteres",
+        "byWords": "Invertir palabras",
+        "byLines": "Invertir líneas",
+        "placeholder": "Escribe o pega texto…"
+      }
+    },
+    "remove-duplicate-lines": {
+      "name": "Eliminar líneas duplicadas",
+      "description": "Elimina líneas duplicadas, quita líneas vacías y ordena — con un conteo en vivo de lo eliminado.",
+      "seoTitle": "Eliminar líneas duplicadas — deduplicar, ordenar y quitar vacías",
+      "seo": "Pega texto separado por líneas y elimina las líneas duplicadas manteniendo el orden original, u ordena el resultado alfabéticamente. También se pueden quitar las líneas vacías, y un resumen en vivo muestra cuántas líneas se eliminaron. Funciona completamente en tu navegador.",
+      "ui": {
+        "dedupe": "Eliminar duplicados",
+        "sortAZ": "Ordenar A → Z",
+        "removeEmpty": "Quitar líneas vacías",
+        "summary": "{kept} líneas conservadas · {removed} eliminadas",
+        "placeholder": "Pega líneas, una por línea…"
+      }
+    },
+    "percentage-calculator": {
+      "name": "Calculadora de porcentajes",
+      "description": "Tres preguntas cotidianas de porcentajes, respondidas al instante: X% de Y, X es qué % de Y, y % de cambio.",
+      "seoTitle": "Calculadora de porcentajes — porcentaje de, es qué %, % de cambio",
+      "seo": "Responde las tres preguntas de porcentajes que surgen constantemente: ¿Cuánto es el X% de Y? ¿X es qué porcentaje de Y? ¿Cuál es el cambio porcentual de X a Y? Los resultados se actualizan mientras escribes. Funciona localmente en tu navegador.",
+      "ui": {
+        "mode1a": "Cuánto es el",
+        "mode1b": "% de",
+        "mode2a": "es qué % de",
+        "mode3a": "Cambio de",
+        "mode3b": "a",
+        "result": "Resultado",
+        "increase": "aumento",
+        "decrease": "disminución"
+      }
+    },
+    "bmi-calculator": {
+      "name": "Calculadora de IMC",
+      "description": "Calcula tu Índice de Masa Corporal en unidades métricas o imperiales, con la categoría de la OMS.",
+      "seoTitle": "Calculadora de IMC — métrica e imperial, categorías OMS",
+      "seo": "Introduce tu altura y peso en unidades métricas o imperiales y obtén tu IMC al instante, junto con la categoría de peso de la OMS correspondiente y el rango de peso saludable para tu altura. Nada se almacena ni se envía a ningún lugar.",
+      "ui": {
+        "height": "Altura",
+        "weight": "Peso",
+        "metric": "Métrico",
+        "imperial": "Imperial",
+        "yourBmi": "Tu IMC",
+        "underweight": "Bajo peso",
+        "normal": "Normal",
+        "overweight": "Sobrepeso",
+        "obese": "Obesidad",
+        "healthyRange": "Peso saludable para tu altura: {range}"
+      }
+    },
+    "date-difference": {
+      "name": "Calculadora de diferencia de fechas",
+      "description": "Calcula la diferencia exacta entre dos fechas en días, semanas, meses y años — además de días laborables.",
+      "seoTitle": "Calculadora de diferencia de fechas — días, semanas, días laborables",
+      "seo": "Elige dos fechas y observa la distancia exacta expresada en días, semanas, meses y años, incluyendo un conteo de días laborables que omite los fines de semana. La fecha final puede incluirse o excluirse. Todo funciona en tu navegador.",
+      "ui": {
+        "startDate": "Fecha inicial",
+        "endDate": "Fecha final",
+        "includeEnd": "Incluir fecha final",
+        "days": "días",
+        "weeks": "semanas",
+        "months": "meses",
+        "years": "años",
+        "businessDays": "días laborables",
+        "inDays": "= {n} días"
+      }
+    },
+    "random-number-generator": {
+      "name": "Generador de números aleatorios",
+      "description": "Genera números aleatorios en cualquier rango — únicos o repetibles, uno o en masa.",
+      "seoTitle": "Generador de números aleatorios — cualquier rango, selección única",
+      "seo": "Elige un mínimo y un máximo, decide cuántos números quieres y, opcionalmente, exige que sean únicos u ordenados. La generación usa la fuente aleatoria criptográficamente segura de tu navegador. Funciona completamente offline.",
+      "ui": {
+        "min": "Mín",
+        "max": "Máx",
+        "count": "Cuántos",
+        "unique": "Sin repeticiones",
+        "sort": "Ordenar resultados",
+        "generate": "Generar",
+        "invalid": "No se pueden elegir tantos valores únicos de este rango"
+      }
+    },
+    "qr-code-generator": {
+      "name": "Generador de códigos QR",
+      "description": "Crea códigos QR para URLs, texto, Wi-Fi y más — tamaño y corrección de errores personalizables.",
+      "seoTitle": "Generador de códigos QR — gratis, personalizable, funciona localmente",
+      "seo": "Escribe cualquier texto o URL y obtén un código QR nítido al instante. Ajusta el tamaño y el nivel de corrección de errores, y luego descárgalo como PNG. El código se genera completamente en tu navegador: tu contenido nunca abandona tu dispositivo.",
+      "ui": {
+        "content": "Contenido",
+        "placeholder": "Introduce una URL o cualquier texto…",
+        "size": "Tamaño",
+        "errorLevel": "Corrección de errores",
+        "levelL": "L — 7%",
+        "levelM": "M — 15%",
+        "levelQ": "Q — 25%",
+        "levelH": "H — 30%",
+        "download": "Descargar PNG",
+        "capacity": "{chars} caracteres"
+      }
+    },
+    "qr-code-scanner": {
+      "name": "Lector de códigos QR",
+      "description": "Decodifica códigos QR desde imágenes directamente en tu navegador — sube, pega o arrastra una imagen.",
+      "seoTitle": "Lector de códigos QR online — decodifica desde imagen, localmente",
+      "seo": "Sube una imagen que contenga un código QR — o simplemente pega una captura de pantalla — y lee su contenido al instante. La decodificación ocurre completamente en tu navegador; la imagen nunca se sube a ningún servidor.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "decoding": "Decodificando…",
+        "noCode": "No se encontró ningún código QR en esta imagen. Prueba con una imagen más nítida o grande.",
+        "result": "Contenido decodificado",
+        "scanAnother": "Escanear otro"
+      }
+    },
+    "regex-tester": {
+      "name": "Probador de expresiones regulares",
+      "description": "Prueba expresiones regulares con resaltado en vivo, grupos de captura, reemplazo y una hoja de referencia.",
+      "seoTitle": "Probador de regex — resaltado de coincidencias en vivo y grupos, funciona localmente",
+      "seo": "Escribe una expresión regular, elige tus flags y observa las coincidencias resaltarse en tiempo real. Inspecciona cada grupo de captura con su índice, prueba reemplazos y toma patrones comunes de la hoja de referencia integrada. Todo funciona localmente en tu navegador.",
+      "ui": {
+        "pattern": "Patrón",
+        "flags": "Flags",
+        "testText": "Texto de prueba",
+        "testPlaceholder": "Pega el texto con el que probar…",
+        "matches": "{count} coincidencias",
+        "matchesTitle": "Coincidencias",
+        "noMatches": "Sin coincidencias",
+        "matchNum": "Coincidencia {n}",
+        "group": "Grupo {n}",
+        "replaceLabel": "Reemplazo (admite $1, $&…)",
+        "replacePlaceholder": "Deja vacío para omitir",
+        "replaceResult": "Resultado del reemplazo",
+        "cheatsheet": "Patrones comunes",
+        "invalid": "Expresión regular inválida: {msg}",
+        "cheatEmail": "Email",
+        "cheatUrl": "URL",
+        "cheatIpv4": "Dirección IPv4",
+        "cheatPhoneCn": "Móvil chino",
+        "cheatDate": "Fecha AAAA-MM-DD",
+        "cheatHex": "Color hexadecimal",
+        "cheatUuid": "UUID",
+        "cheatNumber": "Número"
+      }
+    },
+    "image-compressor": {
+      "name": "Compresor de imágenes",
+      "description": "Comprime imágenes JPEG, PNG y WebP con un control de calidad ajustable — vista previa instantánea del ahorro.",
+      "seoTitle": "Compresor de imágenes — reduce JPEG/PNG/WebP localmente, gratis",
+      "seo": "Arrastra una foto y mueve el control de calidad para encontrar el equilibrio perfecto entre tamaño y fidelidad. Los tamaños antes y después se actualizan al instante y puedes descargar el resultado comprimido. Tus imágenes se procesan completamente en tu navegador — nada se sube.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "quality": "Calidad",
+        "format": "Formato",
+        "original": "Original",
+        "compressed": "Comprimida",
+        "savings": "−{pct}%",
+        "download": "Descargar imagen comprimida",
+        "tooBig": "El archivo comprimido es más grande que el original — prueba con una calidad menor.",
+        "losslessNote": "PNG es un formato sin pérdida: el control de calidad no tiene efecto sobre él. Elige WebP o JPEG para reducir el archivo de verdad.",
+        "autoWebpNote": "Los PNG son sin pérdida, así que el resultado se exporta como WebP para que la compresión funcione."
+      }
+    },
+    "image-converter": {
+      "name": "Conversor de formato de imagen",
+      "description": "Convierte imágenes entre PNG, JPEG y WebP — instantáneo, privado, en tu navegador.",
+      "seoTitle": "Conversor de imágenes — PNG ↔ JPG ↔ WebP, funciona localmente",
+      "seo": "Convierte cualquier imagen a PNG, JPEG o WebP con un clic. La transparencia se aplana sobre blanco al convertir a JPEG. Compara los tamaños de archivo antes de descargar. Todo ocurre localmente — tus imágenes nunca abandonan tu dispositivo.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "targetFormat": "Convertir a",
+        "originalSize": "Original",
+        "outputSize": "Convertida",
+        "download": "Descargar",
+        "quality": "Calidad"
+      }
+    },
+    "image-to-base64": {
+      "name": "Conversor imagen ⇄ Base64",
+      "description": "Codifica imágenes como data URIs Base64 o decodifica una cadena Base64 a imagen — localmente.",
+      "seoTitle": "Codificador y decodificador de imagen a Base64 — data URI, funciona localmente",
+      "seo": "Convierte cualquier imagen en un data URI Base64 listo para incrustar en CSS o HTML, o pega un data URI para previsualizar y descargar la imagen decodificada. La conversión ocurre completamente en tu navegador.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "dataUri": "Data URI Base64",
+        "pasteUri": "…o pega un data URI aquí para decodificarlo",
+        "sizeLabel": "{size} · {chars} caracteres",
+        "invalid": "Eso no parece un data URI de imagen Base64.",
+        "preview": "Vista previa decodificada"
+      }
+    },
+    "image-resizer": {
+      "name": "Redimensionador de imágenes",
+      "description": "Redimensiona imágenes a dimensiones exactas en píxeles con bloqueo de proporción — salida JPEG, PNG y WebP.",
+      "seoTitle": "Redimensionador de imágenes — píxeles exactos, bloqueo de proporción, local",
+      "seo": "Reduce o amplía una imagen al ancho y alto exactos que necesitas, con bloqueo opcional de la proporción. Elige el formato y la calidad de salida, previsualiza el tamaño del resultado y descarga. Todo el procesamiento es local.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "width": "Ancho (px)",
+        "height": "Alto (px)",
+        "lockRatio": "Bloquear proporción",
+        "originalSize": "Original: {w} × {h}",
+        "format": "Formato",
+        "quality": "Calidad",
+        "outputSize": "Salida: {w} × {h} · {size}",
+        "download": "Descargar imagen redimensionada"
+      }
+    },
+    "exif-viewer": {
+      "name": "Visor de metadatos EXIF",
+      "description": "Inspecciona los metadatos de cámara, lente, exposición y GPS ocultos en fotos JPEG — completamente local.",
+      "seoTitle": "Visor EXIF — lee metadatos de fotos y GPS localmente",
+      "seo": "Descubre lo que revelan tus fotos: marca y modelo de cámara, lente, velocidad de obturación, apertura, ISO, distancia focal, marcas de tiempo e incluso coordenadas GPS con enlace al mapa. El archivo se analiza en tu navegador y nunca se sube.",
+      "ui": {
+        "dropzone": "Suelta una foto JPEG aquí, haz clic para explorar o pega desde el portapapeles",
+        "noExif": "No se encontraron metadatos EXIF en este archivo.",
+        "tag": "Etiqueta",
+        "value": "Valor",
+        "viewOnMap": "Ver ubicación en el mapa"
+      }
+    },
+    "image-watermark": {
+      "name": "Herramienta de marca de agua",
+      "description": "Añade marcas de agua de texto personalizadas a fotos — posición, tamaño, opacidad y mosaico — todo en tu navegador.",
+      "seoTitle": "Herramienta de marca de agua — marca de texto, gratis y local",
+      "seo": "Protege tus imágenes con una marca de agua de texto personalizada. Elige el texto, tamaño, color, opacidad y una de nueve posiciones — o repítela en mosaico por toda la imagen. La vista previa se actualiza en vivo y el resultado se descarga como PNG. Nada se sube.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "text": "Texto de la marca de agua",
+        "textPlaceholder": "© Tu Nombre",
+        "size": "Tamaño",
+        "opacity": "Opacidad",
+        "color": "Color",
+        "position": "Posición",
+        "tile": "Mosaico (repetir)",
+        "download": "Descargar imagen con marca de agua"
+      }
+    },
+    "image-color-picker": {
+      "name": "Selector de color de imagen",
+      "description": "Extrae colores exactos de cualquier imagen — haz clic para obtener valores HEX, RGB y HSL con una lupa.",
+      "seoTitle": "Selector de color de imagen — extrae HEX/RGB de fotos, local",
+      "seo": "Sube cualquier imagen y haz clic para muestrear el color exacto del píxel. Una lupa de aumento te ayuda a apuntar con precisión. Los colores elegidos se guardan en una tira de historial con copia en un clic en HEX, RGB y HSL. Todo funciona localmente.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "hint": "Pasa el cursor para previsualizar · haz clic para elegir",
+        "picked": "Colores elegidos",
+        "clear": "Limpiar"
+      }
+    },
+    "favicon-generator": {
+      "name": "Generador de favicon",
+      "description": "Convierte cualquier imagen en un set completo de favicon — ICO de 16/32/48px más PNG e iconos Apple touch.",
+      "seoTitle": "Generador de favicon — set ICO + PNG desde cualquier imagen",
+      "seo": "Sube un logo o imagen y obtén un paquete de favicon listo para usar: un archivo .ico multitamaño (16, 32 y 48 px) más iconos PNG de 180, 192 y 512 px para Apple touch y PWA. Todo se genera localmente en tu navegador.",
+      "ui": {
+        "dropzone": "Suelta una imagen casi cuadrada aquí, haz clic para explorar o pega desde el portapapeles",
+        "preview": "Vista previa",
+        "downloadIco": "Descargar favicon.ico",
+        "downloadPng": "PNG {size}px",
+        "note": "Las imágenes cuadradas funcionan mejor — la imagen se recorta centrada a un cuadrado."
+      }
+    },
+    "image-cropper": {
+      "name": "Recortador de imágenes",
+      "description": "Recorta imágenes con una selección arrastrable y proporciones predefinidas — gratis, privado, en el navegador.",
+      "seoTitle": "Recortador de imágenes — arrastra para recortar, proporciones predefinidas, local",
+      "seo": "Arrastra una selección sobre tu imagen para recortar exactamente lo que necesitas, con preajustes de 1:1, 4:3, 3:2 y 16:9. La región recortada mantiene su resolución original. Todo funciona en tu navegador — sin subidas.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "aspect": "Proporción",
+        "free": "Libre",
+        "selection": "Selección: {w} × {h} px",
+        "crop": "Recortar",
+        "download": "Descargar imagen recortada",
+        "dragHint": "Arrastra sobre la imagen para seleccionar el área de recorte"
+      }
+    },
+    "image-filters": {
+      "name": "Filtros de imagen y editor de fotos",
+      "description": "Ajusta brillo, contraste, saturación y más con vista previa en vivo — además de preajustes con un clic.",
+      "seoTitle": "Filtros de imagen y editor de fotos — brillo, contraste, local",
+      "seo": "Ajusta brillo, contraste, saturación, escala de grises, sepia, desenfoque, tono e inversión con controles en vivo, o parte de un preajuste como B&N o Vintage. El resultado a resolución completa se descarga al instante. Tu foto nunca abandona tu dispositivo.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "brightness": "Brillo",
+        "contrast": "Contraste",
+        "saturate": "Saturación",
+        "grayscale": "Escala de grises",
+        "sepia": "Sepia",
+        "blur": "Desenfoque",
+        "hueRotate": "Tono",
+        "invert": "Invertir",
+        "reset": "Restablecer",
+        "presets": "Preajustes",
+        "presetNormal": "Original",
+        "presetBW": "B y N",
+        "presetVintage": "Vintage",
+        "presetWarm": "Cálido",
+        "presetCold": "Frío",
+        "download": "Descargar imagen editada"
+      }
+    },
+    "image-to-ascii": {
+      "name": "Imagen a arte ASCII",
+      "description": "Convierte imágenes en arte ASCII con ancho y conjuntos de caracteres ajustables — copia o descarga como imagen.",
+      "seoTitle": "Conversor de imagen a arte ASCII — funciona localmente, gratis",
+      "seo": "Convierte cualquier imagen en arte de texto con caracteres ASCII. Ajusta el ancho de salida y elige entre conjuntos de caracteres simples, detallados o de bloques, luego copia el texto o descárgalo como PNG. El renderizado ocurre completamente en tu navegador.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "width": "Ancho (caracteres)",
+        "charset": "Conjunto de caracteres",
+        "simple": "Simple",
+        "detailed": "Detallado",
+        "blocks": "Bloques",
+        "copy": "Copiar texto",
+        "download": "Descargar PNG"
+      }
+    },
+    "image-rotator": {
+      "name": "Rotador de imágenes",
+      "description": "Gira imágenes en pasos de 90° o cualquier ángulo personalizado, y voltéalas horizontal o verticalmente — localmente.",
+      "seoTitle": "Rotador y volteador de imágenes — cualquier ángulo, funciona localmente",
+      "seo": "Gira fotos en pasos de 90 grados o ajusta cualquier ángulo, y voltéalas horizontal o verticalmente. El resultado girado mantiene la calidad completa con esquinas transparentes. El procesamiento es completamente local.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "rotate90cw": "90° horario",
+        "rotate90ccw": "90° antihorario",
+        "rotate180": "180°",
+        "flipH": "Voltear ↔",
+        "flipV": "Voltear ↕",
+        "angle": "Ángulo personalizado",
+        "download": "Descargar imagen girada"
+      }
+    },
+    "metadata-remover": {
+      "name": "Eliminador de metadatos EXIF",
+      "description": "Elimina los metadatos de ubicación, cámara y fecha de las fotos antes de compartirlas — completamente local.",
+      "seoTitle": "Eliminador EXIF — quita metadatos de fotos por privacidad",
+      "seo": "Las fotos pueden revelar dónde y cuándo se tomaron y qué dispositivo las capturó. Esta herramienta muestra qué metadatos lleva tu imagen y produce una copia limpia con todo eliminado. El procesamiento ocurre en tu navegador — la foto nunca se sube.",
+      "ui": {
+        "dropzone": "Suelta una foto aquí, haz clic para explorar o pega desde el portapapeles",
+        "foundMeta": "{n} entradas de metadatos encontradas en esta foto",
+        "alreadyClean": "Esta imagen no contiene metadatos EXIF.",
+        "original": "Original",
+        "stripped": "Limpiada",
+        "download": "Descargar imagen limpia",
+        "keptQuality": "Formato y calidad preservados"
+      }
+    },
+    "color-extractor": {
+      "name": "Extractor de paleta de colores",
+      "description": "Extrae los colores dominantes de cualquier imagen y obtén una paleta lista para usar con códigos HEX y RGB.",
+      "seoTitle": "Extractor de colores — paleta dominante de cualquier imagen",
+      "seo": "Extrae los colores dominantes de una foto o ilustración y obtén una paleta limpia con valores HEX y RGB, lista para tu trabajo de diseño. Elige cuántos colores quieres y copia cualquier muestra con un clic. Todo funciona localmente.",
+      "ui": {
+        "dropzone": "Suelta una imagen aquí, haz clic para explorar o pega desde el portapapeles",
+        "count": "Colores",
+        "extract": "Extraer paleta",
+        "hint": "Haz clic en cualquier color para copiar su código HEX"
+      }
+    },
+    "unit-converter": {
+      "name": "Conversor de unidades",
+      "description": "Convierte unidades de longitud, peso, temperatura, área, volumen, velocidad y almacenamiento de datos al instante — todo localmente.",
+      "seoTitle": "Conversor de unidades — longitud, peso, temperatura, volumen y más",
+      "seo": "Conversor de unidades online gratuito que cubre longitud, peso, temperatura, área, volumen, velocidad y almacenamiento digital. Elige una categoría, escribe un valor y lee el resultado al instante — incluye unidades métricas, imperiales y estadounidenses. Todo funciona localmente en tu navegador: sin registro, sin subidas.",
+      "ui": {
+        "from": "De",
+        "to": "A",
+        "swap": "Intercambiar unidades",
+        "result": "Resultado",
+        "placeholder": "Introduce un valor"
+      }
+    },
+    "scientific-calculator": {
+      "name": "Calculadora científica",
+      "description": "Calculadora científica online gratuita con trigonometría, logaritmos, potencias, factoriales, teclas de memoria e historial.",
+      "seoTitle": "Calculadora científica — trigonometría, logaritmos, potencias, memoria",
+      "seo": "Una calculadora científica completa que funciona enteramente en tu navegador: funciones trigonométricas en grados o radianes, logaritmos naturales y comunes, potencias, raíces, factoriales, las constantes π y e, paréntesis, teclas de memoria y un historial pulsable. Admite entrada por teclado. Sin registro — nada se envía a ningún lugar.",
+      "ui": {
+        "history": "Historial",
+        "clearHistory": "Limpiar",
+        "error": "Error",
+        "emptyHistory": "Aún no hay cálculos"
+      }
+    },
+    "hash-generator": {
+      "name": "Generador de hash — MD5, SHA-1, SHA-256",
+      "description": "Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de cualquier texto al instante — 100% en tu navegador.",
+      "seoTitle": "Generador de hash MD5 y SHA — SHA-1, SHA-256, SHA-512",
+      "seo": "Escribe o pega texto y obtén al instante sus resúmenes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 en hexadecimal. Los hashes se calculan localmente con la Web Crypto API más un MD5 en JavaScript puro, así que tu entrada nunca abandona el dispositivo. Copia con un clic cada resumen.",
+      "ui": {
+        "input": "Texto a hashear",
+        "placeholder": "Escribe o pega texto…",
+        "uppercase": "Hexadecimal en mayúsculas",
+        "copy": "Copiar",
+        "copied": "¡Copiado!",
+        "note": "MD5 y SHA-1 se consideran rotos para fines de seguridad — prefiere SHA-256 o superior."
+      }
+    },
+    "jwt-decoder": {
+      "name": "Decodificador JWT",
+      "description": "Decodifica JSON Web Tokens localmente: inspecciona la cabecera, los claims del payload y la expiración — el token nunca sale de tu navegador.",
+      "seoTitle": "Decodificador JWT — inspecciona cabecera, payload y expiración localmente",
+      "seo": "Pega un JSON Web Token para decodificar al instante su cabecera y payload. Los claims registrados (iss, sub, aud, exp, nbf, iat, jti) se explican, y las marcas de tiempo se convierten a fechas legibles con el estado de expiración en vivo. La decodificación ocurre completamente en tu navegador — el token nunca se transmite. Nota: esta herramienta decodifica pero no verifica firmas.",
+      "ui": {
+        "token": "Token JWT",
+        "placeholder": "Pega un JWT (eyJhbGciOi…)",
+        "sample": "Cargar token de ejemplo",
+        "header": "Cabecera",
+        "payload": "Payload",
+        "signature": "Firma",
+        "sigNote": "La firma se muestra pero no se verifica — la verificación requiere el secreto o una clave pública.",
+        "claims": "Claims registrados",
+        "invalid": "JWT inválido — se esperaban tres segmentos Base64url separados por puntos.",
+        "expired": "expiró hace {t}",
+        "expiresIn": "expira en {t}",
+        "noExp": "Sin expiración definida",
+        "valid": "Estructura válida",
+        "decodeErr": "El segmento no pudo decodificarse como JSON."
+      },
+      "claims": {
+        "iss": "Emisor",
+        "sub": "Sujeto",
+        "aud": "Audiencia",
+        "exp": "Tiempo de expiración",
+        "nbf": "No válido antes de",
+        "iat": "Emitido en",
+        "jti": "ID del JWT"
+      }
+    },
+    "text-diff": {
+      "name": "Comparador de textos (Diff)",
+      "description": "Compara dos textos línea por línea con adiciones y eliminaciones resaltadas — un diff gratuito, privado y en el navegador.",
+      "seoTitle": "Comparador de textos (Diff) — compara dos textos online",
+      "seo": "Pega dos versiones de un texto y observa las diferencias resaltadas línea por línea: adiciones en verde, eliminaciones en rojo, con comparación opcional sin distinguir mayúsculas y recortando espacios. El diff se ejecuta localmente con el algoritmo de Myers — nada se sube.",
+      "ui": {
+        "original": "Texto original",
+        "modified": "Texto modificado",
+        "compare": "Comparar",
+        "result": "Diferencias",
+        "additions": "adiciones",
+        "deletions": "eliminaciones",
+        "identical": "Los dos textos son idénticos.",
+        "ignoreCase": "Ignorar mayúsculas",
+        "ignoreWs": "Recortar espacios de línea",
+        "phOriginal": "Pega el texto original…",
+        "phModified": "Pega el texto modificado…"
+      }
+    }
+  }
+}
