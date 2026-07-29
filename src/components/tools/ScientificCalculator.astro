@@ -1,0 +1,321 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.scientific-calculator.ui.${key}`);
+
+type Key = { label: string; ins?: string; act?: string; cls?: string; span?: number };
+const ROWS: Key[][] = [
+  [{ label: 'DEG', act: 'mode', cls: 'fn' }, { label: 'MC', act: 'mc', cls: 'fn' }, { label: 'MR', act: 'mr', cls: 'fn' }, { label: 'M+', act: 'mplus', cls: 'fn' }, { label: 'M−', act: 'mminus', cls: 'fn' }],
+  [{ label: 'sin', ins: 'sin(', cls: 'fn' }, { label: 'cos', ins: 'cos(', cls: 'fn' }, { label: 'tan', ins: 'tan(', cls: 'fn' }, { label: 'ln', ins: 'ln(', cls: 'fn' }, { label: 'log', ins: 'log(', cls: 'fn' }],
+  [{ label: 'sin⁻¹', ins: 'asin(', cls: 'fn' }, { label: 'cos⁻¹', ins: 'acos(', cls: 'fn' }, { label: 'tan⁻¹', ins: 'atan(', cls: 'fn' }, { label: '√', ins: '√(', cls: 'fn' }, { label: 'xʸ', ins: '^', cls: 'fn' }],
+  [{ label: 'x²', ins: '^2', cls: 'fn' }, { label: 'x!', ins: '!', cls: 'fn' }, { label: '1/x', ins: '1/', cls: 'fn' }, { label: '|x|', ins: 'abs(', cls: 'fn' }, { label: 'eˣ', ins: 'exp(', cls: 'fn' }],
+  [{ label: 'π', ins: 'π', cls: 'fn' }, { label: 'e', ins: 'e', cls: 'fn' }, { label: '(', ins: '(', cls: 'fn' }, { label: ')', ins: ')', cls: 'fn' }, { label: '%', ins: '%', cls: 'fn' }],
+  [{ label: '7', ins: '7' }, { label: '8', ins: '8' }, { label: '9', ins: '9' }, { label: '÷', ins: '÷', cls: 'op' }, { label: '⌫', act: 'back', cls: 'op' }],
+  [{ label: '4', ins: '4' }, { label: '5', ins: '5' }, { label: '6', ins: '6' }, { label: '×', ins: '×', cls: 'op' }, { label: 'C', act: 'clear', cls: 'danger' }],
+  [{ label: '1', ins: '1' }, { label: '2', ins: '2' }, { label: '3', ins: '3' }, { label: '−', ins: '-', cls: 'op' }, { label: '+', ins: '+', cls: 'op' }],
+  [{ label: '0', ins: '0' }, { label: '.', ins: '.' }, { label: '=', act: 'eq', cls: 'eq', span: 3 }],
+];
+---
+
+<div id="scientific-calculator" data-err={u('error')} data-empty={u('emptyHistory')}>
+  <div class="grid gap-6 lg:grid-cols-[1fr_240px]">
+    <div>
+      <div class="rounded-xl border border-line bg-mist/50 p-3">
+        <input
+          id="sc-expr"
+          type="text"
+          class="w-full border-0 bg-transparent text-right font-mono text-lg text-ink outline-none"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="0"
+        />
+        <div class="mt-1 flex items-baseline justify-end gap-2">
+          <span id="sc-mem" class="hidden font-mono text-xs text-ink-soft">M</span>
+          <span id="sc-mode-ind" class="font-mono text-xs text-ink-soft">DEG</span>
+          <div id="sc-result" class="min-h-[2rem] text-right font-display text-2xl font-bold text-pine"></div>
+        </div>
+      </div>
+
+      <div class="mt-3 grid grid-cols-5 gap-1.5">
+        {ROWS.flat().map((k) => (
+          <button
+            type="button"
+            data-ins={k.ins}
+            data-act={k.act}
+            class:list={[
+              'h-11 rounded-lg border font-mono text-sm transition-colors',
+              k.span === 3 ? 'col-span-3' : '',
+              k.cls === 'eq' && 'border-pine bg-pine font-semibold text-white hover:bg-pine-deep',
+              k.cls === 'op' && 'border-line bg-white text-pine hover:border-pine',
+              k.cls === 'danger' && 'border-line bg-white text-red-600 hover:border-red-400',
+              k.cls === 'fn' && 'border-line bg-mist/70 text-ink-soft hover:border-pine hover:text-pine',
+              !k.cls && 'border-line bg-white text-ink hover:border-pine',
+            ]}
+          >
+            {k.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <div class="mb-2 flex items-center justify-between">
+        <h3 class="font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">{u('history')}</h3>
+        <button type="button" id="sc-clearhist" class="text-xs text-ink-soft hover:text-red-600">{u('clearHistory')}</button>
+      </div>
+      <ul id="sc-history" class="max-h-80 space-y-1 overflow-y-auto text-right"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('scientific-calculator');
+  if (root) {
+    const exprEl = root.querySelector<HTMLInputElement>('#sc-expr')!;
+    const resultEl = root.querySelector<HTMLElement>('#sc-result')!;
+    const histEl = root.querySelector<HTMLElement>('#sc-history')!;
+    const memInd = root.querySelector<HTMLElement>('#sc-mem')!;
+    const modeInd = root.querySelector<HTMLElement>('#sc-mode-ind')!;
+    const modeBtn = root.querySelector<HTMLButtonElement>('[data-act="mode"]')!;
+    const ERR = root.dataset.err!;
+    const EMPTY = root.dataset.empty!;
+
+    let deg = true;
+    let mem = 0;
+    let lastAns: number | null = null;
+    const history: { expr: string; result: string }[] = [];
+
+    // ---------- expression parser ----------
+    type Tok = { t: 'num'; v: number; c?: boolean } | { t: 'func'; v: string } | { t: string };
+
+    const tokenize = (src: string): Tok[] => {
+      const s = src.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/π/g, 'pi').replace(/√/g, 'sqrt');
+      const toks: Tok[] = [];
+      let i = 0;
+      while (i < s.length) {
+        const c = s[i];
+        if (c === ' ') { i++; continue; }
+        if (/[0-9.]/.test(c)) {
+          const m = /^(\d+\.?\d*|\.\d+)/.exec(s.slice(i));
+          if (!m) throw ERR;
+          toks.push({ t: 'num', v: parseFloat(m[0]) });
+          i += m[0].length; continue;
+        }
+        if (/[a-z]/i.test(c)) {
+          let j = i;
+          while (j < s.length && /[a-z]/.test(s[j])) j++;
+          const w = s.slice(i, j).toLowerCase();
+          i = j;
+          if (w === 'pi') toks.push({ t: 'num', v: Math.PI, c: true });
+          else if (w === 'e') toks.push({ t: 'num', v: Math.E, c: true });
+          else if (w === 'ans' && lastAns !== null) toks.push({ t: 'num', v: lastAns, c: true });
+          else toks.push({ t: 'func', v: w });
+          continue;
+        }
+        if ('+-*/^%()!'.includes(c)) { toks.push({ t: c }); i++; continue; }
+        throw ERR;
+      }
+      // implicit multiplication: 2pi, 3(4), )( , 2sin, )2, !2, !(
+      const out: Tok[] = [];
+      for (const tk of toks) {
+        const prev = out[out.length - 1];
+        const prevVal = prev && (prev.t === 'num' || prev.t === ')' || prev.t === '!');
+        const curOpen = (tk.t === 'num' && (tk as { c?: boolean }).c) || tk.t === 'func' || tk.t === '(';
+        if (prevVal && curOpen) out.push({ t: '*' });
+        out.push(tk);
+      }
+      // unary minus → 'neg'
+      const fixed: Tok[] = [];
+      for (let k = 0; k < out.length; k++) {
+        const tk = out[k];
+        const prev = fixed[fixed.length - 1];
+        const prevOp = !prev || prev.t === '(' || prev.t === 'neg' ||
+          (typeof prev.t === 'string' && '+-*/^%'.includes(prev.t));
+        if (tk.t === '-' && prevOp) fixed.push({ t: 'neg' });
+        else fixed.push(tk);
+      }
+      return fixed;
+    };
+
+    const toRpn = (toks: Tok[]): Tok[] => {
+      const PREC: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2, '%': 2, neg: 2.5, '^': 3 };
+      const RIGHT = new Set(['^', 'neg']);
+      const out: Tok[] = [];
+      const stack: Tok[] = [];
+      for (const tk of toks) {
+        if (tk.t === 'num') { out.push(tk); continue; }
+        if (tk.t === 'func') { stack.push(tk); continue; }
+        if (tk.t === '!') { out.push(tk); continue; }
+        if (tk.t === '(') { stack.push(tk); continue; }
+        if (tk.t === ')') {
+          while (stack.length && stack[stack.length - 1].t !== '(') out.push(stack.pop()!);
+          if (!stack.length) throw ERR;
+          stack.pop();
+          if (stack.length && stack[stack.length - 1].t === 'func') out.push(stack.pop()!);
+          continue;
+        }
+        const p = PREC[tk.t];
+        if (p === undefined) throw ERR;
+        while (stack.length) {
+          const top = stack[stack.length - 1];
+          if (top.t === 'func') { out.push(stack.pop()!); continue; }
+          const tp = PREC[top.t];
+          if (tp === undefined) break;
+          if (tp > p || (tp === p && !RIGHT.has(tk.t))) out.push(stack.pop()!);
+          else break;
+        }
+        stack.push(tk);
+      }
+      while (stack.length) {
+        const tk = stack.pop()!;
+        if (tk.t === '(') throw ERR;
+        out.push(tk);
+      }
+      return out;
+    };
+
+    const fact = (n: number): number => {
+      const r = Math.round(n);
+      if (Math.abs(n - r) > 1e-9 || r < 0 || r > 170) throw ERR;
+      let acc = 1;
+      for (let i = 2; i <= r; i++) acc *= i;
+      return acc;
+    };
+
+    const evalRpn = (rpn: Tok[]): number => {
+      const toRad = (x: number) => (deg ? (x * Math.PI) / 180 : x);
+      const toDeg = (x: number) => (deg ? (x * 180) / Math.PI : x);
+      const FN: Record<string, (x: number) => number> = {
+        sin: (x) => Math.sin(toRad(x)), cos: (x) => Math.cos(toRad(x)), tan: (x) => Math.tan(toRad(x)),
+        asin: (x) => toDeg(Math.asin(x)), acos: (x) => toDeg(Math.acos(x)), atan: (x) => toDeg(Math.atan(x)),
+        ln: Math.log, log: Math.log10, log2: Math.log2, sqrt: Math.sqrt, cbrt: Math.cbrt,
+        abs: Math.abs, exp: Math.exp,
+      };
+      const st: number[] = [];
+      for (const tk of rpn) {
+        if (tk.t === 'num') { st.push((tk as { v: number }).v); continue; }
+        if (tk.t === 'neg') { const a = st.pop(); if (a === undefined) throw ERR; st.push(-a); continue; }
+        if (tk.t === '!') { const a = st.pop(); if (a === undefined) throw ERR; st.push(fact(a)); continue; }
+        if (tk.t === 'func') {
+          const a = st.pop();
+          const fn = FN[(tk as { v: string }).v];
+          if (a === undefined || !fn) throw ERR;
+          st.push(fn(a));
+          continue;
+        }
+        const b = st.pop(), a = st.pop();
+        if (a === undefined || b === undefined) throw ERR;
+        let r: number;
+        switch (tk.t) {
+          case '+': r = a + b; break;
+          case '-': r = a - b; break;
+          case '*': r = a * b; break;
+          case '/': r = a / b; break;
+          case '%': r = a % b; break;
+          case '^': r = Math.pow(a, b); break;
+          default: throw ERR;
+        }
+        st.push(r);
+      }
+      if (st.length !== 1) throw ERR;
+      const v = st[0];
+      if (typeof v !== 'number' || isNaN(v)) throw ERR;
+      return v;
+    };
+
+    const fmt = (x: number): string => {
+      if (!isFinite(x)) return ERR;
+      const ax = Math.abs(x);
+      if (x !== 0 && (ax >= 1e13 || ax < 1e-10)) return x.toExponential(7).replace(/\.?0+e/, 'e');
+      return String(parseFloat(x.toPrecision(12)));
+    };
+
+    const renderHistory = () => {
+      histEl.innerHTML = history.length
+        ? history.map((h, i) =>
+            `<li><button type="button" data-h="${i}" class="w-full rounded px-2 py-1 font-mono text-xs text-ink-soft transition-colors hover:bg-mist hover:text-ink">` +
+            `<span class="block truncate">${h.expr.replace(/</g, '&lt;')}</span>` +
+            `<span class="block font-semibold text-pine">= ${h.result}</span></button></li>`
+          ).join('')
+        : `<li class="px-2 py-1 text-xs text-ink-soft">${EMPTY}</li>`;
+    };
+
+    const evaluate = () => {
+      const src = exprEl.value.trim();
+      if (!src) { resultEl.textContent = ''; return; }
+      try {
+        const v = evalRpn(toRpn(tokenize(src)));
+        const text = fmt(v);
+        resultEl.textContent = text === ERR ? ERR : `= ${text}`;
+        if (text !== ERR) {
+          lastAns = v;
+          history.unshift({ expr: src, result: text });
+          if (history.length > 30) history.pop();
+          renderHistory();
+        }
+      } catch {
+        resultEl.textContent = ERR;
+      }
+    };
+
+    const insert = (s: string) => {
+      exprEl.value += s;
+      exprEl.focus();
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-ins]').forEach((btn) => {
+      btn.addEventListener('click', () => insert(btn.dataset.ins!));
+    });
+
+    root.querySelector<HTMLButtonElement>('[data-act="back"]')!.addEventListener('click', () => {
+      exprEl.value = exprEl.value.slice(0, -1);
+      exprEl.focus();
+    });
+    root.querySelector<HTMLButtonElement>('[data-act="clear"]')!.addEventListener('click', () => {
+      exprEl.value = '';
+      resultEl.textContent = '';
+      exprEl.focus();
+    });
+    root.querySelector<HTMLButtonElement>('[data-act="eq"]')!.addEventListener('click', evaluate);
+
+    modeBtn.addEventListener('click', () => {
+      deg = !deg;
+      modeBtn.textContent = deg ? 'DEG' : 'RAD';
+      modeInd.textContent = deg ? 'DEG' : 'RAD';
+      exprEl.focus();
+    });
+
+    const memUpdate = () => memInd.classList.toggle('hidden', mem === 0);
+    root.querySelector<HTMLButtonElement>('[data-act="mc"]')!.addEventListener('click', () => { mem = 0; memUpdate(); exprEl.focus(); });
+    root.querySelector<HTMLButtonElement>('[data-act="mr"]')!.addEventListener('click', () => { insert(fmt(mem)); });
+    const curVal = (): number => {
+      if (lastAns !== null && resultEl.textContent.startsWith('=')) return lastAns;
+      try { return evalRpn(toRpn(tokenize(exprEl.value || '0'))); } catch { return 0; }
+    };
+    root.querySelector<HTMLButtonElement>('[data-act="mplus"]')!.addEventListener('click', () => { mem += curVal(); memUpdate(); exprEl.focus(); });
+    root.querySelector<HTMLButtonElement>('[data-act="mminus"]')!.addEventListener('click', () => { mem -= curVal(); memUpdate(); exprEl.focus(); });
+
+    root.querySelector('#sc-clearhist')!.addEventListener('click', () => {
+      history.length = 0;
+      renderHistory();
+    });
+
+    histEl.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-h]');
+      if (!btn) return;
+      exprEl.value = history[Number(btn.dataset.h)].expr;
+      exprEl.focus();
+    });
+
+    exprEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); evaluate(); }
+    });
+
+    renderHistory();
+  }
+</script>

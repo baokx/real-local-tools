@@ -1,0 +1,152 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.text-diff.ui.${key}`);
+const tooLarge = lang === 'zh'
+  ? '文本过大（超过 30,000 行），请分成更小的片段比较。'
+  : 'Text too large (over 30,000 lines) — please compare smaller chunks.';
+---
+
+<div id="text-diff" data-toolarge={tooLarge}>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <label for="td-a" class="rlt-label">{u('original')}</label>
+      <textarea id="td-a" rows="9" class="rlt-textarea font-mono text-xs" spellcheck="false" placeholder={u('phOriginal')}></textarea>
+    </div>
+    <div>
+      <label for="td-b" class="rlt-label">{u('modified')}</label>
+      <textarea id="td-b" rows="9" class="rlt-textarea font-mono text-xs" spellcheck="false" placeholder={u('phModified')}></textarea>
+    </div>
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+    <button type="button" id="td-run" class="rlt-btn">{u('compare')}</button>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="checkbox" id="td-case" class="rlt-check" />{u('ignoreCase')}
+    </label>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="checkbox" id="td-ws" class="rlt-check" />{u('ignoreWs')}
+    </label>
+    <span id="td-stats" class="ml-auto hidden font-mono text-xs"></span>
+  </div>
+
+  <div id="td-result-wrap" class="mt-4 hidden">
+    <h3 class="mb-2 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">{u('result')}</h3>
+    <div id="td-result" class="overflow-x-auto rounded-lg border border-line bg-white"></div>
+  </div>
+  <p id="td-identical" class="mt-4 hidden rounded-lg border border-pine/30 bg-pine/5 px-3 py-2 text-sm text-pine">{u('identical')}</p>
+</div>
+
+<script>
+  const root = document.getElementById('text-diff');
+  if (root) {
+    const aEl = root.querySelector<HTMLTextAreaElement>('#td-a')!;
+    const bEl = root.querySelector<HTMLTextAreaElement>('#td-b')!;
+    const caseEl = root.querySelector<HTMLInputElement>('#td-case')!;
+    const wsEl = root.querySelector<HTMLInputElement>('#td-ws')!;
+    const statsEl = root.querySelector<HTMLElement>('#td-stats')!;
+    const wrap = root.querySelector<HTMLElement>('#td-result-wrap')!;
+    const resultEl = root.querySelector<HTMLElement>('#td-result')!;
+    const identicalEl = root.querySelector<HTMLElement>('#td-identical')!;
+
+    interface Op { type: 'same' | 'add' | 'del'; text: string }
+
+    // Myers O(ND) line diff
+    const diffLines = (a: string[], b: string[]): Op[] => {
+      const n = a.length, m = b.length, max = n + m;
+      if (n === 0) return b.map((text) => ({ type: 'add', text }));
+      if (m === 0) return a.map((text) => ({ type: 'del', text }));
+      const v: Record<number, number> = { 1: 0 };
+      const trace: Record<number, number>[] = [];
+      let done = false;
+      for (let d = 0; d <= max && !done; d++) {
+        trace.push({ ...v });
+        for (let k = -d; k <= d; k += 2) {
+          const down = k === -d || (k !== d && (v[k - 1] ?? -1) < (v[k + 1] ?? -1));
+          let x = down ? (v[k + 1] ?? 0) : (v[k - 1] ?? 0) + 1;
+          let y = x - k;
+          while (x < n && y < m && a[x] === b[y]) { x++; y++; }
+          v[k] = x;
+          if (x >= n && y >= m) { done = true; break; }
+        }
+      }
+      const ops: Op[] = [];
+      let x = n, y = m;
+      for (let d = trace.length - 1; d >= 1; d--) {
+        const vv = trace[d];
+        const k = x - y;
+        const down = k === -d || (k !== d && (vv[k - 1] ?? -1) < (vv[k + 1] ?? -1));
+        const pk = down ? k + 1 : k - 1;
+        const px = vv[pk] ?? 0, py = px - pk;
+        while (x > px && y > py) { ops.push({ type: 'same', text: a[x - 1] }); x--; y--; }
+        if (x === px) { ops.push({ type: 'add', text: b[y - 1] }); y--; }
+        else { ops.push({ type: 'del', text: a[x - 1] }); x--; }
+      }
+      while (x > 0 && y > 0) { ops.push({ type: 'same', text: a[x - 1] }); x--; y--; }
+      return ops.reverse();
+    };
+
+    const esc = (s: string) =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const run = () => {
+      const norm = (s: string) => {
+        let t = s;
+        if (wsEl.checked) t = t.trim();
+        if (caseEl.checked) t = t.toLowerCase();
+        return t;
+      };
+      const rawA = aEl.value.replace(/\r\n?/g, '\n').split('\n');
+      const rawB = bEl.value.replace(/\r\n?/g, '\n').split('\n');
+      wrap.classList.add('hidden');
+      identicalEl.classList.add('hidden');
+      statsEl.classList.add('hidden');
+      if (!aEl.value && !bEl.value) return;
+
+      if (rawA.length + rawB.length > 30000) {
+        alert(root.dataset.toolarge!);
+        return;
+      }
+
+      const ops = diffLines(rawA.map(norm), rawB.map(norm));
+
+      let adds = 0, dels = 0, aNum = 0, bNum = 0, ai = 0, bi = 0;
+      const rows: string[] = [];
+      for (const op of ops) {
+        if (op.type === 'add') { adds++; bNum++; bi++; }
+        else if (op.type === 'del') { dels++; aNum++; ai++; }
+        else { aNum++; bNum++; ai++; bi++; }
+
+        const shown = op.type === 'add' ? rawB[bi - 1] : rawA[ai - 1];
+        const bg = op.type === 'add' ? 'bg-emerald-50' : op.type === 'del' ? 'bg-red-50' : '';
+        const fg = op.type === 'add' ? 'text-emerald-800' : op.type === 'del' ? 'text-red-700' : 'text-ink';
+        const sign = op.type === 'add' ? '+' : op.type === 'del' ? '−' : '';
+        rows.push(
+          `<div class="flex font-mono text-xs leading-5 ${bg} ${fg}">` +
+          `<span class="w-10 shrink-0 select-none pr-2 text-right text-ink-soft/50">${op.type === 'add' ? '' : aNum}</span>` +
+          `<span class="w-10 shrink-0 select-none pr-2 text-right text-ink-soft/50">${op.type === 'del' ? '' : bNum}</span>` +
+          `<span class="w-5 shrink-0 select-none text-center">${sign}</span>` +
+          `<span class="min-w-0 flex-1 whitespace-pre-wrap break-all pr-3">${esc(shown) || '&nbsp;'}</span></div>`
+        );
+      }
+
+      if (adds === 0 && dels === 0) {
+        identicalEl.classList.remove('hidden');
+        return;
+      }
+
+      resultEl.innerHTML = rows.join('');
+      wrap.classList.remove('hidden');
+      statsEl.innerHTML =
+        `<span class="text-emerald-700">+${adds}</span> · <span class="text-red-600">−${dels}</span>`;
+      statsEl.classList.remove('hidden');
+    };
+
+    root.querySelector('#td-run')!.addEventListener('click', run);
+  }
+</script>

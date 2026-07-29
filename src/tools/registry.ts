@@ -25,6 +25,7 @@ export const tools: ToolDef[] = [
   { slug: 'color-converter', category: 'developer', icon: '#hex' },
   { slug: 'number-base-converter', category: 'developer', icon: '0x1F' },
   { slug: 'regex-tester', category: 'developer', icon: '/.*/' },
+  { slug: 'jwt-decoder', category: 'developer', icon: 'jwt' },
 
   // Image tools
   { slug: 'qr-code-generator', category: 'image', icon: '▦QR' },
@@ -46,18 +47,22 @@ export const tools: ToolDef[] = [
 
   // Security tools
   { slug: 'password-generator', category: 'security', icon: '✳✳✳' },
+  { slug: 'hash-generator', category: 'security', icon: '#md5' },
 
   // Text tools
   { slug: 'word-counter', category: 'text', icon: 'Aa¶' },
   { slug: 'case-converter', category: 'text', icon: 'a→A' },
   { slug: 'text-reverser', category: 'text', icon: '↩ab' },
   { slug: 'remove-duplicate-lines', category: 'text', icon: '≡≠' },
+  { slug: 'text-diff', category: 'text', icon: '±↕' },
 
   // Calculators
   { slug: 'percentage-calculator', category: 'calculator', icon: '％' },
   { slug: 'bmi-calculator', category: 'calculator', icon: 'kg/m²' },
   { slug: 'date-difference', category: 'calculator', icon: 'd±' },
   { slug: 'random-number-generator', category: 'calculator', icon: '∴#' },
+  { slug: 'unit-converter', category: 'calculator', icon: '⇄cm' },
+  { slug: 'scientific-calculator', category: 'calculator', icon: '∑xy' },
 ];
 
 export function getTool(slug: string): ToolDef | undefined {

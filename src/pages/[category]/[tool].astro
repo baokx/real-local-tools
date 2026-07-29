@@ -37,6 +37,11 @@ import ImageToAscii from '../../components/tools/ImageToAscii.astro';
 import ImageRotator from '../../components/tools/ImageRotator.astro';
 import MetadataRemover from '../../components/tools/MetadataRemover.astro';
 import ColorExtractor from '../../components/tools/ColorExtractor.astro';
+import UnitConverter from '../../components/tools/UnitConverter.astro';
+import ScientificCalculator from '../../components/tools/ScientificCalculator.astro';
+import HashGenerator from '../../components/tools/HashGenerator.astro';
+import JwtDecoder from '../../components/tools/JwtDecoder.astro';
+import TextDiff from '../../components/tools/TextDiff.astro';
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -83,6 +88,11 @@ const implementations = {
   'image-rotator': ImageRotator,
   'metadata-remover': MetadataRemover,
   'color-extractor': ColorExtractor,
+  'unit-converter': UnitConverter,
+  'scientific-calculator': ScientificCalculator,
+  'hash-generator': HashGenerator,
+  'jwt-decoder': JwtDecoder,
+  'text-diff': TextDiff,
 } as const;
 
 const ToolImpl = implementations[tool.slug as keyof typeof implementations];

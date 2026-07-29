@@ -1,0 +1,153 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.hash-generator.ui.${key}`);
+
+const ALGOS = ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
+---
+
+<div id="hash-generator" data-copy={u('copy')} data-copied={u('copied')}>
+  <label for="hg-input" class="rlt-label">{u('input')}</label>
+  <textarea id="hg-input" rows="4" class="rlt-textarea font-mono" placeholder={u('placeholder')}></textarea>
+
+  <label class="mt-3 flex cursor-pointer items-center gap-2 text-sm text-ink">
+    <input type="checkbox" id="hg-upper" class="rlt-check" />{u('uppercase')}
+  </label>
+
+  <div class="mt-4 space-y-2.5">
+    {ALGOS.map((a) => (
+      <div class="flex items-start gap-3 rounded-lg border border-line bg-white px-3 py-2.5">
+        <span class="w-20 shrink-0 pt-1 font-mono text-xs font-semibold text-ink-soft">{a}</span>
+        <code class="min-w-0 flex-1 break-all pt-0.5 font-mono text-sm text-pine" data-hash={a}>—</code>
+        <button
+          type="button"
+          data-copy-btn={a}
+          class="rlt-copy shrink-0 rounded border border-line px-2 py-1 text-xs text-ink-soft transition-colors hover:border-pine hover:text-pine"
+        >
+          {u('copy')}
+        </button>
+      </div>
+    ))}
+  </div>
+
+  <p class="mt-4 text-xs leading-relaxed text-ink-soft">{u('note')}</p>
+</div>
+
+<script>
+  const root = document.getElementById('hash-generator');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#hg-input')!;
+    const upper = root.querySelector<HTMLInputElement>('#hg-upper')!;
+    const cells = new Map<string, HTMLElement>();
+    root.querySelectorAll<HTMLElement>('[data-hash]').forEach((el) => cells.set(el.dataset.hash!, el));
+
+    // ---- MD5 (RFC 1321), pure JS, UTF-8 input ----
+    const S = [
+      7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+      5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
+      4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+      6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
+    ];
+    const K = Array.from({ length: 64 }, (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296) | 0);
+
+    const md5 = (bytes: Uint8Array): string => {
+      const bitLenHi = Math.floor(bytes.length / 0x20000000);
+      const bitLenLo = (bytes.length * 8) >>> 0;
+      let len = bytes.length + 1;
+      while (len % 64 !== 56) len++;
+      const msg = new Uint8Array(len + 8);
+      msg.set(bytes);
+      msg[bytes.length] = 0x80;
+      const dv = new DataView(msg.buffer);
+      dv.setUint32(len, bitLenLo, true);
+      dv.setUint32(len + 4, bitLenHi, true);
+
+      let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+      for (let off = 0; off < msg.length; off += 64) {
+        const M: number[] = [];
+        for (let i = 0; i < 16; i++) M[i] = dv.getUint32(off + i * 4, true);
+        let A = a0, B = b0, C = c0, D = d0;
+        for (let i = 0; i < 64; i++) {
+          let F: number, g: number;
+          if (i < 16) { F = (B & C) | (~B & D); g = i; }
+          else if (i < 32) { F = (D & B) | (~D & C); g = (5 * i + 1) % 16; }
+          else if (i < 48) { F = B ^ C ^ D; g = (3 * i + 5) % 16; }
+          else { F = C ^ (B | ~D); g = (7 * i) % 16; }
+          F = (F + A + K[i] + M[g]) | 0;
+          A = D; D = C; C = B;
+          B = (B + ((F << S[i]) | (F >>> (32 - S[i])))) | 0;
+        }
+        a0 = (a0 + A) | 0; b0 = (b0 + B) | 0; c0 = (c0 + C) | 0; d0 = (d0 + D) | 0;
+      }
+      const hex = (w: number) => {
+        const uw = w >>> 0;
+        let s = '';
+        for (let i = 0; i < 4; i++) s += ((uw >> (i * 8)) & 0xff).toString(16).padStart(2, '0');
+        return s;
+      };
+      return hex(a0) + hex(b0) + hex(c0) + hex(d0);
+    };
+
+    const toHex = (buf: ArrayBuffer): string =>
+      Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
+
+    let hashes: Record<string, string> = {};
+    let timer = 0;
+
+    const render = () => {
+      for (const [algo, el] of cells) {
+        const h = hashes[algo];
+        el.textContent = h ? (upper.checked ? h.toUpperCase() : h) : '—';
+      }
+    };
+
+    const compute = async () => {
+      const text = input.value;
+      if (!text) { hashes = {}; render(); return; }
+      const bytes = new TextEncoder().encode(text);
+      const out: Record<string, string> = { MD5: md5(bytes) };
+      if (crypto.subtle) {
+        const digests = await Promise.all(
+          ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'].map((a) => crypto.subtle.digest(a, bytes))
+        );
+        ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'].forEach((a, i) => { out[a] = toHex(digests[i]); });
+      }
+      hashes = out;
+      render();
+    };
+
+    const debounced = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(compute, 150);
+    };
+
+    input.addEventListener('input', debounced);
+    upper.addEventListener('change', render);
+
+    root.querySelectorAll<HTMLButtonElement>('[data-copy-btn]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const h = hashes[btn.dataset.copyBtn!];
+        if (!h) return;
+        const val = upper.checked ? h.toUpperCase() : h;
+        try { await navigator.clipboard.writeText(val); }
+        catch {
+          const ta = document.createElement('textarea');
+          ta.value = val; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        const orig = btn.textContent;
+        btn.textContent = root.dataset.copied!;
+        btn.classList.add('border-pine', 'text-pine');
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('border-pine', 'text-pine');
+        }, 1200);
+      });
+    });
+  }
+</script>

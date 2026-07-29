@@ -1,0 +1,194 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.jwt-decoder.ui.${key}`);
+const claims = JSON.parse(JSON.stringify(t(lang, 'tools.jwt-decoder.claims') as unknown as object)) as Record<string, string>;
+const i18n = {
+  invalid: u('invalid'),
+  decodeErr: u('decodeErr'),
+  expired: u('expired'),
+  expiresIn: u('expiresIn'),
+  noExp: u('noExp'),
+};
+---
+
+<div
+  id="jwt-decoder"
+  data-i18n={JSON.stringify(i18n)}
+  data-claims={JSON.stringify(claims)}
+>
+  <div class="flex items-end justify-between gap-3">
+    <label for="jd-input" class="rlt-label">{u('token')}</label>
+    <button type="button" id="jd-sample" class="text-xs text-pine underline-offset-2 hover:underline">{u('sample')}</button>
+  </div>
+  <textarea id="jd-input" rows="4" class="rlt-textarea font-mono text-xs" spellcheck="false" placeholder={u('placeholder')}></textarea>
+
+  <p id="jd-error" class="mt-3 hidden rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"></p>
+
+  <div id="jd-output" class="mt-5 hidden space-y-5">
+    <div>
+      <h3 class="mb-2 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">{u('header')}</h3>
+      <pre id="jd-header" class="overflow-x-auto rounded-lg border border-line bg-mist/50 p-3 font-mono text-xs leading-relaxed text-ink"></pre>
+    </div>
+
+    <div>
+      <h3 class="mb-2 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">{u('payload')}</h3>
+      <pre id="jd-payload" class="overflow-x-auto rounded-lg border border-line bg-mist/50 p-3 font-mono text-xs leading-relaxed text-ink"></pre>
+    </div>
+
+    <div id="jd-claims-wrap">
+      <h3 class="mb-2 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">{u('claims')}</h3>
+      <div class="overflow-x-auto rounded-lg border border-line">
+        <table class="w-full text-sm">
+          <tbody id="jd-claims" class="divide-y divide-line"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="mb-2 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">{u('signature')}</h3>
+      <code id="jd-sig" class="block break-all rounded-lg border border-line bg-mist/50 p-3 font-mono text-xs text-ink-soft"></code>
+      <p class="mt-1.5 text-xs text-ink-soft">{u('sigNote')}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('jwt-decoder');
+  if (root) {
+    const i18n = JSON.parse(root.dataset.i18n!);
+    const CLAIM_NAMES: Record<string, string> = JSON.parse(root.dataset.claims!);
+    const TIME_CLAIMS = new Set(['exp', 'nbf', 'iat']);
+
+    const input = root.querySelector<HTMLTextAreaElement>('#jd-input')!;
+    const errorEl = root.querySelector<HTMLElement>('#jd-error')!;
+    const output = root.querySelector<HTMLElement>('#jd-output')!;
+    const headerPre = root.querySelector<HTMLElement>('#jd-header')!;
+    const payloadPre = root.querySelector<HTMLElement>('#jd-payload')!;
+    const claimsTbody = root.querySelector<HTMLElement>('#jd-claims')!;
+    const claimsWrap = root.querySelector<HTMLElement>('#jd-claims-wrap')!;
+    const sigEl = root.querySelector<HTMLElement>('#jd-sig')!;
+
+    const b64urlDecode = (seg: string): string => {
+      let s = seg.replace(/-/g, '+').replace(/_/g, '/');
+      while (s.length % 4) s += '=';
+      const bin = atob(s);
+      const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    };
+
+    const highlight = (obj: unknown): string => {
+      const json = JSON.stringify(obj, null, 2)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(
+        /("(\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\btrue\b|\bfalse\b|\bnull\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+        (m) => {
+          let cls = 'text-orange-700';
+          if (m.startsWith('"')) cls = m.endsWith(':') ? 'font-semibold text-pine' : 'text-amber-700';
+          else if (m === 'true' || m === 'false') cls = 'text-purple-700';
+          else if (m === 'null') cls = 'text-ink-soft';
+          return `<span class="${cls}">${m}</span>`;
+        }
+      );
+    };
+
+    const rel = (secs: number): string => {
+      const s = Math.abs(secs);
+      if (s < 90) return `${Math.floor(s)}s`;
+      if (s < 5400) return `${Math.floor(s / 60)}min`;
+      if (s < 129600) return `${Math.floor(s / 3600)}h`;
+      return `${Math.floor(s / 86400)}d`;
+    };
+
+    const esc = (v: unknown): string =>
+      String(typeof v === 'object' ? JSON.stringify(v) : v)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    let timer = 0;
+
+    const decode = () => {
+      const token = input.value.trim();
+      errorEl.classList.add('hidden');
+      output.classList.add('hidden');
+      if (!token) return;
+
+      const parts = token.split('.');
+      if (parts.length !== 3 || parts.some((p) => !p)) {
+        errorEl.textContent = i18n.invalid;
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      let header: unknown, payload: Record<string, unknown>;
+      try {
+        header = JSON.parse(b64urlDecode(parts[0]));
+        payload = JSON.parse(b64urlDecode(parts[1]));
+      } catch {
+        errorEl.textContent = i18n.decodeErr;
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      headerPre.innerHTML = highlight(header);
+      payloadPre.innerHTML = highlight(payload);
+
+      const rows: string[] = [];
+      const now = Math.floor(Date.now() / 1000);
+      for (const key of Object.keys(CLAIM_NAMES)) {
+        if (!(key in payload)) continue;
+        const v = payload[key];
+        let valueHtml = esc(v);
+        let extra = '';
+        if (TIME_CLAIMS.has(key) && typeof v === 'number') {
+          const d = new Date(v * 1000);
+          valueHtml = `${d.toLocaleString()} <span class="text-ink-soft">(${v})</span>`;
+          if (key === 'exp') {
+            const diff = v - now;
+            extra = diff >= 0
+              ? `<span class="ml-2 rounded bg-pine/10 px-1.5 py-0.5 text-xs text-pine">${i18n.expiresIn.replace('{t}', rel(diff))}</span>`
+              : `<span class="ml-2 rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-700">${i18n.expired.replace('{t}', rel(diff))}</span>`;
+          }
+        }
+        rows.push(
+          `<tr><td class="px-3 py-2 font-mono text-xs font-semibold text-pine">${key}</td>` +
+          `<td class="px-3 py-2 text-ink-soft">${CLAIM_NAMES[key]}</td>` +
+          `<td class="break-all px-3 py-2 font-mono text-xs text-ink">${valueHtml}${extra}</td></tr>`
+        );
+      }
+      if (typeof payload.exp !== 'number') {
+        rows.push(
+          `<tr><td class="px-3 py-2 font-mono text-xs font-semibold text-pine">exp</td>` +
+          `<td class="px-3 py-2 text-ink-soft">${CLAIM_NAMES.exp}</td>` +
+          `<td class="px-3 py-2 text-xs text-ink-soft">${i18n.noExp}</td></tr>`
+        );
+      }
+      claimsTbody.innerHTML = rows.join('');
+      claimsWrap.classList.toggle('hidden', rows.length === 0);
+
+      const sigBytes = parts[2].length * 6 / 8 | 0;
+      sigEl.textContent = `${parts[2]}  ·  ~${sigBytes} bytes`;
+      output.classList.remove('hidden');
+    };
+
+    input.addEventListener('input', () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(decode, 150);
+    });
+
+    root.querySelector('#jd-sample')!.addEventListener('click', () => {
+      const enc = (o: unknown) =>
+        btoa(JSON.stringify(o)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      const now = Math.floor(Date.now() / 1000);
+      input.value =
+        `${enc({ alg: 'HS256', typ: 'JWT' })}.` +
+        `${enc({ iss: 'https://issuer.example.com', sub: 'user_42', name: 'Ada Lovelace', iat: now - 3600, exp: now + 7 * 86400, jti: 'demo-token-01' })}.` +
+        'SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      decode();
+    });
+  }
+</script>

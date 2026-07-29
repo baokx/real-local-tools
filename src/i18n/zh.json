@@ -582,6 +582,95 @@
         "extract": "提取调色板",
         "hint": "点击任意颜色复制其 HEX 值"
       }
+    },
+    "unit-converter": {
+      "name": "单位换算器",
+      "description": "长度、重量、温度、面积、体积、速度与数据存储单位即时换算,全部本地完成。",
+      "seoTitle": "单位换算器 — 长度、重量、温度、体积在线转换",
+      "seo": "免费在线单位换算工具,覆盖长度、重量、温度、面积、体积、速度和数据存储,支持公制、英制与美制单位。选择类别、输入数值即可即时查看结果。全程浏览器本地运行,无需注册、无需上传。",
+      "ui": {
+        "from": "从",
+        "to": "转换为",
+        "swap": "交换单位",
+        "result": "结果",
+        "placeholder": "输入数值"
+      }
+    },
+    "scientific-calculator": {
+      "name": "科学计算器",
+      "description": "免费在线科学计算器,支持三角函数、对数、幂运算、阶乘、记忆功能与计算历史。",
+      "seoTitle": "科学计算器在线 — 三角函数、对数、幂运算",
+      "seo": "功能完整的在线科学计算器:三角函数(角度/弧度切换)、自然对数与常用对数、幂与开方、阶乘、π 与 e 常量、括号运算、记忆键与可点击的计算历史,支持键盘输入。全程本地运行,无需注册,数据不外传。",
+      "ui": {
+        "history": "历史记录",
+        "clearHistory": "清空",
+        "error": "错误",
+        "emptyHistory": "暂无计算记录"
+      }
+    },
+    "hash-generator": {
+      "name": "哈希生成器 — MD5/SHA",
+      "description": "即时计算任意文本的 MD5、SHA-1、SHA-256、SHA-384、SHA-512 哈希值,100% 浏览器本地完成。",
+      "seoTitle": "MD5/SHA 哈希生成器 — 支持 SHA-256/SHA-512",
+      "seo": "输入或粘贴文本,即时获得 MD5、SHA-1、SHA-256、SHA-384 与 SHA-512 的十六进制摘要。计算完全在本地进行(Web Crypto API 与纯 JavaScript MD5 实现),输入内容绝不离开设备,每个结果均可一键复制。",
+      "ui": {
+        "input": "待哈希文本",
+        "placeholder": "输入或粘贴文本…",
+        "uppercase": "大写十六进制",
+        "copy": "复制",
+        "copied": "已复制",
+        "note": "注意:MD5 与 SHA-1 已被证明不安全,请勿用于安全场景,建议使用 SHA-256 或更强算法。"
+      }
+    },
+    "jwt-decoder": {
+      "name": "JWT 解码器",
+      "description": "在本地解码 JSON Web Token:查看头部、载荷声明与过期时间,令牌绝不外传。",
+      "seoTitle": "JWT 解码器 — 本地解析 Header/Payload 与过期时间",
+      "seo": "粘贴 JSON Web Token 即可即时解码 Header 与 Payload,注册声明(iss、sub、aud、exp、nbf、iat、jti)附中文说明,时间戳自动转为可读日期并实时显示过期状态。解码完全在浏览器本地进行,令牌不会上传。注意:本工具仅解码,不验证签名。",
+      "ui": {
+        "token": "JWT 令牌",
+        "placeholder": "粘贴 JWT(eyJhbGciOi…)",
+        "sample": "填入示例令牌",
+        "header": "头部(Header)",
+        "payload": "载荷(Payload)",
+        "signature": "签名(Signature)",
+        "sigNote": "仅展示签名内容,不验证其有效性——验证需要密钥或公钥。",
+        "claims": "注册声明",
+        "invalid": "无效的 JWT——应为三段以点分隔的 Base64url 字符串。",
+        "expired": "已于 {t} 前过期",
+        "expiresIn": "剩余 {t}",
+        "noExp": "未设置过期时间",
+        "valid": "结构有效",
+        "decodeErr": "该段无法解码为 JSON。"
+      },
+      "claims": {
+        "iss": "签发者",
+        "sub": "主题",
+        "aud": "接收方",
+        "exp": "过期时间",
+        "nbf": "生效时间",
+        "iat": "签发时间",
+        "jti": "令牌 ID"
+      }
+    },
+    "text-diff": {
+      "name": "文本差异对比",
+      "description": "逐行比较两段文本,高亮显示新增与删除——免费、私密、纯本地的 Diff 工具。",
+      "seoTitle": "文本差异对比工具 — 在线比较两段文本",
+      "seo": "粘贴两个版本的文本,逐行高亮差异:绿色为新增、红色为删除,支持忽略大小写与忽略行首尾空白选项。对比基于 Myers 算法在浏览器本地运行,文本绝不上传。",
+      "ui": {
+        "original": "原始文本",
+        "modified": "修改后文本",
+        "compare": "比较",
+        "result": "差异结果",
+        "additions": "处新增",
+        "deletions": "处删除",
+        "identical": "两段文本完全一致。",
+        "ignoreCase": "忽略大小写",
+        "ignoreWs": "忽略行首尾空白",
+        "phOriginal": "粘贴原始文本…",
+        "phModified": "粘贴修改后文本…"
+      }
     }
   }
 }

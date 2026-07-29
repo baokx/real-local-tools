@@ -582,6 +582,95 @@
         "extract": "Extract palette",
         "hint": "Click any color to copy its HEX code"
       }
+    },
+    "unit-converter": {
+      "name": "Unit Converter",
+      "description": "Convert length, weight, temperature, area, volume, speed and data-storage units instantly — all locally.",
+      "seoTitle": "Unit Converter — length, weight, temperature, volume & more",
+      "seo": "Free online unit converter covering length, weight, temperature, area, volume, speed and digital storage. Pick a category, type a value and read the result instantly — metric, imperial and US customary units included. Everything runs locally in your browser: no sign-up, no uploads.",
+      "ui": {
+        "from": "From",
+        "to": "To",
+        "swap": "Swap units",
+        "result": "Result",
+        "placeholder": "Enter a value"
+      }
+    },
+    "scientific-calculator": {
+      "name": "Scientific Calculator",
+      "description": "Free online scientific calculator with trigonometry, logarithms, powers, factorials, memory keys and history.",
+      "seoTitle": "Scientific Calculator — trig, logs, powers, memory",
+      "seo": "A full scientific calculator that runs entirely in your browser: trigonometric functions in degrees or radians, natural and common logarithms, powers, roots, factorials, the constants π and e, parentheses, memory keys and a tappable history. Keyboard input supported. No sign-up — nothing is sent anywhere.",
+      "ui": {
+        "history": "History",
+        "clearHistory": "Clear",
+        "error": "Error",
+        "emptyHistory": "No calculations yet"
+      }
+    },
+    "hash-generator": {
+      "name": "Hash Generator — MD5, SHA-1, SHA-256",
+      "description": "Compute MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes of any text instantly — 100% in your browser.",
+      "seoTitle": "MD5 & SHA Hash Generator — SHA-1, SHA-256, SHA-512",
+      "seo": "Type or paste text and instantly get its MD5, SHA-1, SHA-256, SHA-384 and SHA-512 digests in hex. Hashes are computed locally with the Web Crypto API plus a pure-JavaScript MD5, so your input never leaves the device. One-click copy for every digest.",
+      "ui": {
+        "input": "Text to hash",
+        "placeholder": "Type or paste text…",
+        "uppercase": "Uppercase hex",
+        "copy": "Copy",
+        "copied": "Copied!",
+        "note": "MD5 and SHA-1 are considered broken for security purposes — prefer SHA-256 or stronger."
+      }
+    },
+    "jwt-decoder": {
+      "name": "JWT Decoder",
+      "description": "Decode JSON Web Tokens locally: inspect the header, payload claims and expiry — the token never leaves your browser.",
+      "seoTitle": "JWT Decoder — inspect header, payload & expiry locally",
+      "seo": "Paste a JSON Web Token to instantly decode its header and payload. Registered claims (iss, sub, aud, exp, nbf, iat, jti) are explained, and timestamps are converted to readable dates with live expiry status. Decoding happens entirely in your browser — the token is never transmitted. Note: this tool decodes but does not verify signatures.",
+      "ui": {
+        "token": "JWT token",
+        "placeholder": "Paste a JWT (eyJhbGciOi…)",
+        "sample": "Load a sample token",
+        "header": "Header",
+        "payload": "Payload",
+        "signature": "Signature",
+        "sigNote": "Signature is displayed but not verified — verification requires the secret or a public key.",
+        "claims": "Registered claims",
+        "invalid": "Invalid JWT — expected three Base64url segments separated by dots.",
+        "expired": "expired {t} ago",
+        "expiresIn": "expires in {t}",
+        "noExp": "No expiration set",
+        "valid": "Valid structure",
+        "decodeErr": "Segment could not be decoded as JSON."
+      },
+      "claims": {
+        "iss": "Issuer",
+        "sub": "Subject",
+        "aud": "Audience",
+        "exp": "Expiration time",
+        "nbf": "Not valid before",
+        "iat": "Issued at",
+        "jti": "JWT ID"
+      }
+    },
+    "text-diff": {
+      "name": "Text Diff — Compare Texts",
+      "description": "Compare two texts line by line with additions and deletions highlighted — a free, private, in-browser diff checker.",
+      "seoTitle": "Text Diff Checker — compare two texts online",
+      "seo": "Paste two versions of a text and see the differences highlighted line by line: additions in green, deletions in red, with optional case-insensitive and whitespace-trimming comparison. The diff runs locally using the Myers algorithm — nothing is uploaded.",
+      "ui": {
+        "original": "Original text",
+        "modified": "Changed text",
+        "compare": "Compare",
+        "result": "Differences",
+        "additions": "additions",
+        "deletions": "deletions",
+        "identical": "The two texts are identical.",
+        "ignoreCase": "Ignore case",
+        "ignoreWs": "Trim line whitespace",
+        "phOriginal": "Paste the original text…",
+        "phModified": "Paste the changed text…"
+      }
     }
   }
 }
