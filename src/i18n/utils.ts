@@ -34,15 +34,19 @@ export function getLocaleFromUrl(url: URL): Locale {
     : defaultLocale;
 }
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 /** Prefix a path with the locale (default locale stays unprefixed). */
 export function localePath(lang: Locale, path: string): string {
   const clean = path.startsWith('/') ? path : `/${path}`;
-  if (lang === defaultLocale) return clean;
-  return `/${lang}${clean === '/' ? '' : clean}` || `/${lang}/`;
+  const localized =
+    lang === defaultLocale ? clean : `/${lang}${clean === '/' ? '' : clean}` || `/${lang}/`;
+  return `${base}${localized}`;
 }
 
 export function stripLocalePrefix(url: URL): string {
-  const stripped = url.pathname.replace(/^\/zh(?=\/|$)/, '');
+  const withoutBase = base ? url.pathname.replace(new RegExp(`^${base}`), '') : url.pathname;
+  const stripped = withoutBase.replace(/^\/zh(?=\/|$)/, '');
   return stripped === '' ? '/' : stripped;
 }
 

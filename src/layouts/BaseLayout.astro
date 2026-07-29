@@ -14,6 +14,7 @@ const { lang, title, description } = Astro.props;
 const pageTitle = title ? `${title} | ${t(lang, 'site.name')}` : t(lang, 'site.title');
 const pageDescription = description ?? t(lang, 'site.description');
 
+const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const altLang = otherLocale(lang);
 const altUrl = new URL(alternateUrl(Astro.url, altLang), Astro.site);
@@ -24,7 +25,7 @@ const altUrl = new URL(alternateUrl(Astro.url, altLang), Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
 
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
@@ -38,7 +39,7 @@ const altUrl = new URL(alternateUrl(Astro.url, altLang), Astro.site);
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL('/og.svg', Astro.site)} />
+    <meta property="og:image" content={new URL(`${base}og.svg`.replace(/^\//, ''), Astro.site)} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
