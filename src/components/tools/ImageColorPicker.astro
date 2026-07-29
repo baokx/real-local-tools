@@ -1,0 +1,155 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-color-picker.ui.${key}`);
+---
+
+<div id="image-color-picker" data-copied={t(lang, 'common.copied')}>
+  <ImageDropzone id="cp-drop" text={u('dropzone')} />
+
+  <div id="cp-panel" class="mt-5 hidden">
+    <p class="mb-2 font-mono text-xs text-ink-soft">{u('hint')}</p>
+    <div class="relative inline-block" id="cp-stage">
+      <canvas id="cp-canvas" class="block max-w-full cursor-crosshair rounded-lg border border-line"></canvas>
+      <canvas
+        id="cp-loupe"
+        width="110"
+        height="110"
+        class="pointer-events-none absolute hidden rounded-full border-2 border-white shadow-lg"
+        style="width: 110px; height: 110px;"
+      ></canvas>
+    </div>
+
+    <div class="mt-3 flex items-center gap-3">
+      <div id="cp-current" class="h-10 w-10 rounded-lg border border-line" style="background: transparent"></div>
+      <div class="font-mono text-sm text-ink">
+        <span id="cp-hex">—</span> · <span id="cp-rgb"></span> · <span id="cp-hsl"></span>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <div class="mb-2 flex items-center justify-between">
+        <span class="rlt-label mb-0">{u('picked')}</span>
+        <button id="cp-clear" class="rlt-btn rlt-btn-sm">{u('clear')}</button>
+      </div>
+      <div id="cp-history" class="flex flex-wrap gap-2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-color-picker');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#cp-panel')!;
+    const stage = root.querySelector<HTMLDivElement>('#cp-stage')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('#cp-canvas')!;
+    const loupe = root.querySelector<HTMLCanvasElement>('#cp-loupe')!;
+    const historyEl = root.querySelector<HTMLDivElement>('#cp-history')!;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+    const loupeCtx = loupe.getContext('2d')!;
+
+    let img: HTMLImageElement | null = null;
+
+    const toHex = (r: number, g: number, b: number) =>
+      `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`.toUpperCase();
+
+    const toHsl = (r: number, g: number, b: number) => {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const l = (max + min) / 2;
+      if (max === min) return `hsl(0, 0%, ${Math.round(l * 100)}%)`;
+      const d = max - min;
+      const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      let h = 0;
+      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+      else if (max === g) h = ((b - r) / d + 2) / 6;
+      else h = ((r - g) / d + 4) / 6;
+      return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+    };
+
+    const showCurrent = (r: number, g: number, b: number) => {
+      root.querySelector<HTMLDivElement>('#cp-current')!.style.background = toHex(r, g, b);
+      root.querySelector('#cp-hex')!.textContent = toHex(r, g, b);
+      root.querySelector('#cp-rgb')!.textContent = `rgb(${r}, ${g}, ${b})`;
+      root.querySelector('#cp-hsl')!.textContent = toHsl(r, g, b);
+    };
+
+    const sampleAt = (clientX: number, clientY: number): { x: number; y: number } | null => {
+      if (!img) return null;
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.floor(((clientX - rect.left) / rect.width) * canvas.width);
+      const y = Math.floor(((clientY - rect.top) / rect.height) * canvas.height);
+      if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return null;
+      return { x, y };
+    };
+
+    canvas.addEventListener('mousemove', (e) => {
+      const pos = sampleAt(e.clientX, e.clientY);
+      if (!pos || !img) {
+        loupe.classList.add('hidden');
+        return;
+      }
+      const [r, g, b] = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+      showCurrent(r, g, b);
+
+      // Loupe: 11×11 source pixels magnified ×10 with a crosshair square.
+      loupeCtx.imageSmoothingEnabled = false;
+      loupeCtx.clearRect(0, 0, 110, 110);
+      loupeCtx.drawImage(canvas, pos.x - 5, pos.y - 5, 11, 11, 0, 0, 110, 110);
+      loupeCtx.strokeStyle = 'rgba(255,255,255,0.9)';
+      loupeCtx.strokeRect(50, 50, 10, 10);
+      const rect = stage.getBoundingClientRect();
+      loupe.style.left = `${e.clientX - rect.left + 14}px`;
+      loupe.style.top = `${e.clientY - rect.top - 60}px`;
+      loupe.classList.remove('hidden');
+    });
+
+    canvas.addEventListener('mouseleave', () => loupe.classList.add('hidden'));
+
+    canvas.addEventListener('click', (e) => {
+      const pos = sampleAt(e.clientX, e.clientY);
+      if (!pos) return;
+      const [r, g, b] = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+      const hex = toHex(r, g, b);
+      const swatch = document.createElement('button');
+      swatch.className =
+        'h-10 w-10 rounded-lg border border-line transition-transform hover:scale-110';
+      swatch.style.background = hex;
+      swatch.title = hex;
+      swatch.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(hex);
+      });
+      historyEl.prepend(swatch);
+    });
+
+    root.querySelector('#cp-clear')!.addEventListener('click', () => (historyEl.innerHTML = ''));
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        const maxW = 900;
+        const scale = Math.min(1, maxW / img.naturalWidth);
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        loaded.revoke();
+        panel.classList.remove('hidden');
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#cp-drop')!,
+      root.querySelector<HTMLInputElement>('#cp-drop-file')!,
+      handle,
+    );
+  }
+</script>

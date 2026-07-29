@@ -1,0 +1,154 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-resizer.ui.${key}`);
+---
+
+<div
+  id="image-resizer"
+  data-orig-tpl={u('originalSize')}
+  data-out-tpl={u('outputSize')}
+>
+  <ImageDropzone id="rs-drop" text={u('dropzone')} />
+
+  <div id="rs-panel" class="mt-5 hidden">
+    <div class="flex flex-wrap items-end gap-3">
+      <div>
+        <label for="rs-width" class="rlt-label">{u('width')}</label>
+        <input id="rs-width" type="number" min="1" class="rlt-input w-28 font-mono" />
+      </div>
+      <div>
+        <label for="rs-height" class="rlt-label">{u('height')}</label>
+        <input id="rs-height" type="number" min="1" class="rlt-input w-28 font-mono" />
+      </div>
+      <label class="flex cursor-pointer items-center gap-2 pb-2 text-sm text-ink">
+        <input type="checkbox" id="rs-lock" checked class="rlt-check" />{u('lockRatio')}
+      </label>
+      <div>
+        <label for="rs-format" class="rlt-label">{u('format')}</label>
+        <select id="rs-format" class="rlt-input">
+          <option value="auto" selected>Auto</option>
+          <option value="image/png">PNG</option>
+          <option value="image/jpeg">JPEG</option>
+          <option value="image/webp">WebP</option>
+        </select>
+      </div>
+      <div>
+        <label for="rs-quality" class="rlt-label">{u('quality')}: <output id="rs-quality-view" class="text-ink">90%</output></label>
+        <input id="rs-quality" type="range" min="10" max="100" value="90" class="w-32 accent-pine" />
+      </div>
+      <button id="rs-download" class="rlt-btn rlt-btn-primary">{u('download')}</button>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start">
+      <img id="rs-preview" alt="" class="max-h-64 w-auto rounded-lg border border-line bg-white object-contain" />
+      <div class="text-sm">
+        <p class="font-mono text-ink-soft" id="rs-orig"></p>
+        <p class="mt-1 font-mono text-pine" id="rs-out"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob,
+    humanFileSize, extForMime, baseName, flattenForJpeg,
+  } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-resizer');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#rs-panel')!;
+    const preview = root.querySelector<HTMLImageElement>('#rs-preview')!;
+    const widthEl = root.querySelector<HTMLInputElement>('#rs-width')!;
+    const heightEl = root.querySelector<HTMLInputElement>('#rs-height')!;
+    const lockEl = root.querySelector<HTMLInputElement>('#rs-lock')!;
+    const formatEl = root.querySelector<HTMLSelectElement>('#rs-format')!;
+    const qualityEl = root.querySelector<HTMLInputElement>('#rs-quality')!;
+    const qualityView = root.querySelector<HTMLOutputElement>('#rs-quality-view')!;
+
+    let img: HTMLImageElement | null = null;
+    let sourceUrl = '';
+    let sourceFile: File | null = null;
+    let outputBlob: Blob | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const rerender = async () => {
+      if (!img || !sourceFile) return;
+      const w = Math.max(1, Math.round(Number(widthEl.value)));
+      const h = Math.max(1, Math.round(Number(heightEl.value)));
+      if (!w || !h) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d')!.drawImage(img, 0, 0, w, h);
+
+      const mime = formatEl.value === 'auto' ? (sourceFile.type || 'image/png') : formatEl.value;
+      const target = mime === 'image/jpeg' ? flattenForJpeg(canvas) : canvas;
+      outputBlob = await canvasToBlob(target, mime, mime === 'image/png' ? undefined : Number(qualityEl.value) / 100);
+
+      root.querySelector('#rs-out')!.textContent = root.dataset.outTpl!
+        .replace('{w}', String(w))
+        .replace('{h}', String(h))
+        .replace('{size}', humanFileSize(outputBlob.size));
+    };
+
+    const schedule = () => {
+      qualityView.textContent = `${qualityEl.value}%`;
+      clearTimeout(timer);
+      timer = setTimeout(rerender, 150);
+    };
+
+    widthEl.addEventListener('input', () => {
+      if (lockEl.checked && img && widthEl.value) {
+        heightEl.value = String(Math.round(Number(widthEl.value) / (img.naturalWidth / img.naturalHeight)));
+      }
+      schedule();
+    });
+    heightEl.addEventListener('input', () => {
+      if (lockEl.checked && img && heightEl.value) {
+        widthEl.value = String(Math.round(Number(heightEl.value) * (img.naturalWidth / img.naturalHeight)));
+      }
+      schedule();
+    });
+    lockEl.addEventListener('change', schedule);
+    formatEl.addEventListener('change', schedule);
+    qualityEl.addEventListener('input', schedule);
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+        sourceUrl = loaded.url;
+        img = loaded.img;
+        sourceFile = file;
+        widthEl.value = String(img.naturalWidth);
+        heightEl.value = String(img.naturalHeight);
+        preview.src = loaded.url;
+        root.querySelector('#rs-orig')!.textContent = root.dataset.origTpl!
+          .replace('{w}', String(img.naturalWidth))
+          .replace('{h}', String(img.naturalHeight));
+        panel.classList.remove('hidden');
+        await rerender();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#rs-drop')!,
+      root.querySelector<HTMLInputElement>('#rs-drop-file')!,
+      handle,
+    );
+
+    root.querySelector('#rs-download')!.addEventListener('click', () => {
+      if (!outputBlob || !sourceFile) return;
+      downloadBlob(outputBlob, `${baseName(sourceFile.name)}-${widthEl.value}x${heightEl.value}.${extForMime(outputBlob.type)}`);
+    });
+  }
+</script>

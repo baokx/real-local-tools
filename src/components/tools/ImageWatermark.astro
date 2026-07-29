@@ -1,0 +1,169 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-watermark.ui.${key}`);
+const positions = ['nw', 'n', 'ne', 'w', 'c', 'e', 'sw', 's', 'se'] as const;
+---
+
+<div id="image-watermark">
+  <ImageDropzone id="wm-drop" text={u('dropzone')} />
+
+  <div id="wm-panel" class="mt-5 hidden">
+    <div class="grid gap-5 lg:grid-cols-[1fr_280px]">
+      <canvas id="wm-canvas" class="block max-w-full rounded-lg border border-line"></canvas>
+
+      <div class="grid content-start gap-3">
+        <div>
+          <label for="wm-text" class="rlt-label">{u('text')}</label>
+          <input id="wm-text" type="text" value={u('textPlaceholder')} class="rlt-input w-full" />
+        </div>
+        <div>
+          <label for="wm-size" class="rlt-label">{u('size')}: <output id="wm-size-view" class="text-ink">48</output></label>
+          <input id="wm-size" type="range" min="12" max="200" value="48" class="w-full accent-pine" />
+        </div>
+        <div>
+          <label for="wm-opacity" class="rlt-label">{u('opacity')}: <output id="wm-opacity-view" class="text-ink">50%</output></label>
+          <input id="wm-opacity" type="range" min="5" max="100" value="50" class="w-full accent-pine" />
+        </div>
+        <div class="flex items-center gap-3">
+          <label for="wm-color" class="text-sm text-ink-soft">{u('color')}</label>
+          <input id="wm-color" type="color" value="#ffffff" class="h-9 w-14 cursor-pointer rounded-md border border-line bg-white p-0.5" />
+        </div>
+        <div>
+          <span class="rlt-label">{u('position')}</span>
+          <div class="grid w-24 grid-cols-3 gap-1">
+            {
+              positions.map((pos) => (
+                <button
+                  data-pos={pos}
+                  class:list={[
+                    'wm-pos aspect-square rounded border border-line bg-white transition-colors hover:border-pine',
+                    pos === 'se' && 'border-pine bg-pine/15',
+                  ]}
+                  aria-label={pos}
+                />
+              ))
+            }
+          </div>
+          <label class="mt-2 flex cursor-pointer items-center gap-2 text-sm text-ink">
+            <input type="checkbox" id="wm-tile" class="rlt-check" />{u('tile')}
+          </label>
+        </div>
+        <button id="wm-download" class="rlt-btn rlt-btn-primary">{u('download')}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob, baseName } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-watermark');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#wm-panel')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('#wm-canvas')!;
+    const textEl = root.querySelector<HTMLInputElement>('#wm-text')!;
+    const sizeEl = root.querySelector<HTMLInputElement>('#wm-size')!;
+    const opacityEl = root.querySelector<HTMLInputElement>('#wm-opacity')!;
+    const colorEl = root.querySelector<HTMLInputElement>('#wm-color')!;
+    const tileEl = root.querySelector<HTMLInputElement>('#wm-tile')!;
+
+    let img: HTMLImageElement | null = null;
+    let position = 'se';
+    let sourceName = 'image';
+
+    /** Renders image + watermark onto any canvas. `fontScale` rescales the
+     *  font when rendering at a different resolution than the preview. */
+    const paint = (target: HTMLCanvasElement, fontScale = 1) => {
+      if (!img) return;
+      const ctx = target.getContext('2d')!;
+      ctx.clearRect(0, 0, target.width, target.height);
+      ctx.drawImage(img, 0, 0, target.width, target.height);
+
+      const text = textEl.value;
+      if (!text) return;
+      const size = Number(sizeEl.value) * fontScale;
+      const pad = size * 0.75;
+      ctx.font = `600 ${size}px "IBM Plex Sans", "PingFang SC", sans-serif`;
+      ctx.fillStyle = colorEl.value;
+      ctx.globalAlpha = Number(opacityEl.value) / 100;
+      ctx.textBaseline = 'middle';
+
+      if (tileEl.checked) {
+        ctx.save();
+        ctx.translate(target.width / 2, target.height / 2);
+        ctx.rotate(-Math.PI / 6);
+        ctx.textAlign = 'center';
+        const stepX = ctx.measureText(text).width + size * 2;
+        const stepY = size * 4;
+        const diag = Math.hypot(target.width, target.height);
+        for (let y = -diag / 2; y < diag / 2; y += stepY) {
+          for (let x = -diag / 2; x < diag / 2; x += stepX) {
+            ctx.fillText(text, x + (Math.round(y / stepY) % 2 ? stepX / 2 : 0), y);
+          }
+        }
+        ctx.restore();
+      } else {
+        const w = ctx.measureText(text).width;
+        const x = position.endsWith('w') ? pad : position.endsWith('e') ? target.width - w - pad : (target.width - w) / 2;
+        const y = position[0] === 'n' ? pad : position[0] === 's' ? target.height - pad : target.height / 2;
+        ctx.textAlign = 'left';
+        ctx.fillText(text, x, y);
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const preview = () => {
+      root.querySelector<HTMLOutputElement>('#wm-size-view')!.textContent = sizeEl.value;
+      root.querySelector<HTMLOutputElement>('#wm-opacity-view')!.textContent = `${opacityEl.value}%`;
+      paint(canvas);
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        sourceName = file.name;
+        const maxW = 1000;
+        const scale = Math.min(1, maxW / img.naturalWidth);
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        panel.classList.remove('hidden');
+        preview();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#wm-drop')!,
+      root.querySelector<HTMLInputElement>('#wm-drop-file')!,
+      handle,
+    );
+
+    [textEl, sizeEl, opacityEl, colorEl, tileEl].forEach((el) => el.addEventListener('input', preview));
+
+    root.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('.wm-pos');
+      if (!btn) return;
+      position = btn.dataset.pos!;
+      root.querySelectorAll('.wm-pos').forEach((el) => el.classList.remove('border-pine', 'bg-pine/15'));
+      btn.classList.add('border-pine', 'bg-pine/15');
+      preview();
+    });
+
+    root.querySelector('#wm-download')!.addEventListener('click', async () => {
+      if (!img) return;
+      const full = document.createElement('canvas');
+      full.width = img.naturalWidth;
+      full.height = img.naturalHeight;
+      paint(full, full.width / canvas.width);
+      const blob = await canvasToBlob(full, 'image/png');
+      downloadBlob(blob, `${baseName(sourceName)}-watermarked.png`);
+    });
+  }
+</script>

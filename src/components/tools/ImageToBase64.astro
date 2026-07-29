@@ -1,0 +1,106 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-to-base64.ui.${key}`);
+---
+
+<div
+  id="image-to-base64"
+  data-copied={t(lang, 'common.copied')}
+  data-size-tpl={u('sizeLabel')}
+  data-invalid={u('invalid')}
+>
+  <ImageDropzone id="b64-drop" text={u('dropzone')} />
+
+  <div id="b64-out-panel" class="mt-4 hidden">
+    <div class="mb-1.5 flex items-center justify-between">
+      <span class="rlt-label mb-0">{u('dataUri')}</span>
+      <button id="b64-copy" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+    </div>
+    <textarea id="b64-output" rows="5" readonly spellcheck="false" class="rlt-textarea bg-mist/50"></textarea>
+    <p id="b64-size" class="mt-1.5 font-mono text-xs text-ink-soft"></p>
+  </div>
+
+  <div class="my-6 border-t border-line"></div>
+
+  <label for="b64-input" class="rlt-label">{u('pasteUri')}</label>
+  <textarea id="b64-input" rows="4" spellcheck="false" placeholder="data:image/png;base64,iVBORw0KG…" class="rlt-textarea"></textarea>
+  <p id="b64-error" role="status" class="rlt-status mt-1.5 text-amber"></p>
+
+  <div id="b64-preview-panel" class="mt-4 hidden">
+    <span class="rlt-label">{u('preview')}</span>
+    <div class="flex items-start gap-4">
+      <img id="b64-preview" alt="" class="max-h-56 w-auto rounded-lg border border-line bg-white object-contain" />
+      <button id="b64-download" class="rlt-btn rlt-btn-primary">{t(lang, 'common.download')}</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, fileToDataURL, humanFileSize, extForMime } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-to-base64');
+  if (root) {
+    const outPanel = root.querySelector<HTMLDivElement>('#b64-out-panel')!;
+    const output = root.querySelector<HTMLTextAreaElement>('#b64-output')!;
+    const sizeEl = root.querySelector<HTMLParagraphElement>('#b64-size')!;
+    const input = root.querySelector<HTMLTextAreaElement>('#b64-input')!;
+    const errorEl = root.querySelector<HTMLParagraphElement>('#b64-error')!;
+    const previewPanel = root.querySelector<HTMLDivElement>('#b64-preview-panel')!;
+    const preview = root.querySelector<HTMLImageElement>('#b64-preview')!;
+    let decodedMime = 'image/png';
+
+    const handle = async (file: File) => {
+      const dataUrl = await fileToDataURL(file);
+      output.value = dataUrl;
+      sizeEl.textContent = root.dataset.sizeTpl!
+        .replace('{size}', humanFileSize(file.size))
+        .replace('{chars}', dataUrl.length.toLocaleString());
+      outPanel.classList.remove('hidden');
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#b64-drop')!,
+      root.querySelector<HTMLInputElement>('#b64-drop-file')!,
+      handle,
+    );
+
+    root.querySelector('#b64-copy')!.addEventListener('click', async (event) => {
+      if (!output.value) return;
+      await navigator.clipboard.writeText(output.value);
+      const btn = event.currentTarget as HTMLButtonElement;
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+
+    input.addEventListener('input', () => {
+      errorEl.textContent = '';
+      previewPanel.classList.add('hidden');
+      const raw = input.value.trim();
+      if (!raw) return;
+      const match = raw.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=\s]+)$/);
+      if (!match) {
+        errorEl.textContent = root.dataset.invalid!;
+        return;
+      }
+      decodedMime = match[1];
+      preview.onload = () => previewPanel.classList.remove('hidden');
+      preview.onerror = () => (errorEl.textContent = root.dataset.invalid!);
+      preview.src = raw;
+    });
+
+    root.querySelector('#b64-download')!.addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = preview.src;
+      a.download = `decoded.${extForMime(decodedMime)}`;
+      a.click();
+    });
+  }
+</script>

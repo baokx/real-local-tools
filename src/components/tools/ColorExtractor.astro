@@ -1,0 +1,150 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.color-extractor.ui.${key}`);
+---
+
+<div id="color-extractor" data-copied={t(lang, 'common.copied')}>
+  <ImageDropzone id="ce-drop" text={u('dropzone')} />
+
+  <div id="ce-panel" class="mt-5 hidden">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+      <img id="ce-preview" alt="" class="max-h-56 w-auto rounded-lg border border-line bg-white object-contain" />
+      <div class="flex-1">
+        <div class="flex items-center gap-3">
+          <label for="ce-count" class="text-sm text-ink-soft">{u('count')}</label>
+          <select id="ce-count" class="rlt-input">
+            <option value="5" selected>5</option>
+            <option value="6">6</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+          </select>
+        </div>
+        <div id="ce-palette" class="mt-3 grid gap-2 sm:grid-cols-2"></div>
+        <p class="mt-2 font-mono text-xs text-ink-soft">{u('hint')}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile } from '../../lib/image-tools';
+
+  const root = document.getElementById('color-extractor');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#ce-panel')!;
+    const preview = root.querySelector<HTMLImageElement>('#ce-preview')!;
+    const countEl = root.querySelector<HTMLSelectElement>('#ce-count')!;
+    const paletteEl = root.querySelector<HTMLDivElement>('#ce-palette')!;
+    let sourceUrl = '';
+    let sampled: Array<[number, number, number]> = [];
+
+    type RGB = [number, number, number];
+
+    /** Median-cut quantization: repeatedly split the box with the widest channel. */
+    const medianCut = (pixels: RGB[], depth: number): RGB[][] => {
+      if (pixels.length === 0) return [];
+      if (depth === 0 || pixels.length < 2) return [pixels];
+      const channel = [0, 1, 2].reduce((widest, ch) => {
+        const range = (c: number) => {
+          let min = 255, max = 0;
+          for (const p of pixels) {
+            if (p[c] < min) min = p[c];
+            if (p[c] > max) max = p[c];
+          }
+          return max - min;
+        };
+        return range(ch) > range(widest) ? ch : widest;
+      }, 0);
+      const sorted = [...pixels].sort((a, b) => a[channel] - b[channel]);
+      const mid = Math.floor(sorted.length / 2);
+      return [...medianCut(sorted.slice(0, mid), depth - 1), ...medianCut(sorted.slice(mid), depth - 1)];
+    };
+
+    const average = (pixels: RGB[]): RGB => {
+      const sum = pixels.reduce((acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]], [0, 0, 0] as RGB);
+      return [
+        Math.round(sum[0] / pixels.length),
+        Math.round(sum[1] / pixels.length),
+        Math.round(sum[2] / pixels.length),
+      ];
+    };
+
+    const toHex = ([r, g, b]: RGB) =>
+      `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`.toUpperCase();
+
+    const extract = () => {
+      paletteEl.innerHTML = '';
+      if (sampled.length === 0) return;
+      const count = Number(countEl.value);
+      // depth 4 gives ≤16 boxes; merge down to the requested count by size.
+      let boxes = medianCut(sampled, 4)
+        .map((box) => ({ color: average(box), weight: box.length }))
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, count);
+
+      for (const { color, weight } of boxes) {
+        const hex = toHex(color);
+        const card = document.createElement('button');
+        card.className =
+          'flex items-center gap-3 rounded-lg border border-line bg-white p-2 text-left transition-colors hover:border-pine';
+        const swatch = document.createElement('span');
+        swatch.className = 'h-10 w-10 shrink-0 rounded-md';
+        swatch.style.background = hex;
+        const label = document.createElement('span');
+        label.className = 'font-mono text-xs text-ink';
+        const pct = Math.round((weight / sampled.length) * 100);
+        label.textContent = `${hex} · rgb(${color.join(', ')}) · ${pct}%`;
+        card.append(swatch, label);
+        card.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(hex);
+          const original = label.textContent!;
+          label.textContent = root.dataset.copied!;
+          setTimeout(() => (label.textContent = original), 1200);
+        });
+        paletteEl.appendChild(card);
+      }
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+        sourceUrl = loaded.url;
+        preview.src = loaded.url;
+
+        // Sample on a small canvas — plenty for palette statistics.
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1, 150 / Math.max(loaded.img.naturalWidth, loaded.img.naturalHeight));
+        canvas.width = Math.max(1, Math.round(loaded.img.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(loaded.img.naturalHeight * scale));
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+        ctx.drawImage(loaded.img, 0, 0, canvas.width, canvas.height);
+        const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        sampled = [];
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] < 128) continue; // skip transparent pixels
+          sampled.push([data[i], data[i + 1], data[i + 2]]);
+        }
+        loaded.revoke();
+        panel.classList.remove('hidden');
+        extract();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    countEl.addEventListener('change', extract);
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#ce-drop')!,
+      root.querySelector<HTMLInputElement>('#ce-drop-file')!,
+      handle,
+    );
+  }
+</script>

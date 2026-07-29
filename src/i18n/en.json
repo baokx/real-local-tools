@@ -28,6 +28,7 @@
   "common": {
     "copy": "Copy",
     "copied": "Copied to clipboard",
+    "download": "Download",
     "clear": "Clear",
     "input": "Input",
     "output": "Output",
@@ -363,6 +364,221 @@
         "cheatHex": "Hex color",
         "cheatUuid": "UUID",
         "cheatNumber": "Number"
+      }
+    },
+    "image-compressor": {
+      "name": "Image Compressor",
+      "description": "Compress JPEG, PNG and WebP images with an adjustable quality slider — instant size savings preview.",
+      "seoTitle": "Image Compressor — shrink JPEG/PNG/WebP locally, free",
+      "seo": "Drop in a photo and drag the quality slider to find the sweet spot between size and fidelity. The before/after file sizes update instantly and you can download the compressed result. Your images are processed entirely in your browser — nothing is uploaded.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "quality": "Quality",
+        "format": "Format",
+        "original": "Original",
+        "compressed": "Compressed",
+        "savings": "−{pct}%",
+        "download": "Download compressed image",
+        "tooBig": "Compressed file is larger than the original — try a lower quality."
+      }
+    },
+    "image-converter": {
+      "name": "Image Format Converter",
+      "description": "Convert images between PNG, JPEG and WebP formats — instant, private, in your browser.",
+      "seoTitle": "Image Converter — PNG ↔ JPG ↔ WebP, runs locally",
+      "seo": "Convert any image to PNG, JPEG or WebP with one click. Transparency is flattened onto white when converting to JPEG. Compare file sizes before downloading. Everything happens locally — your images never leave your device.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "targetFormat": "Convert to",
+        "originalSize": "Original",
+        "outputSize": "Converted",
+        "download": "Download",
+        "quality": "Quality"
+      }
+    },
+    "image-to-base64": {
+      "name": "Image ⇄ Base64 Converter",
+      "description": "Encode images as Base64 data URIs or decode a Base64 string back into an image — locally.",
+      "seoTitle": "Image to Base64 Encoder & Decoder — data URI, runs locally",
+      "seo": "Turn any image into a Base64 data URI ready for CSS or HTML embedding, or paste a data URI to preview and download the decoded image. Conversion happens entirely in your browser.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "dataUri": "Base64 data URI",
+        "pasteUri": "…or paste a data URI here to decode it",
+        "sizeLabel": "{size} · {chars} chars",
+        "invalid": "That doesn't look like a Base64 image data URI.",
+        "preview": "Decoded preview"
+      }
+    },
+    "image-resizer": {
+      "name": "Image Resizer",
+      "description": "Resize images to exact pixel dimensions with aspect-ratio lock — JPEG, PNG and WebP output.",
+      "seoTitle": "Image Resizer — exact pixels, ratio lock, runs locally",
+      "seo": "Shrink or enlarge an image to the exact width and height you need, with an optional aspect-ratio lock. Choose the output format and quality, preview the result size, and download. All processing is local.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "width": "Width (px)",
+        "height": "Height (px)",
+        "lockRatio": "Lock aspect ratio",
+        "originalSize": "Original: {w} × {h}",
+        "format": "Format",
+        "quality": "Quality",
+        "outputSize": "Output: {w} × {h} · {size}",
+        "download": "Download resized image"
+      }
+    },
+    "exif-viewer": {
+      "name": "EXIF Metadata Viewer",
+      "description": "Inspect camera, lens, exposure and GPS metadata hidden inside JPEG photos — fully local.",
+      "seoTitle": "EXIF Viewer — read photo metadata & GPS locally",
+      "seo": "See what your photos reveal: camera make and model, lens, shutter speed, aperture, ISO, focal length, timestamps and even GPS coordinates with a map link. The file is parsed in your browser and never uploaded.",
+      "ui": {
+        "dropzone": "Drop a JPEG photo here, click to browse, or paste from clipboard",
+        "noExif": "No EXIF metadata found in this file.",
+        "tag": "Tag",
+        "value": "Value",
+        "viewOnMap": "View location on map"
+      }
+    },
+    "image-watermark": {
+      "name": "Image Watermark Tool",
+      "description": "Add custom text watermarks to photos — position, size, opacity and tiling — all in your browser.",
+      "seoTitle": "Image Watermark Tool — text watermark, free & local",
+      "seo": "Protect your images with a custom text watermark. Choose the wording, size, color, opacity and one of nine positions — or tile it across the whole image. Preview updates live and the result downloads as PNG. Nothing is uploaded.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "text": "Watermark text",
+        "textPlaceholder": "© Your Name",
+        "size": "Size",
+        "opacity": "Opacity",
+        "color": "Color",
+        "position": "Position",
+        "tile": "Tile (repeat)",
+        "download": "Download watermarked image"
+      }
+    },
+    "image-color-picker": {
+      "name": "Image Color Picker",
+      "description": "Pick exact colors from any image — click to grab HEX, RGB and HSL values with a zoom loupe.",
+      "seoTitle": "Image Color Picker — grab HEX/RGB from photos, local",
+      "seo": "Upload any image and click to sample the exact pixel color. A magnifying loupe helps you aim precisely. Picked colors are kept in a history strip with one-click copy in HEX, RGB and HSL. Everything runs locally.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "hint": "Hover to preview · click to pick",
+        "picked": "Picked colors",
+        "clear": "Clear"
+      }
+    },
+    "favicon-generator": {
+      "name": "Favicon Generator",
+      "description": "Turn any image into a complete favicon set — ICO with 16/32/48px plus PNG and Apple touch icons.",
+      "seoTitle": "Favicon Generator — ICO + PNG set from any image",
+      "seo": "Upload a logo or picture and get a ready-to-use favicon package: a multi-size .ico file (16, 32 and 48 px) plus PNG icons at 180, 192 and 512 px for Apple touch and PWA use. Everything is generated locally in your browser.",
+      "ui": {
+        "dropzone": "Drop a square-ish image here, click to browse, or paste from clipboard",
+        "preview": "Preview",
+        "downloadIco": "Download favicon.ico",
+        "downloadPng": "PNG {size}px",
+        "note": "Square source images work best — the image is center-cropped to a square."
+      }
+    },
+    "image-cropper": {
+      "name": "Image Cropper",
+      "description": "Crop images with a draggable selection and aspect-ratio presets — free, private, in-browser.",
+      "seoTitle": "Image Cropper — drag to crop, ratio presets, local",
+      "seo": "Drag a selection over your image to crop exactly what you need, with presets for 1:1, 4:3, 3:2 and 16:9. The cropped region keeps its original resolution. Everything runs in your browser — no uploads.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "aspect": "Aspect ratio",
+        "free": "Free",
+        "selection": "Selection: {w} × {h} px",
+        "crop": "Crop",
+        "download": "Download cropped image",
+        "dragHint": "Drag on the image to select the crop area"
+      }
+    },
+    "image-filters": {
+      "name": "Image Filters & Photo Editor",
+      "description": "Adjust brightness, contrast, saturation and more with live preview — plus one-click presets.",
+      "seoTitle": "Image Filters & Photo Editor — brightness, contrast, local",
+      "seo": "Tune brightness, contrast, saturation, grayscale, sepia, blur, hue and inversion with live sliders, or start from a preset like B&W or Vintage. The full-resolution result downloads instantly. Your photo never leaves your device.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "brightness": "Brightness",
+        "contrast": "Contrast",
+        "saturate": "Saturation",
+        "grayscale": "Grayscale",
+        "sepia": "Sepia",
+        "blur": "Blur",
+        "hueRotate": "Hue",
+        "invert": "Invert",
+        "reset": "Reset",
+        "presets": "Presets",
+        "presetNormal": "Original",
+        "presetBW": "B & W",
+        "presetVintage": "Vintage",
+        "presetWarm": "Warm",
+        "presetCold": "Cold",
+        "download": "Download edited image"
+      }
+    },
+    "image-to-ascii": {
+      "name": "Image to ASCII Art",
+      "description": "Turn images into ASCII art with adjustable width and character sets — copy or download as image.",
+      "seoTitle": "Image to ASCII Art Converter — runs locally, free",
+      "seo": "Convert any image into text art made of ASCII characters. Adjust the output width and pick from simple, detailed or block character sets, then copy the text or download it as a PNG. Rendering happens entirely in your browser.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "width": "Width (characters)",
+        "charset": "Character set",
+        "simple": "Simple",
+        "detailed": "Detailed",
+        "blocks": "Blocks",
+        "copy": "Copy text",
+        "download": "Download PNG"
+      }
+    },
+    "image-rotator": {
+      "name": "Image Rotator",
+      "description": "Rotate images by 90° steps or any custom angle, and flip horizontally or vertically — locally.",
+      "seoTitle": "Image Rotator & Flipper — any angle, runs locally",
+      "seo": "Rotate photos in 90-degree steps or dial in any angle, and flip them horizontally or vertically. The rotated result keeps full quality with transparent corners. Processing is entirely local.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "rotate90cw": "90° CW",
+        "rotate90ccw": "90° CCW",
+        "rotate180": "180°",
+        "flipH": "Flip ↔",
+        "flipV": "Flip ↕",
+        "angle": "Custom angle",
+        "download": "Download rotated image"
+      }
+    },
+    "metadata-remover": {
+      "name": "EXIF & Metadata Remover",
+      "description": "Strip location, camera and timestamp metadata from photos before sharing them — fully local.",
+      "seoTitle": "EXIF Remover — strip photo metadata for privacy",
+      "seo": "Photos can leak where and when they were taken and what device captured them. This tool shows what metadata your image carries and produces a clean copy with all of it stripped. Processing happens in your browser — the photo is never uploaded.",
+      "ui": {
+        "dropzone": "Drop a photo here, click to browse, or paste from clipboard",
+        "foundMeta": "{n} metadata entries found in this photo",
+        "alreadyClean": "This image carries no EXIF metadata.",
+        "original": "Original",
+        "stripped": "Cleaned",
+        "download": "Download clean image",
+        "keptQuality": "Format and quality preserved"
+      }
+    },
+    "color-extractor": {
+      "name": "Color Palette Extractor",
+      "description": "Extract dominant colors from any image and get a ready-to-use palette with HEX and RGB codes.",
+      "seoTitle": "Color Extractor — dominant palette from any image",
+      "seo": "Pull the dominant colors out of a photo or artwork and get a clean palette with HEX and RGB values, ready for your design work. Choose how many colors you want and copy any swatch with one click. Everything runs locally.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "count": "Colors",
+        "extract": "Extract palette",
+        "hint": "Click any color to copy its HEX code"
       }
     }
   }

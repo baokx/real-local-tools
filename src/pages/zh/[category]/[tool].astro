@@ -23,6 +23,20 @@ import RandomNumberGenerator from '../../../components/tools/RandomNumberGenerat
 import QrCodeGenerator from '../../../components/tools/QrCodeGenerator.astro';
 import QrCodeScanner from '../../../components/tools/QrCodeScanner.astro';
 import RegexTester from '../../../components/tools/RegexTester.astro';
+import ImageCompressor from '../../../components/tools/ImageCompressor.astro';
+import ImageConverter from '../../../components/tools/ImageConverter.astro';
+import ImageToBase64 from '../../../components/tools/ImageToBase64.astro';
+import ImageResizer from '../../../components/tools/ImageResizer.astro';
+import ExifViewer from '../../../components/tools/ExifViewer.astro';
+import ImageWatermark from '../../../components/tools/ImageWatermark.astro';
+import ImageColorPicker from '../../../components/tools/ImageColorPicker.astro';
+import FaviconGenerator from '../../../components/tools/FaviconGenerator.astro';
+import ImageCropper from '../../../components/tools/ImageCropper.astro';
+import ImageFilters from '../../../components/tools/ImageFilters.astro';
+import ImageToAscii from '../../../components/tools/ImageToAscii.astro';
+import ImageRotator from '../../../components/tools/ImageRotator.astro';
+import MetadataRemover from '../../../components/tools/MetadataRemover.astro';
+import ColorExtractor from '../../../components/tools/ColorExtractor.astro';
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -55,6 +69,20 @@ const implementations = {
   'qr-code-generator': QrCodeGenerator,
   'qr-code-scanner': QrCodeScanner,
   'regex-tester': RegexTester,
+  'image-compressor': ImageCompressor,
+  'image-converter': ImageConverter,
+  'image-to-base64': ImageToBase64,
+  'image-resizer': ImageResizer,
+  'exif-viewer': ExifViewer,
+  'image-watermark': ImageWatermark,
+  'image-color-picker': ImageColorPicker,
+  'favicon-generator': FaviconGenerator,
+  'image-cropper': ImageCropper,
+  'image-filters': ImageFilters,
+  'image-to-ascii': ImageToAscii,
+  'image-rotator': ImageRotator,
+  'metadata-remover': MetadataRemover,
+  'color-extractor': ColorExtractor,
 } as const;
 
 const ToolImpl = implementations[tool.slug as keyof typeof implementations];

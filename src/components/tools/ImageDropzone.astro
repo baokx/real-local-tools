@@ -1,0 +1,24 @@
+---
+interface Props {
+  /** Base id; the file input gets `${id}-file`. */
+  id: string;
+  text: string;
+}
+
+const { id, text } = Astro.props;
+---
+
+<input type="file" id={`${id}-file`} accept="image/*" class="hidden" />
+<div
+  id={id}
+  role="button"
+  tabindex="0"
+  class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-line bg-mist/40 px-6 py-10 text-center transition-colors hover:border-pine"
+>
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-ink-soft">
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <path d="M21 15l-5-5L5 21" />
+  </svg>
+  <p class="text-sm text-ink-soft">{text}</p>
+</div>

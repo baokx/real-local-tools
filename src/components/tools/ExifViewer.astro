@@ -1,0 +1,100 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.exif-viewer.ui.${key}`);
+---
+
+<div id="exif-viewer" data-no-exif={u('noExif')}>
+  <ImageDropzone id="ex-drop" text={u('dropzone')} />
+
+  <div id="ex-panel" class="mt-5 hidden">
+    <div class="flex flex-col gap-5 lg:flex-row">
+      <img id="ex-preview" alt="" class="max-h-64 w-auto self-start rounded-lg border border-line bg-white object-contain" />
+      <div class="min-w-0 flex-1">
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-line text-left">
+              <th class="pb-1.5 pr-4 font-mono text-xs uppercase tracking-wide text-ink-soft">{u('tag')}</th>
+              <th class="pb-1.5 font-mono text-xs uppercase tracking-wide text-ink-soft">{u('value')}</th>
+            </tr>
+          </thead>
+          <tbody id="ex-body"></tbody>
+        </table>
+        <a id="ex-map" target="_blank" rel="noopener noreferrer" class="mt-3 hidden inline-flex items-center gap-1 text-sm font-medium text-pine hover:underline">
+          {u('viewOnMap')} ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <p id="ex-empty" role="status" class="rlt-status mt-4 hidden text-ink-soft"></p>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile } from '../../lib/image-tools';
+  import { parseExif } from '../../lib/exif';
+
+  const root = document.getElementById('exif-viewer');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#ex-panel')!;
+    const empty = root.querySelector<HTMLParagraphElement>('#ex-empty')!;
+    const preview = root.querySelector<HTMLImageElement>('#ex-preview')!;
+    const body = root.querySelector<HTMLTableSectionElement>('#ex-body')!;
+    const mapLink = root.querySelector<HTMLAnchorElement>('#ex-map')!;
+    let sourceUrl = '';
+
+    const handle = async (file: File) => {
+      body.innerHTML = '';
+      mapLink.classList.add('hidden');
+      panel.classList.add('hidden');
+      empty.classList.add('hidden');
+      try {
+        const [loaded, buffer] = await Promise.all([loadImageFromFile(file), file.arrayBuffer()]);
+        if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+        sourceUrl = loaded.url;
+        preview.src = loaded.url;
+
+        const exif = parseExif(buffer);
+        if (!exif) {
+          empty.textContent = root.dataset.noExif!;
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        for (const { tag, value } of exif.entries) {
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-line/60';
+          const tdTag = document.createElement('td');
+          tdTag.className = 'py-1.5 pr-4 font-mono text-xs text-ink-soft';
+          tdTag.textContent = tag;
+          const tdValue = document.createElement('td');
+          tdValue.className = 'py-1.5 break-all font-mono text-sm text-ink';
+          tdValue.textContent = value;
+          tr.append(tdTag, tdValue);
+          body.appendChild(tr);
+        }
+
+        if (exif.gps) {
+          mapLink.href = `https://www.google.com/maps?q=${exif.gps.lat},${exif.gps.lon}`;
+          mapLink.classList.remove('hidden');
+        }
+        panel.classList.remove('hidden');
+      } catch {
+        empty.textContent = root.dataset.noExif!;
+        empty.classList.remove('hidden');
+      }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#ex-drop')!,
+      root.querySelector<HTMLInputElement>('#ex-drop-file')!,
+      handle,
+    );
+  }
+</script>

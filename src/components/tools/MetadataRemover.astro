@@ -1,0 +1,89 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.metadata-remover.ui.${key}`);
+---
+
+<div
+  id="metadata-remover"
+  data-found-tpl={u('foundMeta')}
+  data-already-clean={u('alreadyClean')}
+>
+  <ImageDropzone id="mr-drop" text={u('dropzone')} />
+
+  <div id="mr-panel" class="mt-5 hidden">
+    <p id="mr-status" class="text-sm font-medium"></p>
+
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-lg border border-line bg-mist/50 p-3">
+        <span class="rlt-label mb-1">{u('original')}</span>
+        <p class="font-mono text-sm text-ink" id="mr-orig"></p>
+      </div>
+      <div class="rounded-lg border border-pine/40 bg-pine/5 p-3">
+        <span class="rlt-label mb-1">{u('stripped')}</span>
+        <p class="font-mono text-sm text-ink" id="mr-new"></p>
+      </div>
+    </div>
+
+    <button id="mr-download" class="rlt-btn rlt-btn-primary mt-4">{u('download')}</button>
+  </div>
+</div>
+
+<script>
+  import {
+    wireDropzone, loadImageFromFile, imageToCanvas, canvasToBlob,
+    downloadBlob, humanFileSize, extForMime, baseName, flattenForJpeg,
+  } from '../../lib/image-tools';
+  import { parseExif } from '../../lib/exif';
+
+  const root = document.getElementById('metadata-remover');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#mr-panel')!;
+    const status = root.querySelector<HTMLParagraphElement>('#mr-status')!;
+    let sourceFile: File | null = null;
+    let cleanBlob: Blob | null = null;
+
+    const handle = async (file: File) => {
+      try {
+        const [loaded, buffer] = await Promise.all([loadImageFromFile(file), file.arrayBuffer()]);
+        loaded.revoke();
+        sourceFile = file;
+
+        // Redrawing to canvas drops every metadata segment by construction.
+        const canvas = imageToCanvas(loaded.img);
+        const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        const target = mime === 'image/jpeg' ? flattenForJpeg(canvas) : canvas;
+        cleanBlob = await canvasToBlob(target, mime, 0.92);
+
+        const exif = parseExif(buffer);
+        status.textContent = exif
+          ? root.dataset.foundTpl!.replace('{n}', String(exif.entries.length))
+          : root.dataset.alreadyClean!;
+        status.style.color = exif ? 'var(--color-amber)' : 'var(--color-pine)';
+
+        root.querySelector('#mr-orig')!.textContent =
+          `${humanFileSize(file.size)} · ${loaded.img.naturalWidth} × ${loaded.img.naturalHeight}`;
+        root.querySelector('#mr-new')!.textContent =
+          `${humanFileSize(cleanBlob.size)} · ${extForMime(mime).toUpperCase()} · 0 metadata`;
+        panel.classList.remove('hidden');
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#mr-drop')!,
+      root.querySelector<HTMLInputElement>('#mr-drop-file')!,
+      handle,
+    );
+
+    root.querySelector('#mr-download')!.addEventListener('click', () => {
+      if (!cleanBlob || !sourceFile) return;
+      downloadBlob(cleanBlob, `${baseName(sourceFile.name)}-clean.${extForMime(cleanBlob.type)}`);
+    });
+  }
+</script>

@@ -1,0 +1,129 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.favicon-generator.ui.${key}`);
+const previewSizes = [16, 32, 48, 180];
+---
+
+<div id="favicon-generator" data-png-label={u('downloadPng')}>
+  <ImageDropzone id="fv-drop" text={u('dropzone')} />
+
+  <div id="fv-panel" class="mt-5 hidden">
+    <p class="mb-3 font-mono text-xs text-ink-soft">{u('note')}</p>
+
+    <span class="rlt-label">{u('preview')}</span>
+    <div class="flex items-end gap-4 rounded-lg border border-line bg-mist/50 p-4">
+      {
+        previewSizes.map((size) => (
+          <div class="flex flex-col items-center gap-1.5">
+            <canvas data-size={size} width={size} height={size} class="rounded border border-line bg-white" style={`width:${Math.max(size, 24)}px;height:${Math.max(size, 24)}px;image-rendering:pixelated;`}></canvas>
+            <span class="font-mono text-xs text-ink-soft">{size}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button id="fv-ico" class="rlt-btn rlt-btn-primary">{u('downloadIco')}</button>
+      <button data-png="180" class="rlt-btn fv-png">180px</button>
+      <button data-png="192" class="rlt-btn fv-png">192px</button>
+      <button data-png="512" class="rlt-btn fv-png">512px</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob, baseName } from '../../lib/image-tools';
+
+  const root = document.getElementById('favicon-generator');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#fv-panel')!;
+    let img: HTMLImageElement | null = null;
+    let sourceName = 'image';
+
+    /** Center-crops the source to a square and scales it to `size`. */
+    const renderSize = (size: number): HTMLCanvasElement => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      if (!img) return canvas;
+      const side = Math.min(img.naturalWidth, img.naturalHeight);
+      const sx = (img.naturalWidth - side) / 2;
+      const sy = (img.naturalHeight - side) / 2;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+      return canvas;
+    };
+
+    /** Builds a classic .ico file embedding PNG images (Vista+ format). */
+    const buildIco = async (sizes: number[]): Promise<Blob> => {
+      const pngs = await Promise.all(sizes.map((s) => canvasToBlob(renderSize(s), 'image/png')));
+      const buffers = await Promise.all(pngs.map((b) => b.arrayBuffer()));
+
+      const header = new DataView(new ArrayBuffer(6));
+      header.setUint16(0, 0, true); // reserved
+      header.setUint16(2, 1, true); // icon type
+      header.setUint16(4, sizes.length, true);
+
+      const entries = new DataView(new ArrayBuffer(16 * sizes.length));
+      let offset = 6 + 16 * sizes.length;
+      buffers.forEach((buf, i) => {
+        const size = sizes[i];
+        const base = i * 16;
+        entries.setUint8(base + 0, size >= 256 ? 0 : size); // width (0 = 256)
+        entries.setUint8(base + 1, size >= 256 ? 0 : size); // height
+        entries.setUint8(base + 2, 0); // palette
+        entries.setUint8(base + 3, 0); // reserved
+        entries.setUint16(base + 4, 1, true); // color planes
+        entries.setUint16(base + 6, 32, true); // bits per pixel
+        entries.setUint32(base + 8, buf.byteLength, true);
+        entries.setUint32(base + 12, offset, true);
+        offset += buf.byteLength;
+      });
+
+      return new Blob([header.buffer, entries.buffer, ...buffers], { type: 'image/x-icon' });
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        sourceName = file.name;
+        loaded.revoke();
+
+        root.querySelectorAll<HTMLCanvasElement>('[data-size]').forEach((canvas) => {
+          const rendered = renderSize(Number(canvas.dataset.size));
+          canvas.getContext('2d')!.drawImage(rendered, 0, 0);
+        });
+        panel.classList.remove('hidden');
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#fv-drop')!,
+      root.querySelector<HTMLInputElement>('#fv-drop-file')!,
+      handle,
+    );
+
+    root.querySelector('#fv-ico')!.addEventListener('click', async () => {
+      if (!img) return;
+      const ico = await buildIco([16, 32, 48]);
+      downloadBlob(ico, 'favicon.ico');
+    });
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('.fv-png');
+      if (!btn || !img) return;
+      const size = Number(btn.dataset.png);
+      const blob = await canvasToBlob(renderSize(size), 'image/png');
+      downloadBlob(blob, `${baseName(sourceName)}-${size}.png`);
+    });
+  }
+</script>

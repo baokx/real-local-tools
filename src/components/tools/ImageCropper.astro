@@ -1,0 +1,173 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-cropper.ui.${key}`);
+---
+
+<div id="image-cropper" data-sel-tpl={u('selection')}>
+  <ImageDropzone id="cr-drop" text={u('dropzone')} />
+
+  <div id="cr-panel" class="mt-5 hidden">
+    <div class="flex flex-wrap items-center gap-3">
+      <label class="flex items-center gap-2 text-sm text-ink-soft">
+        {u('aspect')}
+        <select id="cr-aspect" class="rlt-input">
+          <option value="free" selected>{u('free')}</option>
+          <option value="1">1:1</option>
+          <option value="4/3">4:3</option>
+          <option value="3/2">3:2</option>
+          <option value="16/9">16:9</option>
+        </select>
+      </label>
+      <span id="cr-size" class="font-mono text-xs text-ink-soft">{u('dragHint')}</span>
+      <button id="cr-download" class="rlt-btn rlt-btn-primary ml-auto" disabled>{u('download')}</button>
+    </div>
+    <canvas id="cr-canvas" class="mt-3 block max-w-full cursor-crosshair rounded-lg border border-line"></canvas>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob, baseName } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-cropper');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#cr-panel')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('#cr-canvas')!;
+    const ctx = canvas.getContext('2d')!;
+    const aspectEl = root.querySelector<HTMLSelectElement>('#cr-aspect')!;
+    const sizeEl = root.querySelector<HTMLSpanElement>('#cr-size')!;
+    const downloadBtn = root.querySelector<HTMLButtonElement>('#cr-download')!;
+    const hint = sizeEl.textContent!;
+
+    let img: HTMLImageElement | null = null;
+    let sourceName = 'image';
+    let dragging = false;
+    let sel: { x0: number; y0: number; x1: number; y1: number } | null = null;
+
+    const aspectValue = (): number | null => {
+      const v = aspectEl.value;
+      if (v === 'free') return null;
+      const [a, b] = v.split('/').map(Number);
+      return b ? a / b : Number(v);
+    };
+
+    const canvasPos = (e: MouseEvent): { x: number; y: number } => {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: Math.min(Math.max(((e.clientX - rect.left) / rect.width) * canvas.width, 0), canvas.width),
+        y: Math.min(Math.max(((e.clientY - rect.top) / rect.height) * canvas.height, 0), canvas.height),
+      };
+    };
+
+    const draw = () => {
+      if (!img) return;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if (!sel) return;
+      const { x0, y0, x1, y1 } = sel;
+      const w = x1 - x0, h = y1 - y0;
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, x0, y0, w, h, x0, y0, w, h);
+      ctx.strokeStyle = '#14532d';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x0, y0, w, h);
+
+      const scaleX = img.naturalWidth / canvas.width;
+      const scaleY = img.naturalHeight / canvas.height;
+      sizeEl.textContent = root.dataset.selTpl!
+        .replace('{w}', String(Math.round(w * scaleX)))
+        .replace('{h}', String(Math.round(h * scaleY)));
+    };
+
+    canvas.addEventListener('mousedown', (e) => {
+      if (!img) return;
+      const pos = canvasPos(e);
+      sel = { x0: pos.x, y0: pos.y, x1: pos.x, y1: pos.y };
+      dragging = true;
+      draw();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!dragging || !sel) return;
+      const pos = canvasPos(e);
+      sel.x1 = pos.x;
+      sel.y1 = pos.y;
+      const aspect = aspectValue();
+      if (aspect) {
+        // Width drives height; flip vertically when dragging upward.
+        const h = (sel.x1 - sel.x0) / aspect;
+        sel.y1 = sel.y0 + h;
+        if (sel.y1 < 0) sel.y1 = 0;
+        if (sel.y1 > canvas.height) sel.y1 = canvas.height;
+      }
+      draw();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!dragging || !sel) return;
+      dragging = false;
+      // Normalize so x0,y0 is top-left.
+      const { x0, y0, x1, y1 } = sel;
+      sel = {
+        x0: Math.min(x0, x1), y0: Math.min(y0, y1),
+        x1: Math.max(x0, x1), y1: Math.max(y0, y1),
+      };
+      const valid = sel.x1 - sel.x0 >= 4 && sel.y1 - sel.y0 >= 4;
+      downloadBtn.disabled = !valid;
+      if (!valid) sel = null;
+      draw();
+    });
+
+    aspectEl.addEventListener('change', () => {
+      sel = null;
+      downloadBtn.disabled = true;
+      sizeEl.textContent = hint;
+      draw();
+    });
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        sourceName = file.name;
+        const maxW = 900;
+        const scale = Math.min(1, maxW / img.naturalWidth);
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        sel = null;
+        downloadBtn.disabled = true;
+        sizeEl.textContent = hint;
+        panel.classList.remove('hidden');
+        draw();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#cr-drop')!,
+      root.querySelector<HTMLInputElement>('#cr-drop-file')!,
+      handle,
+    );
+
+    downloadBtn.addEventListener('click', async () => {
+      if (!img || !sel) return;
+      const scaleX = img.naturalWidth / canvas.width;
+      const scaleY = img.naturalHeight / canvas.height;
+      const sx = Math.round(sel.x0 * scaleX);
+      const sy = Math.round(sel.y0 * scaleY);
+      const sw = Math.round((sel.x1 - sel.x0) * scaleX);
+      const sh = Math.round((sel.y1 - sel.y0) * scaleY);
+      const out = document.createElement('canvas');
+      out.width = sw;
+      out.height = sh;
+      out.getContext('2d')!.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+      const blob = await canvasToBlob(out, 'image/png');
+      downloadBlob(blob, `${baseName(sourceName)}-cropped.png`);
+    });
+  }
+</script>

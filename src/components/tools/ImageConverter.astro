@@ -1,0 +1,110 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-converter.ui.${key}`);
+---
+
+<div id="image-converter">
+  <ImageDropzone id="cv-drop" text={u('dropzone')} />
+
+  <div id="cv-panel" class="mt-5 hidden">
+    <div class="flex flex-wrap items-end gap-3">
+      <div>
+        <label for="cv-format" class="rlt-label">{u('targetFormat')}</label>
+        <select id="cv-format" class="rlt-input">
+          <option value="image/png">PNG</option>
+          <option value="image/jpeg">JPEG</option>
+          <option value="image/webp" selected>WebP</option>
+        </select>
+      </div>
+      <div id="cv-quality-wrap">
+        <label for="cv-quality" class="rlt-label">{u('quality')}: <output id="cv-quality-view" class="text-ink">90%</output></label>
+        <input id="cv-quality" type="range" min="10" max="100" value="90" class="w-40 accent-pine" />
+      </div>
+      <button id="cv-download" class="rlt-btn rlt-btn-primary">{u('download')}</button>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start">
+      <img id="cv-preview" alt="" class="max-h-64 w-auto rounded-lg border border-line bg-white object-contain" />
+      <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+        <dt class="text-ink-soft">{u('originalSize')}</dt>
+        <dd class="font-mono text-ink"><span id="cv-orig"></span></dd>
+        <dt class="text-ink-soft">{u('outputSize')}</dt>
+        <dd class="font-mono text-pine"><span id="cv-out"></span></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    wireDropzone, loadImageFromFile, imageToCanvas, canvasToBlob,
+    downloadBlob, humanFileSize, extForMime, baseName, flattenForJpeg,
+  } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-converter');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#cv-panel')!;
+    const preview = root.querySelector<HTMLImageElement>('#cv-preview')!;
+    const formatEl = root.querySelector<HTMLSelectElement>('#cv-format')!;
+    const qualityEl = root.querySelector<HTMLInputElement>('#cv-quality')!;
+    const qualityView = root.querySelector<HTMLOutputElement>('#cv-quality-view')!;
+    const qualityWrap = root.querySelector<HTMLDivElement>('#cv-quality-wrap')!;
+
+    let sourceCanvas: HTMLCanvasElement | null = null;
+    let sourceUrl = '';
+    let sourceFile: File | null = null;
+    let outputBlob: Blob | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const convert = async () => {
+      if (!sourceCanvas) return;
+      const mime = formatEl.value;
+      qualityWrap.classList.toggle('invisible', mime === 'image/png');
+      const canvas = mime === 'image/jpeg' ? flattenForJpeg(sourceCanvas) : sourceCanvas;
+      outputBlob = await canvasToBlob(canvas, mime, mime === 'image/png' ? undefined : Number(qualityEl.value) / 100);
+      root.querySelector('#cv-out')!.textContent = humanFileSize(outputBlob.size);
+    };
+
+    const schedule = () => {
+      qualityView.textContent = `${qualityEl.value}%`;
+      clearTimeout(timer);
+      timer = setTimeout(convert, 150);
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+        sourceUrl = loaded.url;
+        sourceFile = file;
+        sourceCanvas = imageToCanvas(loaded.img);
+        preview.src = loaded.url;
+        root.querySelector('#cv-orig')!.textContent =
+          `${file.type.replace('image/', '').toUpperCase()} · ${humanFileSize(file.size)} · ${loaded.img.naturalWidth} × ${loaded.img.naturalHeight}`;
+        panel.classList.remove('hidden');
+        await convert();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#cv-drop')!,
+      root.querySelector<HTMLInputElement>('#cv-drop-file')!,
+      handle,
+    );
+
+    formatEl.addEventListener('change', schedule);
+    qualityEl.addEventListener('input', schedule);
+
+    root.querySelector('#cv-download')!.addEventListener('click', () => {
+      if (!outputBlob || !sourceFile) return;
+      downloadBlob(outputBlob, `${baseName(sourceFile.name)}.${extForMime(outputBlob.type)}`);
+    });
+  }
+</script>

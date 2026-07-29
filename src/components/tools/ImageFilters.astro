@@ -1,0 +1,152 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-filters.ui.${key}`);
+
+const sliders = [
+  { id: 'brightness', min: 0, max: 200, value: 100, unit: '%' },
+  { id: 'contrast', min: 0, max: 200, value: 100, unit: '%' },
+  { id: 'saturate', min: 0, max: 200, value: 100, unit: '%' },
+  { id: 'grayscale', min: 0, max: 100, value: 0, unit: '%' },
+  { id: 'sepia', min: 0, max: 100, value: 0, unit: '%' },
+  { id: 'blur', min: 0, max: 20, value: 0, unit: 'px' },
+  { id: 'hueRotate', min: -180, max: 180, value: 0, unit: '°' },
+  { id: 'invert', min: 0, max: 100, value: 0, unit: '%' },
+] as const;
+
+const presets = ['presetNormal', 'presetBW', 'presetVintage', 'presetWarm', 'presetCold'] as const;
+---
+
+<div id="image-filters">
+  <ImageDropzone id="fx-drop" text={u('dropzone')} />
+
+  <div id="fx-panel" class="mt-5 hidden">
+    <div class="grid gap-5 lg:grid-cols-[1fr_260px]">
+      <canvas id="fx-canvas" class="block max-w-full rounded-lg border border-line"></canvas>
+
+      <div class="grid content-start gap-2.5">
+        {
+          sliders.map(({ id, min, max, value, unit }) => (
+            <div>
+              <label for={`fx-${id}`} class="mb-0.5 flex justify-between text-xs text-ink-soft">
+                <span>{u(id)}</span>
+                <output id={`fx-${id}-view`} class="font-mono text-ink">{value}{unit}</output>
+              </label>
+              <input id={`fx-${id}`} data-filter={id} data-unit={unit} type="range" min={min} max={max} value={value} class="w-full accent-pine" />
+            </div>
+          ))
+        }
+
+        <div class="mt-2 border-t border-line pt-3">
+          <span class="rlt-label">{u('presets')}</span>
+          <div class="flex flex-wrap gap-1.5">
+            {presets.map((preset) => (
+              <button data-preset={preset} class="rlt-btn">{u(preset)}</button>
+            ))}
+          </div>
+        </div>
+
+        <div class="mt-2 flex gap-2">
+          <button id="fx-reset" class="rlt-btn">{u('reset')}</button>
+          <button id="fx-download" class="rlt-btn rlt-btn-primary">{u('download')}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob, baseName } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-filters');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#fx-panel')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('#fx-canvas')!;
+    const sliders = [...root.querySelectorAll<HTMLInputElement>('[data-filter]')];
+
+    let img: HTMLImageElement | null = null;
+    let sourceName = 'image';
+
+    const filterString = (): string =>
+      sliders
+        .map((el) => `${el.dataset.filter === 'hueRotate' ? 'hue-rotate' : el.dataset.filter}(${el.value}${el.dataset.unit})`)
+        .join(' ');
+
+    const paint = (target: HTMLCanvasElement) => {
+      if (!img) return;
+      const tctx = target.getContext('2d')!;
+      tctx.filter = filterString();
+      tctx.clearRect(0, 0, target.width, target.height);
+      tctx.drawImage(img, 0, 0, target.width, target.height);
+      tctx.filter = 'none';
+    };
+
+    const preview = () => {
+      sliders.forEach((el) => {
+        root.querySelector<HTMLOutputElement>(`#fx-${el.dataset.filter}-view`)!.textContent =
+          `${el.value}${el.dataset.unit}`;
+      });
+      paint(canvas);
+    };
+
+    const setValues = (next: Record<string, number>) => {
+      sliders.forEach((el) => {
+        const v = next[el.dataset.filter!];
+        if (v !== undefined) el.value = String(v);
+      });
+      preview();
+    };
+
+    const presets: Record<string, Record<string, number>> = {
+      presetNormal: { brightness: 100, contrast: 100, saturate: 100, grayscale: 0, sepia: 0, blur: 0, hueRotate: 0, invert: 0 },
+      presetBW: { brightness: 105, contrast: 110, saturate: 100, grayscale: 100, sepia: 0, blur: 0, hueRotate: 0, invert: 0 },
+      presetVintage: { brightness: 105, contrast: 90, saturate: 75, grayscale: 0, sepia: 60, blur: 0, hueRotate: 0, invert: 0 },
+      presetWarm: { brightness: 105, contrast: 100, saturate: 120, grayscale: 0, sepia: 30, blur: 0, hueRotate: -10, invert: 0 },
+      presetCold: { brightness: 100, contrast: 110, saturate: 90, grayscale: 0, sepia: 0, blur: 0, hueRotate: 20, invert: 0 },
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        sourceName = file.name;
+        const maxW = 900;
+        const scale = Math.min(1, maxW / img.naturalWidth);
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        panel.classList.remove('hidden');
+        preview();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#fx-drop')!,
+      root.querySelector<HTMLInputElement>('#fx-drop-file')!,
+      handle,
+    );
+
+    sliders.forEach((el) => el.addEventListener('input', preview));
+
+    root.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-preset], #fx-reset, #fx-download');
+      if (!btn) return;
+      if (btn.dataset.preset) setValues(presets[btn.dataset.preset]);
+      else if (btn.id === 'fx-reset') setValues(presets.presetNormal);
+      else if (btn.id === 'fx-download' && img) {
+        const full = document.createElement('canvas');
+        full.width = img.naturalWidth;
+        full.height = img.naturalHeight;
+        paint(full);
+        canvasToBlob(full, 'image/png').then((blob) =>
+          downloadBlob(blob, `${baseName(sourceName)}-edited.png`),
+        );
+      }
+    });
+  }
+</script>

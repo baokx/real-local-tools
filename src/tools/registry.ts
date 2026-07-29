@@ -29,6 +29,20 @@ export const tools: ToolDef[] = [
   // Image tools
   { slug: 'qr-code-generator', category: 'image', icon: '▦QR' },
   { slug: 'qr-code-scanner', category: 'image', icon: '▦◉' },
+  { slug: 'image-compressor', category: 'image', icon: '▼▣' },
+  { slug: 'image-converter', category: 'image', icon: '⇄▣' },
+  { slug: 'image-to-base64', category: 'image', icon: '64▣' },
+  { slug: 'image-resizer', category: 'image', icon: '⤡px' },
+  { slug: 'exif-viewer', category: 'image', icon: 'EXIF' },
+  { slug: 'image-watermark', category: 'image', icon: '≈wm' },
+  { slug: 'image-color-picker', category: 'image', icon: '◉#' },
+  { slug: 'favicon-generator', category: 'image', icon: '★16' },
+  { slug: 'image-cropper', category: 'image', icon: '✂▣' },
+  { slug: 'image-filters', category: 'image', icon: '☀fx' },
+  { slug: 'image-to-ascii', category: 'image', icon: '▓Aa' },
+  { slug: 'image-rotator', category: 'image', icon: '⟳90' },
+  { slug: 'metadata-remover', category: 'image', icon: '∅ex' },
+  { slug: 'color-extractor', category: 'image', icon: '▤#' },
 
   // Security tools
   { slug: 'password-generator', category: 'security', icon: '✳✳✳' },

@@ -1,0 +1,149 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-to-ascii.ui.${key}`);
+---
+
+<div id="image-to-ascii" data-copied={t(lang, 'common.copied')}>
+  <ImageDropzone id="aa-drop" text={u('dropzone')} />
+
+  <div id="aa-panel" class="mt-5 hidden">
+    <div class="flex flex-wrap items-center gap-3">
+      <label class="flex items-center gap-2 text-sm text-ink-soft">
+        {u('width')}
+        <select id="aa-width" class="rlt-input">
+          <option value="80">80</option>
+          <option value="120" selected>120</option>
+          <option value="160">160</option>
+          <option value="200">200</option>
+        </select>
+      </label>
+      <label class="flex items-center gap-2 text-sm text-ink-soft">
+        {u('charset')}
+        <select id="aa-charset" class="rlt-input">
+          <option value="simple">{u('simple')}</option>
+          <option value="detailed" selected>{u('detailed')}</option>
+          <option value="blocks">{u('blocks')}</option>
+        </select>
+      </label>
+      <button id="aa-copy" class="rlt-btn">{u('copy')}</button>
+      <button id="aa-download" class="rlt-btn rlt-btn-primary">{u('download')}</button>
+    </div>
+
+    <pre
+      id="aa-output"
+      class="mt-4 overflow-x-auto rounded-lg border border-line bg-ink p-3 font-mono leading-none text-[#b8e6c9]"
+      style="font-size: 7px; letter-spacing: 0;"
+    ></pre>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob, baseName } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-to-ascii');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#aa-panel')!;
+    const widthEl = root.querySelector<HTMLSelectElement>('#aa-width')!;
+    const charsetEl = root.querySelector<HTMLSelectElement>('#aa-charset')!;
+    const output = root.querySelector<HTMLPreElement>('#aa-output')!;
+
+    // Ordered dark → light so index maps directly from luminance.
+    const charsets: Record<string, string> = {
+      simple: '@%#*+=-:. ',
+      detailed: "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ",
+      blocks: '█▓▒░ ',
+    };
+
+    let img: HTMLImageElement | null = null;
+    let sourceName = 'image';
+    let art = '';
+
+    const render = () => {
+      if (!img) return;
+      const chars = charsets[charsetEl.value];
+      const cols = Number(widthEl.value);
+      // Characters are roughly twice as tall as wide — compensate.
+      const scale = cols / img.naturalWidth;
+      const rows = Math.max(1, Math.round(img.naturalHeight * scale * 0.5));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = cols;
+      canvas.height = rows;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+      ctx.drawImage(img, 0, 0, cols, rows);
+      const { data } = ctx.getImageData(0, 0, cols, rows);
+
+      const lines: string[] = [];
+      for (let y = 0; y < rows; y++) {
+        let line = '';
+        for (let x = 0; x < cols; x++) {
+          const i = (y * cols + x) * 4;
+          const lum = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+          line += chars[Math.floor((lum / 255) * (chars.length - 1))];
+        }
+        lines.push(line);
+      }
+      art = lines.join('\n');
+      output.textContent = art;
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        sourceName = file.name;
+        loaded.revoke();
+        panel.classList.remove('hidden');
+        render();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#aa-drop')!,
+      root.querySelector<HTMLInputElement>('#aa-drop-file')!,
+      handle,
+    );
+
+    widthEl.addEventListener('change', render);
+    charsetEl.addEventListener('change', render);
+
+    root.querySelector('#aa-copy')!.addEventListener('click', async (event) => {
+      if (!art) return;
+      await navigator.clipboard.writeText(art);
+      const btn = event.currentTarget as HTMLButtonElement;
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+
+    root.querySelector('#aa-download')!.addEventListener('click', async () => {
+      if (!art) return;
+      // Render the ASCII text into an image so it survives as a picture.
+      const fontSize = 12;
+      const lineHeight = fontSize;
+      const lines = art.split('\n');
+      const measure = document.createElement('canvas').getContext('2d')!;
+      measure.font = `${fontSize}px monospace`;
+      const width = Math.ceil(measure.measureText('█'.repeat(lines[0]?.length ?? 1)).width);
+      const canvas = document.createElement('canvas');
+      canvas.width = width + 16;
+      canvas.height = lines.length * lineHeight + 16;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = '#1b1e1c';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `${fontSize}px monospace`;
+      ctx.fillStyle = '#b8e6c9';
+      ctx.textBaseline = 'top';
+      lines.forEach((line, i) => ctx.fillText(line, 8, 8 + i * lineHeight));
+      const blob = await canvasToBlob(canvas, 'image/png');
+      downloadBlob(blob, `${baseName(sourceName)}-ascii.png`);
+    });
+  }
+</script>

@@ -1,0 +1,118 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-rotator.ui.${key}`);
+---
+
+<div id="image-rotator">
+  <ImageDropzone id="rt-drop" text={u('dropzone')} />
+
+  <div id="rt-panel" class="mt-5 hidden">
+    <div class="flex flex-wrap items-center gap-2">
+      <button data-rot="-90" class="rlt-btn">{u('rotate90ccw')}</button>
+      <button data-rot="90" class="rlt-btn">{u('rotate90cw')}</button>
+      <button data-rot="180" class="rlt-btn">{u('rotate180')}</button>
+      <button data-flip="h" class="rlt-btn">{u('flipH')}</button>
+      <button data-flip="v" class="rlt-btn">{u('flipV')}</button>
+      <span class="mx-2 hidden h-5 w-px bg-line sm:block"></span>
+      <label class="flex items-center gap-2 text-sm text-ink-soft">
+        {u('angle')}
+        <input id="rt-angle" type="range" min="-180" max="180" value="0" class="w-36 accent-pine" />
+        <output id="rt-angle-view" class="w-10 font-mono text-ink">0°</output>
+      </label>
+      <button id="rt-download" class="rlt-btn rlt-btn-primary ml-auto">{u('download')}</button>
+    </div>
+    <canvas id="rt-canvas" class="mt-3 block max-w-full rounded-lg border border-line"></canvas>
+  </div>
+</div>
+
+<script>
+  import { wireDropzone, loadImageFromFile, canvasToBlob, downloadBlob, baseName } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-rotator');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#rt-panel')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('#rt-canvas')!;
+    const ctx = canvas.getContext('2d')!;
+    const angleEl = root.querySelector<HTMLInputElement>('#rt-angle')!;
+    const angleView = root.querySelector<HTMLOutputElement>('#rt-angle-view')!;
+
+    let img: HTMLImageElement | null = null;
+    let sourceName = 'image';
+    // Base transform from the step buttons; the slider adds a free angle.
+    let quarterTurns = 0;
+    let flipH = false;
+    let flipV = false;
+
+    const totalAngle = () => quarterTurns * 90 + Number(angleEl.value);
+
+    const paint = (target: HTMLCanvasElement, scale = 1) => {
+      if (!img) return;
+      const rad = (totalAngle() * Math.PI) / 180;
+      const w = img.naturalWidth * scale;
+      const h = img.naturalHeight * scale;
+      const cos = Math.abs(Math.cos(rad));
+      const sin = Math.abs(Math.sin(rad));
+      target.width = Math.round(w * cos + h * sin);
+      target.height = Math.round(w * sin + h * cos);
+      const tctx = target.getContext('2d')!;
+      tctx.save();
+      tctx.translate(target.width / 2, target.height / 2);
+      tctx.rotate(rad);
+      tctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+      tctx.drawImage(img, -w / 2, -h / 2, w, h);
+      tctx.restore();
+    };
+
+    const preview = () => {
+      angleView.textContent = `${angleEl.value}°`;
+      const maxW = 900;
+      const scale = img ? Math.min(1, maxW / img.naturalWidth) : 1;
+      paint(canvas, scale);
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        img = loaded.img;
+        sourceName = file.name;
+        quarterTurns = 0;
+        flipH = flipV = false;
+        angleEl.value = '0';
+        panel.classList.remove('hidden');
+        preview();
+      } catch { /* unreadable file — ignore */ }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#rt-drop')!,
+      root.querySelector<HTMLInputElement>('#rt-drop-file')!,
+      handle,
+    );
+
+    root.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-rot], [data-flip]');
+      if (!btn) return;
+      if (btn.dataset.rot) quarterTurns = (quarterTurns + Number(btn.dataset.rot) / 90 + 4) % 4;
+      else if (btn.dataset.flip === 'h') flipH = !flipH;
+      else flipV = !flipV;
+      preview();
+    });
+
+    angleEl.addEventListener('input', preview);
+
+    root.querySelector('#rt-download')!.addEventListener('click', async () => {
+      if (!img) return;
+      const full = document.createElement('canvas');
+      paint(full, 1);
+      const blob = await canvasToBlob(full, 'image/png');
+      downloadBlob(blob, `${baseName(sourceName)}-rotated.png`);
+    });
+  }
+</script>

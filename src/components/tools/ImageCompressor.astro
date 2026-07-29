@@ -1,0 +1,125 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+import ImageDropzone from './ImageDropzone.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.image-compressor.ui.${key}`);
+---
+
+<div
+  id="image-compressor"
+  data-savings-tpl={u('savings')}
+  data-too-big={u('tooBig')}
+>
+  <ImageDropzone id="ic-drop" text={u('dropzone')} />
+
+  <div id="ic-panel" class="mt-5 hidden">
+    <div class="grid gap-5 lg:grid-cols-2">
+      <div>
+        <img id="ic-preview" alt="" class="max-h-72 w-auto rounded-lg border border-line bg-white object-contain" />
+        <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+          <dt class="text-ink-soft">{u('original')}</dt>
+          <dd class="font-mono text-ink"><span id="ic-orig-size"></span> · <span id="ic-orig-dims"></span></dd>
+          <dt class="text-ink-soft">{u('compressed')}</dt>
+          <dd class="font-mono text-pine"><span id="ic-new-size"></span> <span id="ic-savings" class="font-medium"></span></dd>
+        </dl>
+        <p id="ic-note" role="status" class="rlt-status mt-2 text-amber"></p>
+      </div>
+
+      <div>
+        <label for="ic-quality" class="rlt-label">{u('quality')}: <output id="ic-quality-view" class="text-ink">80%</output></label>
+        <input id="ic-quality" type="range" min="10" max="100" value="80" class="w-full accent-pine" />
+        <div class="mt-2 flex items-center gap-3">
+          <label for="ic-format" class="text-sm text-ink-soft">{u('format')}</label>
+          <select id="ic-format" class="rlt-input">
+            <option value="auto" selected>Auto</option>
+            <option value="image/webp">WebP</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/png">PNG</option>
+          </select>
+        </div>
+        <button id="ic-download" class="rlt-btn rlt-btn-primary mt-5">{u('download')}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    wireDropzone, loadImageFromFile, imageToCanvas, canvasToBlob,
+    downloadBlob, humanFileSize, extForMime, baseName, flattenForJpeg,
+  } from '../../lib/image-tools';
+
+  const root = document.getElementById('image-compressor');
+  if (root) {
+    const panel = root.querySelector<HTMLDivElement>('#ic-panel')!;
+    const preview = root.querySelector<HTMLImageElement>('#ic-preview')!;
+    const qualityEl = root.querySelector<HTMLInputElement>('#ic-quality')!;
+    const qualityView = root.querySelector<HTMLOutputElement>('#ic-quality-view')!;
+    const formatEl = root.querySelector<HTMLSelectElement>('#ic-format')!;
+    const note = root.querySelector<HTMLParagraphElement>('#ic-note')!;
+
+    let sourceCanvas: HTMLCanvasElement | null = null;
+    let sourceUrl = '';
+    let sourceFile: File | null = null;
+    let outputBlob: Blob | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const recompress = async () => {
+      if (!sourceCanvas || !sourceFile) return;
+      const quality = Number(qualityEl.value) / 100;
+      const mime = formatEl.value === 'auto' ? (sourceFile.type || 'image/jpeg') : formatEl.value;
+      const canvas = mime === 'image/jpeg' ? flattenForJpeg(sourceCanvas) : sourceCanvas;
+      // PNG ignores the quality flag; JPEG/WebP honor it.
+      outputBlob = await canvasToBlob(canvas, mime, mime === 'image/png' ? undefined : quality);
+
+      root.querySelector('#ic-new-size')!.textContent = humanFileSize(outputBlob.size);
+      const pct = Math.round((1 - outputBlob.size / sourceFile.size) * 100);
+      const savingsEl = root.querySelector('#ic-savings')!;
+      savingsEl.textContent = pct > 0 ? root.dataset.savingsTpl!.replace('{pct}', String(pct)) : '';
+      note.textContent = outputBlob.size >= sourceFile.size ? root.dataset.tooBig! : '';
+    };
+
+    const schedule = () => {
+      qualityView.textContent = `${qualityEl.value}%`;
+      clearTimeout(timer);
+      timer = setTimeout(recompress, 150);
+    };
+
+    const handle = async (file: File) => {
+      try {
+        const loaded = await loadImageFromFile(file);
+        if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+        sourceUrl = loaded.url;
+        sourceFile = file;
+        sourceCanvas = imageToCanvas(loaded.img);
+        preview.src = loaded.url;
+        root.querySelector('#ic-orig-size')!.textContent = humanFileSize(file.size);
+        root.querySelector('#ic-orig-dims')!.textContent =
+          `${loaded.img.naturalWidth} × ${loaded.img.naturalHeight}`;
+        panel.classList.remove('hidden');
+        await recompress();
+      } catch {
+        note.textContent = '✕';
+      }
+    };
+
+    wireDropzone(
+      root.querySelector<HTMLElement>('#ic-drop')!,
+      root.querySelector<HTMLInputElement>('#ic-drop-file')!,
+      handle,
+    );
+
+    qualityEl.addEventListener('input', schedule);
+    formatEl.addEventListener('change', schedule);
+
+    root.querySelector('#ic-download')!.addEventListener('click', () => {
+      if (!outputBlob || !sourceFile) return;
+      downloadBlob(outputBlob, `${baseName(sourceFile.name)}-compressed.${extForMime(outputBlob.type)}`);
+    });
+  }
+</script>

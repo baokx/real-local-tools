@@ -28,6 +28,7 @@
   "common": {
     "copy": "复制",
     "copied": "已复制到剪贴板",
+    "download": "下载",
     "clear": "清空",
     "input": "输入",
     "output": "输出",
@@ -363,6 +364,221 @@
         "cheatHex": "十六进制颜色",
         "cheatUuid": "UUID",
         "cheatNumber": "数字"
+      }
+    },
+    "image-compressor": {
+      "name": "图像压缩器",
+      "description": "压缩 JPEG、PNG 和 WebP 图像,质量滑块可调——即时预览体积变化。",
+      "seoTitle": "图像压缩器 — 本地压缩 JPEG/PNG/WebP,免费",
+      "seo": "拖入照片,拖动质量滑块,在体积和保真度之间找到最佳平衡。压缩前后的大小即时更新,满意后即可下载。图像完全在您的浏览器中处理——不会上传任何内容。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "quality": "质量",
+        "format": "格式",
+        "original": "原始",
+        "compressed": "压缩后",
+        "savings": "−{pct}%",
+        "download": "下载压缩后的图片",
+        "tooBig": "压缩后反而更大了——试试更低的质量。"
+      }
+    },
+    "image-converter": {
+      "name": "图像格式转换器",
+      "description": "在 PNG、JPEG 和 WebP 格式之间转换图像——即时、私密、就在浏览器中。",
+      "seoTitle": "图像格式转换器 — PNG ↔ JPG ↔ WebP,本地运行",
+      "seo": "一键将任意图像转换为 PNG、JPEG 或 WebP。转换为 JPEG 时透明区域会自动填充为白色。下载前可比较文件大小。一切在本地进行——您的图像不会离开设备。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "targetFormat": "转换为",
+        "originalSize": "原始",
+        "outputSize": "转换后",
+        "download": "下载",
+        "quality": "质量"
+      }
+    },
+    "image-to-base64": {
+      "name": "图像 ⇄ Base64 转换器",
+      "description": "将图像编码为 Base64 数据 URI,或将 Base64 字符串解码回图像——本地完成。",
+      "seoTitle": "图像转 Base64 编码 / 解码 — data URI,本地运行",
+      "seo": "将任意图像转换为可直接嵌入 CSS 或 HTML 的 Base64 数据 URI;或粘贴数据 URI 预览并下载解码后的图像。转换完全在您的浏览器中进行。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "dataUri": "Base64 数据 URI",
+        "pasteUri": "…或在此粘贴数据 URI 进行解码",
+        "sizeLabel": "{size} · {chars} 字符",
+        "invalid": "这不是有效的 Base64 图像数据 URI。",
+        "preview": "解码预览"
+      }
+    },
+    "image-resizer": {
+      "name": "图像缩放工具",
+      "description": "将图像缩放到精确的像素尺寸,支持宽高比锁定——JPEG、PNG、WebP 输出。",
+      "seoTitle": "图像缩放工具 — 精确像素、比例锁定,本地运行",
+      "seo": "将图像缩小或放大到所需的精确宽高,可选宽高比锁定。选择输出格式和质量,预览结果大小后下载。全部处理在本地进行。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "width": "宽(px)",
+        "height": "高(px)",
+        "lockRatio": "锁定宽高比",
+        "originalSize": "原始:{w} × {h}",
+        "format": "格式",
+        "quality": "质量",
+        "outputSize": "输出:{w} × {h} · {size}",
+        "download": "下载缩放后的图片"
+      }
+    },
+    "exif-viewer": {
+      "name": "EXIF 元数据查看器",
+      "description": "查看 JPEG 照片中隐藏的相机、镜头、曝光和 GPS 元数据——完全本地。",
+      "seoTitle": "EXIF 查看器 — 本地读取照片元数据与 GPS",
+      "seo": "看看您的照片透露了什么:相机品牌和型号、镜头、快门速度、光圈、ISO、焦距、时间戳,甚至带地图链接的 GPS 坐标。文件在您的浏览器中解析,不会上传。",
+      "ui": {
+        "dropzone": "将 JPEG 照片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "noExif": "未在该文件中找到 EXIF 元数据。",
+        "tag": "标签",
+        "value": "值",
+        "viewOnMap": "在地图上查看位置"
+      }
+    },
+    "image-watermark": {
+      "name": "图片水印工具",
+      "description": "为照片添加自定义文字水印——位置、大小、透明度和平铺——全在浏览器中。",
+      "seoTitle": "图片水印工具 — 文字水印,免费本地",
+      "seo": "用自定义文字水印保护您的图片。可设置文字内容、字号、颜色、透明度和九个位置之一,或平铺整张图片。预览实时更新,结果下载为 PNG。不会上传任何内容。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "text": "水印文字",
+        "textPlaceholder": "© 您的名字",
+        "size": "字号",
+        "opacity": "透明度",
+        "color": "颜色",
+        "position": "位置",
+        "tile": "平铺(重复)",
+        "download": "下载加水印后的图片"
+      }
+    },
+    "image-color-picker": {
+      "name": "图片取色器",
+      "description": "从任意图片中拾取精确颜色——点击即可获取 HEX、RGB 和 HSL 值,带放大镜。",
+      "seoTitle": "图片取色器 — 从照片取 HEX/RGB,本地运行",
+      "seo": "上传任意图片,点击即可采样精确的像素颜色。放大镜帮您精确瞄准。拾取的颜色保存在历史条中,HEX、RGB、HSL 一键复制。全部本地运行。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "hint": "移动预览 · 点击取色",
+        "picked": "已取颜色",
+        "clear": "清空"
+      }
+    },
+    "favicon-generator": {
+      "name": "Favicon 生成器",
+      "description": "将任意图片变成完整的网站图标套装——内含 16/32/48px 的 ICO 及 PNG、Apple 触摸图标。",
+      "seoTitle": "Favicon 生成器 — 任意图片生成 ICO + PNG 套装",
+      "seo": "上传 Logo 或图片,即可得到即用的网站图标包:多尺寸 .ico 文件(16、32、48 px),以及用于 Apple 触摸图标和 PWA 的 180、192、512 px PNG。全部在您的浏览器中生成。",
+      "ui": {
+        "dropzone": "将接近正方形的图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "preview": "预览",
+        "downloadIco": "下载 favicon.ico",
+        "downloadPng": "PNG {size}px",
+        "note": "正方形源图效果最佳——图片会居中裁剪为正方形。"
+      }
+    },
+    "image-cropper": {
+      "name": "图片裁剪工具",
+      "description": "拖拽选区裁剪图片,支持宽高比预设——免费、私密、在浏览器中。",
+      "seoTitle": "图片裁剪工具 — 拖拽裁剪、比例预设,本地运行",
+      "seo": "在图片上拖出选区,精确裁剪您需要的部分,支持 1:1、4:3、3:2 和 16:9 预设。裁剪区域保持原始分辨率。一切在您的浏览器中运行——无需上传。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "aspect": "宽高比",
+        "free": "自由",
+        "selection": "选区:{w} × {h} px",
+        "crop": "裁剪",
+        "download": "下载裁剪后的图片",
+        "dragHint": "在图片上拖动以选择裁剪区域"
+      }
+    },
+    "image-filters": {
+      "name": "图片滤镜与照片编辑器",
+      "description": "实时预览调整亮度、对比度、饱和度等参数——另有一键预设。",
+      "seoTitle": "图片滤镜与照片编辑器 — 亮度、对比度,本地运行",
+      "seo": "用实时滑块调整亮度、对比度、饱和度、灰度、褐色调、模糊、色相和反色,或从黑白、复古等预设开始。全分辨率结果即时下载。您的照片不会离开设备。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "brightness": "亮度",
+        "contrast": "对比度",
+        "saturate": "饱和度",
+        "grayscale": "灰度",
+        "sepia": "怀旧",
+        "blur": "模糊",
+        "hueRotate": "色相",
+        "invert": "反色",
+        "reset": "重置",
+        "presets": "预设",
+        "presetNormal": "原图",
+        "presetBW": "黑白",
+        "presetVintage": "复古",
+        "presetWarm": "暖调",
+        "presetCold": "冷调",
+        "download": "下载编辑后的图片"
+      }
+    },
+    "image-to-ascii": {
+      "name": "图片转字符画(ASCII Art)",
+      "description": "将图片转换为 ASCII 字符画,宽度和字符集可调——可复制文本或下载图片。",
+      "seoTitle": "图片转 ASCII 字符画 — 本地运行,免费",
+      "seo": "将任意图片转换为由 ASCII 字符组成的文字画。可调整输出宽度,选择简单、细节或方块字符集,然后复制文本或下载为 PNG。渲染完全在您的浏览器中进行。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "width": "宽度(字符数)",
+        "charset": "字符集",
+        "simple": "简单",
+        "detailed": "细节",
+        "blocks": "方块",
+        "copy": "复制文本",
+        "download": "下载 PNG"
+      }
+    },
+    "image-rotator": {
+      "name": "图片旋转器",
+      "description": "按 90° 步进或任意自定义角度旋转图片,支持水平和垂直翻转——本地运行。",
+      "seoTitle": "图片旋转与翻转 — 任意角度,本地运行",
+      "seo": "以 90 度步进旋转照片,或拨入任意角度,并可水平或垂直翻转。旋转结果保持完整画质,角落为透明。处理完全在本地进行。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "rotate90cw": "顺时针 90°",
+        "rotate90ccw": "逆时针 90°",
+        "rotate180": "180°",
+        "flipH": "水平翻转",
+        "flipV": "垂直翻转",
+        "angle": "自定义角度",
+        "download": "下载旋转后的图片"
+      }
+    },
+    "metadata-remover": {
+      "name": "EXIF 与元数据去除器",
+      "description": "分享照片前,去除其中的位置、相机和时间戳元数据——完全本地。",
+      "seoTitle": "EXIF 去除器 — 清除照片元数据保护隐私",
+      "seo": "照片可能泄露拍摄的时间、地点和设备。本工具展示图像携带的元数据,并生成一份完全清除这些信息的干净副本。处理在您的浏览器中进行——照片不会上传。",
+      "ui": {
+        "dropzone": "将照片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "foundMeta": "该照片中发现 {n} 条元数据",
+        "alreadyClean": "该图片不含 EXIF 元数据。",
+        "original": "原始",
+        "stripped": "清理后",
+        "download": "下载干净的图片",
+        "keptQuality": "格式与画质保持不变"
+      }
+    },
+    "color-extractor": {
+      "name": "颜色提取器",
+      "description": "从任意图片中提取主色调,生成附带 HEX 和 RGB 值的调色板。",
+      "seoTitle": "颜色提取器 — 任意图片提取主色调色板",
+      "seo": "从照片或画作中提取主色调,得到附带 HEX 和 RGB 值的干净调色板,可直接用于设计工作。可选颜色数量,点击任意色块复制。全部本地运行。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "count": "颜色数量",
+        "extract": "提取调色板",
+        "hint": "点击任意颜色复制其 HEX 值"
       }
     }
   }
