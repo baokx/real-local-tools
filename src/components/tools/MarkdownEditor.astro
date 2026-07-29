@@ -1,0 +1,213 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.markdown-editor.ui.${key}`);
+
+const buttons = [
+  { id: 'bold', label: 'B', cls: 'font-bold' },
+  { id: 'italic', label: 'I', cls: 'italic' },
+  { id: 'strike', label: 'S', cls: 'line-through' },
+  { id: 'h1', label: 'H1', cls: '' },
+  { id: 'h2', label: 'H2', cls: '' },
+  { id: 'h3', label: 'H3', cls: '' },
+  { id: 'link', label: 'a↗', cls: '' },
+  { id: 'image', label: 'img', cls: 'font-mono' },
+  { id: 'code', label: '`·`', cls: 'font-mono' },
+  { id: 'codeblock', label: '{ }', cls: 'font-mono' },
+  { id: 'quote', label: '❝', cls: '' },
+  { id: 'ul', label: '•≡', cls: '' },
+  { id: 'ol', label: '1≡', cls: '' },
+  { id: 'table', label: '▦', cls: '' },
+  { id: 'hr', label: '—', cls: '' },
+];
+---
+
+<div id="markdown-editor" data-sample={u('sample')} data-copied={u('copied')} data-copy={u('copyHtml')}>
+  <div class="flex flex-wrap items-center gap-1.5 rounded-t-lg border border-line bg-mist/60 px-3 py-2">
+    {
+      buttons.map((b) => (
+        <button
+          type="button"
+          data-md={b.id}
+          title={u(`toolbar.${b.id}`)}
+          class={`rounded border border-transparent px-2 py-1 text-sm text-ink-soft transition-colors hover:border-line hover:bg-white hover:text-ink ${b.cls}`}
+        >
+          {b.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="grid lg:grid-cols-2">
+    <textarea
+      id="md-input"
+      class="rlt-textarea min-h-96 w-full resize-y rounded-none border-x border-b border-line font-mono text-sm lg:rounded-bl-lg lg:border-r-0"
+      spellcheck="false"
+      placeholder={u('placeholder')}
+    ></textarea>
+    <div
+      id="md-preview"
+      class="md-preview min-h-96 overflow-auto rounded-b-lg border border-line bg-white px-5 py-4 lg:rounded-bl-none lg:rounded-br-lg"
+    >
+    </div>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+    <span class="text-xs text-ink-soft">
+      <span id="md-words" class="font-mono">0</span> {u('words')} ·
+      <span id="md-chars" class="font-mono">0</span> {u('chars')}
+    </span>
+    <span class="flex-1"></span>
+    <button id="md-copy" type="button" class="rlt-btn text-sm">{u('copyHtml')}</button>
+    <button id="md-dl-md" type="button" class="rlt-btn text-sm">{u('downloadMd')}</button>
+    <button id="md-dl-html" type="button" class="rlt-btn text-sm">{u('downloadHtml')}</button>
+    <button id="md-clear" type="button" class="rlt-btn text-sm">{u('clear')}</button>
+  </div>
+</div>
+
+<style is:global>
+  .md-preview h1 { font-size: 1.5rem; font-weight: 700; margin: 0.9rem 0 0.5rem; }
+  .md-preview h2 { font-size: 1.25rem; font-weight: 700; margin: 0.9rem 0 0.45rem; border-bottom: 1px solid var(--color-line); padding-bottom: 0.25rem; }
+  .md-preview h3 { font-size: 1.1rem; font-weight: 600; margin: 0.8rem 0 0.4rem; }
+  .md-preview h4, .md-preview h5, .md-preview h6 { font-weight: 600; margin: 0.7rem 0 0.35rem; }
+  .md-preview p { margin: 0.5rem 0; line-height: 1.7; }
+  .md-preview ul, .md-preview ol { margin: 0.5rem 0; padding-left: 1.5rem; line-height: 1.7; }
+  .md-preview ul { list-style: disc; }
+  .md-preview ol { list-style: decimal; }
+  .md-preview li > ul, .md-preview li > ol { margin: 0.15rem 0; }
+  .md-preview code { background: var(--color-mist); border-radius: 0.25rem; padding: 0.1rem 0.35rem; font-family: var(--font-mono); font-size: 0.85em; }
+  .md-preview pre { background: var(--color-mist); border-radius: 0.5rem; padding: 0.75rem 1rem; overflow-x: auto; margin: 0.6rem 0; }
+  .md-preview pre code { background: none; padding: 0; font-size: 0.8rem; }
+  .md-preview blockquote { border-left: 3px solid var(--color-pine); margin: 0.6rem 0; padding: 0.15rem 0 0.15rem 0.9rem; color: var(--color-ink-soft); }
+  .md-preview a { color: var(--color-pine); text-decoration: underline; text-underline-offset: 2px; }
+  .md-preview img { max-width: 100%; border-radius: 0.5rem; }
+  .md-preview hr { border: none; border-top: 1px solid var(--color-line); margin: 1rem 0; }
+  .md-preview table { border-collapse: collapse; margin: 0.6rem 0; font-size: 0.85rem; }
+  .md-preview th, .md-preview td { border: 1px solid var(--color-line); padding: 0.35rem 0.7rem; }
+  .md-preview th { background: var(--color-mist); font-weight: 600; }
+  .md-preview del { opacity: 0.65; }
+  .md-preview > :first-child { margin-top: 0; }
+</style>
+
+<script>
+  import { marked } from 'marked';
+  import DOMPurify from 'dompurify';
+
+  const root = document.getElementById('markdown-editor');
+  if (root) {
+    const editor = root.querySelector<HTMLTextAreaElement>('#md-input')!;
+    const preview = root.querySelector<HTMLElement>('#md-preview')!;
+    const wordsEl = root.querySelector('#md-words')!;
+    const charsEl = root.querySelector('#md-chars')!;
+    const copyBtn = root.querySelector<HTMLButtonElement>('#md-copy')!;
+    const DRAFT_KEY = 'rlt:markdown-draft';
+
+    marked.setOptions({ gfm: true, breaks: false });
+
+    let html = '';
+    const render = () => {
+      const md = editor.value;
+      html = DOMPurify.sanitize(marked.parse(md) as string);
+      preview.innerHTML = html;
+      const cjk = (md.match(/[぀-ヿ㐀-䶿一-鿿豈-﫿가-힯]/g) || []).length;
+      const words = (md.replace(/[぀-ヿ㐀-䶿一-鿿豈-﫿가-힯]/g, ' ').match(/\S+/g) || []).length;
+      wordsEl.textContent = (cjk + words).toLocaleString('en-US');
+      charsEl.textContent = md.length.toLocaleString('en-US');
+    };
+
+    const wrapSelection = (before: string, after = '', placeholder = '') => {
+      const { selectionStart: s, selectionEnd: e, value } = editor;
+      const selected = value.slice(s, e) || placeholder;
+      editor.setRangeText(before + selected + after, s, e, 'end');
+      editor.focus();
+      render();
+    };
+
+    const prefixLine = (prefix: string) => {
+      const lineStart = editor.value.lastIndexOf('\n', editor.selectionStart - 1) + 1;
+      editor.setRangeText(prefix, lineStart, lineStart, 'end');
+      editor.focus();
+      render();
+    };
+
+    const actions: Record<string, () => void> = {
+      bold: () => wrapSelection('**', '**', 'bold'),
+      italic: () => wrapSelection('*', '*', 'italic'),
+      strike: () => wrapSelection('~~', '~~', 'strike'),
+      h1: () => prefixLine('# '),
+      h2: () => prefixLine('## '),
+      h3: () => prefixLine('### '),
+      link: () => wrapSelection('[', '](https://)', 'link text'),
+      image: () => wrapSelection('![', '](https://)', 'alt'),
+      code: () => wrapSelection('`', '`', 'code'),
+      codeblock: () => wrapSelection('\n```\n', '\n```\n', 'code'),
+      quote: () => prefixLine('> '),
+      ul: () => prefixLine('- '),
+      ol: () => prefixLine('1. '),
+      table: () => wrapSelection('\n| Column 1 | Column 2 |\n| --- | --- |\n| ', ' | |\n', 'cell'),
+      hr: () => wrapSelection('\n\n---\n\n'),
+    };
+
+    root.querySelectorAll<HTMLButtonElement>('[data-md]').forEach((btn) => {
+      btn.addEventListener('click', () => actions[btn.dataset.md!]?.());
+    });
+
+    const download = (content: string, filename: string, type: string) => {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(html);
+        copyBtn.textContent = root.dataset.copied!;
+        setTimeout(() => (copyBtn.textContent = root.dataset.copy!), 1200);
+      } catch {}
+    });
+    root.querySelector('#md-dl-md')!.addEventListener('click', () =>
+      download(editor.value, 'document.md', 'text/markdown;charset=utf-8'),
+    );
+    root.querySelector('#md-dl-html')!.addEventListener('click', () =>
+      download(
+        `<!doctype html><html><head><meta charset="utf-8"><title>document</title></head><body>${html}</body></html>`,
+        'document.html',
+        'text/html;charset=utf-8',
+      ),
+    );
+    root.querySelector('#md-clear')!.addEventListener('click', () => {
+      editor.value = '';
+      localStorage.removeItem(DRAFT_KEY);
+      render();
+      editor.focus();
+    });
+
+    let saveTimer = 0;
+    editor.addEventListener('input', () => {
+      render();
+      clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(() => {
+        try {
+          if (editor.value) localStorage.setItem(DRAFT_KEY, editor.value);
+          else localStorage.removeItem(DRAFT_KEY);
+        } catch {}
+      }, 300);
+    });
+
+    let initial = '';
+    try {
+      initial = localStorage.getItem(DRAFT_KEY) ?? '';
+    } catch {}
+    editor.value = initial || root.dataset.sample!;
+    render();
+  }
+</script>

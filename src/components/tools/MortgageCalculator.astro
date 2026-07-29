@@ -1,0 +1,217 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.mortgage-calculator.ui.${key}`);
+---
+
+<div id="mortgage-calculator">
+  <div class="grid gap-5 lg:grid-cols-[320px_1fr]">
+    <section class="space-y-4 rounded-lg border border-line bg-mist/40 p-4">
+      <div>
+        <label for="mc-amount" class="rlt-label">{u('loanAmount')}</label>
+        <input id="mc-amount" type="number" min="0" step="1000" value="500000" class="rlt-input w-full font-mono" />
+      </div>
+      <div>
+        <label for="mc-rate" class="rlt-label">{u('annualRate')}</label>
+        <input id="mc-rate" type="number" min="0" step="0.01" value="4.5" class="rlt-input w-full font-mono" />
+      </div>
+      <div>
+        <label for="mc-years" class="rlt-label">{u('termYears')}</label>
+        <input id="mc-years" type="number" min="1" max="50" step="1" value="30" class="rlt-input w-full font-mono" />
+      </div>
+      <div>
+        <label for="mc-method" class="rlt-label">{u('method')}</label>
+        <select id="mc-method" class="rlt-input w-full">
+          <option value="annuity">{u('annuity')}</option>
+          <option value="equal-principal">{u('equalPrincipal')}</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div>
+          <p class="text-xs text-ink-soft" id="mc-payment-label">{u('monthlyPayment')}</p>
+          <p class="mt-1 font-mono text-2xl font-semibold text-pine" id="mc-payment">—</p>
+          <p
+            class="mt-1 hidden text-xs text-ink-soft"
+            id="mc-payment-range"
+            data-first={u('firstPayment')}
+            data-last={u('lastPayment')}
+            data-decrease={u('monthlyDecrease')}
+          >
+          </p>
+        </div>
+        <div>
+          <p class="text-xs text-ink-soft">{u('totalInterest')}</p>
+          <p class="mt-1 font-mono text-2xl font-semibold text-ink" id="mc-interest">—</p>
+        </div>
+        <div>
+          <p class="text-xs text-ink-soft">{u('totalPayment')}</p>
+          <p class="mt-1 font-mono text-2xl font-semibold text-ink" id="mc-total">—</p>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <div class="flex h-2.5 overflow-hidden rounded-full bg-line/60">
+          <div id="mc-bar-principal" class="bg-pine transition-all duration-300" style="width: 50%"></div>
+          <div id="mc-bar-interest" class="bg-amber-500/80 transition-all duration-300" style="width: 50%"></div>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-ink-soft">
+          <span><span class="mr-1.5 inline-block h-2 w-2 rounded-full bg-pine align-middle"></span>{u('principalLabel')} <span id="mc-bar-pt" class="font-mono">—</span></span>
+          <span><span class="mr-1.5 inline-block h-2 w-2 rounded-full bg-amber-500/80 align-middle"></span>{u('interestLabel')} <span id="mc-bar-it" class="font-mono">—</span></span>
+        </div>
+      </div>
+
+      <button id="mc-toggle" type="button" class="rlt-btn mt-5 hidden text-sm" data-show={u('show')} data-hide={u('hide')}>
+        {u('show')}
+      </button>
+      <div id="mc-schedule-wrap" class="mt-3 hidden max-h-96 overflow-auto rounded-lg border border-line">
+        <table class="w-full text-xs">
+          <thead class="sticky top-0 bg-mist text-left text-ink-soft">
+            <tr>
+              <th class="px-3 py-2 font-medium">{u('colMonth')}</th>
+              <th class="px-3 py-2 text-right font-medium">{u('colPayment')}</th>
+              <th class="px-3 py-2 text-right font-medium">{u('colPrincipal')}</th>
+              <th class="px-3 py-2 text-right font-medium">{u('colInterest')}</th>
+              <th class="px-3 py-2 text-right font-medium">{u('colBalance')}</th>
+            </tr>
+          </thead>
+          <tbody id="mc-schedule" class="font-mono text-ink"></tbody>
+        </table>
+      </div>
+      <p id="mc-invalid" class="rlt-status mt-4 hidden">{u('invalid')}</p>
+    </section>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('mortgage-calculator');
+  if (root) {
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) => root.querySelector<T>(`#${id}`)!;
+    const amountEl = $<HTMLInputElement>('mc-amount');
+    const rateEl = $<HTMLInputElement>('mc-rate');
+    const yearsEl = $<HTMLInputElement>('mc-years');
+    const methodEl = $<HTMLSelectElement>('mc-method');
+    const paymentLabelEl = $('mc-payment-label');
+    const paymentEl = $('mc-payment');
+    const rangeEl = $('mc-payment-range');
+    const interestEl = $('mc-interest');
+    const totalEl = $('mc-total');
+    const barPEl = $('mc-bar-principal');
+    const barIEl = $('mc-bar-interest');
+    const barPtEl = $('mc-bar-pt');
+    const barItEl = $('mc-bar-it');
+    const toggleEl = $<HTMLButtonElement>('mc-toggle');
+    const wrapEl = $('mc-schedule-wrap');
+    const scheduleEl = $('mc-schedule');
+    const invalidEl = $('mc-invalid');
+
+    const labels = {
+      monthly: paymentLabelEl.textContent!,
+      first: rangeEl.dataset.first ?? '',
+      last: rangeEl.dataset.last ?? '',
+      decrease: rangeEl.dataset.decrease ?? '',
+    };
+
+    const fmt = (n: number): string =>
+      n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const renderSchedule = (rows: Array<[number, number, number, number, number]>) => {
+      const html = rows
+        .map(
+          ([k, pay, prin, intr, bal]) =>
+            `<tr class="border-t border-line/60"><td class="px-3 py-1.5">${k}</td>` +
+            `<td class="px-3 py-1.5 text-right">${fmt(pay)}</td>` +
+            `<td class="px-3 py-1.5 text-right">${fmt(prin)}</td>` +
+            `<td class="px-3 py-1.5 text-right">${fmt(intr)}</td>` +
+            `<td class="px-3 py-1.5 text-right">${fmt(Math.max(0, bal))}</td></tr>`,
+        )
+        .join('');
+      scheduleEl.innerHTML = html;
+    };
+
+    const update = () => {
+      const P = Number(amountEl.value);
+      const annual = Number(rateEl.value);
+      const years = Number(yearsEl.value);
+      const valid = P > 0 && annual >= 0 && years >= 1 && years <= 100;
+      invalidEl.classList.toggle('hidden', valid);
+      toggleEl.classList.add('hidden');
+      wrapEl.classList.add('hidden');
+      toggleEl.textContent = toggleEl.dataset.show!;
+      if (!valid) {
+        paymentEl.textContent = '—';
+        interestEl.textContent = '—';
+        totalEl.textContent = '—';
+        rangeEl.classList.add('hidden');
+        return;
+      }
+
+      const i = annual / 100 / 12;
+      const n = Math.round(years * 12);
+      const rows: Array<[number, number, number, number, number]> = [];
+      let balance = P;
+      let totalInterest = 0;
+      let firstPayment = 0;
+      let lastPayment = 0;
+
+      if (methodEl.value === 'annuity') {
+        const factor = Math.pow(1 + i, n);
+        const M = i === 0 ? P / n : (P * i * factor) / (factor - 1);
+        for (let k = 1; k <= n; k++) {
+          const intr = balance * i;
+          let prin = M - intr;
+          if (k === n) prin = balance;
+          balance -= prin;
+          totalInterest += intr;
+          rows.push([k, prin + intr, prin, intr, balance]);
+        }
+        paymentLabelEl.textContent = labels.monthly;
+        paymentEl.textContent = fmt(M);
+        rangeEl.classList.add('hidden');
+      } else {
+        const prinMonth = P / n;
+        for (let k = 1; k <= n; k++) {
+          const intr = balance * i;
+          balance -= prinMonth;
+          totalInterest += intr;
+          if (k === 1) firstPayment = prinMonth + intr;
+          if (k === n) lastPayment = prinMonth + intr;
+          rows.push([k, prinMonth + intr, prinMonth, intr, balance]);
+        }
+        paymentLabelEl.textContent = labels.first;
+        paymentEl.textContent = fmt(firstPayment);
+        rangeEl.textContent = `${labels.last} ${fmt(lastPayment)} · ${labels.decrease} ${fmt((firstPayment - lastPayment) / (n - 1 || 1))}`;
+        rangeEl.classList.remove('hidden');
+      }
+
+      const total = P + totalInterest;
+      interestEl.textContent = fmt(totalInterest);
+      totalEl.textContent = fmt(total);
+      const pPct = total > 0 ? (P / total) * 100 : 50;
+      barPEl.style.width = `${pPct}%`;
+      barIEl.style.width = `${100 - pPct}%`;
+      barPtEl.textContent = `${pPct.toFixed(1)}%`;
+      barItEl.textContent = `${(100 - pPct).toFixed(1)}%`;
+
+      renderSchedule(rows);
+      toggleEl.classList.remove('hidden');
+    };
+
+    toggleEl.addEventListener('click', () => {
+      const showing = !wrapEl.classList.contains('hidden');
+      wrapEl.classList.toggle('hidden', showing);
+      toggleEl.textContent = showing ? toggleEl.dataset.show! : toggleEl.dataset.hide!;
+    });
+
+    root.addEventListener('input', update);
+    root.addEventListener('change', update);
+    update();
+  }
+</script>

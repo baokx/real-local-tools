@@ -688,6 +688,179 @@
         "phOriginal": "Paste the original text…",
         "phModified": "Paste the changed text…"
       }
+    },
+    "mortgage-calculator": {
+      "name": "Mortgage Calculator",
+      "description": "Calculate monthly mortgage payments, total interest and a full amortization schedule — free, private, in-browser.",
+      "seoTitle": "Mortgage Calculator — monthly payment & amortization",
+      "seo": "Estimate your monthly mortgage payment from loan amount, interest rate and term, compare fixed-payment (annuity) and fixed-principal schedules, and see how much interest you will pay over the life of the loan. All calculations run locally in your browser.",
+      "ui": {
+        "loanAmount": "Loan amount",
+        "annualRate": "Annual interest rate (%)",
+        "termYears": "Term (years)",
+        "method": "Repayment method",
+        "annuity": "Fixed payment (annuity)",
+        "equalPrincipal": "Fixed principal",
+        "monthlyPayment": "Monthly payment",
+        "firstPayment": "First month",
+        "lastPayment": "Last month",
+        "monthlyDecrease": "decreases by",
+        "totalInterest": "Total interest",
+        "totalPayment": "Total payment",
+        "principalLabel": "Principal",
+        "interestLabel": "Interest",
+        "show": "Show amortization schedule",
+        "hide": "Hide schedule",
+        "colMonth": "#",
+        "colPayment": "Payment",
+        "colPrincipal": "Principal",
+        "colInterest": "Interest",
+        "colBalance": "Balance",
+        "invalid": "Enter a positive loan amount, a non-negative rate and a term of 1–100 years."
+      }
+    },
+    "age-calculator": {
+      "name": "Age Calculator",
+      "description": "Calculate exact age in years, months and days, plus totals, next birthday countdown and zodiac signs — free and private.",
+      "seoTitle": "Age Calculator — exact age in years, months, days",
+      "seo": "Find your exact age in years, months and days, see totals in weeks, days, hours and minutes, count down to your next birthday, and discover your day of birth, Western zodiac and Chinese zodiac sign. Everything is computed locally.",
+      "ui": {
+        "birthDate": "Date of birth",
+        "asOf": "Age at date",
+        "exactAge": "Exact age",
+        "years": "years",
+        "months": "months",
+        "days": "days",
+        "totalMonths": "Total months",
+        "totalWeeks": "Total weeks",
+        "totalDays": "Total days",
+        "totalHours": "Total hours",
+        "totalMinutes": "Total minutes",
+        "bornOn": "Born on",
+        "zodiacLabel": "Zodiac sign",
+        "chineseLabel": "Chinese zodiac",
+        "todayIsBirthday": "Today is your birthday — happy birthday!",
+        "daysUntil": "days until your next birthday",
+        "invalid": "Enter a valid birth date on or before the target date.",
+        "weekday": {
+          "sun": "Sunday",
+          "mon": "Monday",
+          "tue": "Tuesday",
+          "wed": "Wednesday",
+          "thu": "Thursday",
+          "fri": "Friday",
+          "sat": "Saturday"
+        },
+        "zodiac": {
+          "capricorn": "Capricorn",
+          "aquarius": "Aquarius",
+          "pisces": "Pisces",
+          "aries": "Aries",
+          "taurus": "Taurus",
+          "gemini": "Gemini",
+          "cancer": "Cancer",
+          "leo": "Leo",
+          "virgo": "Virgo",
+          "libra": "Libra",
+          "scorpio": "Scorpio",
+          "sagittarius": "Sagittarius"
+        },
+        "chinese": {
+          "rat": "Rat",
+          "ox": "Ox",
+          "tiger": "Tiger",
+          "rabbit": "Rabbit",
+          "dragon": "Dragon",
+          "snake": "Snake",
+          "horse": "Horse",
+          "goat": "Goat",
+          "monkey": "Monkey",
+          "rooster": "Rooster",
+          "dog": "Dog",
+          "pig": "Pig"
+        }
+      }
+    },
+    "tip-calculator": {
+      "name": "Tip Calculator",
+      "description": "Split the bill and calculate tips in seconds — tip amount, total and per-person share. Free and private.",
+      "seoTitle": "Tip Calculator — split the bill with tip",
+      "seo": "Enter the bill, pick a tip percentage and split between any number of people. See the tip amount, grand total and per-person share instantly — all calculated in your browser.",
+      "ui": {
+        "billAmount": "Bill amount",
+        "tipPercent": "Tip percentage",
+        "custom": "Custom %",
+        "split": "Split between people",
+        "tipAmount": "Tip",
+        "total": "Total",
+        "perPerson": "Per person",
+        "summary": "{pct}% tip on {bill} · split by {people}"
+      }
+    },
+    "compound-interest-calculator": {
+      "name": "Compound Interest Calculator",
+      "description": "See how your money grows with compound interest — contributions, compounding frequency and a yearly chart. Free and private.",
+      "seoTitle": "Compound Interest Calculator — watch your money grow",
+      "seo": "Project the future value of a principal sum with optional recurring contributions at any compounding frequency. A yearly breakdown table and growth chart show deposits vs. interest over time — all computed locally.",
+      "ui": {
+        "principal": "Initial principal",
+        "annualRate": "Annual rate (%)",
+        "years": "Years",
+        "frequency": "Compounding frequency",
+        "freq": {
+          "annually": "Annually",
+          "semiannually": "Semiannually",
+          "quarterly": "Quarterly",
+          "monthly": "Monthly",
+          "daily": "Daily"
+        },
+        "contribution": "Contribution per period",
+        "contributionHint": "Added at the end of each compounding period; 0 to disable.",
+        "finalBalance": "Final balance",
+        "totalDeposits": "Total deposits",
+        "totalInterest": "Interest earned",
+        "depositsLabel": "Deposits",
+        "interestLabel": "Interest",
+        "colYear": "Year",
+        "colDeposits": "Deposits",
+        "colInterest": "Interest",
+        "colBalance": "Balance",
+        "invalid": "Enter a non-negative rate, 1–100 years, and a positive principal or contribution."
+      }
+    },
+    "markdown-editor": {
+      "name": "Markdown Editor",
+      "description": "Write Markdown with a live preview, toolbar, word count and HTML export — free, private, auto-saved locally.",
+      "seoTitle": "Markdown Editor — live preview, free & private",
+      "seo": "A distraction-free Markdown editor with live preview, formatting toolbar, GitHub-flavored Markdown tables, word and character counts, and one-click export to .md or .html. Your draft is auto-saved in your browser — nothing is uploaded.",
+      "ui": {
+        "toolbar": {
+          "bold": "Bold",
+          "italic": "Italic",
+          "strike": "Strikethrough",
+          "h1": "Heading 1",
+          "h2": "Heading 2",
+          "h3": "Heading 3",
+          "link": "Link",
+          "image": "Image",
+          "code": "Inline code",
+          "codeblock": "Code block",
+          "quote": "Quote",
+          "ul": "Bulleted list",
+          "ol": "Numbered list",
+          "table": "Table",
+          "hr": "Horizontal rule"
+        },
+        "placeholder": "Type Markdown here…",
+        "words": "words",
+        "chars": "characters",
+        "copyHtml": "Copy HTML",
+        "copied": "Copied!",
+        "downloadMd": "Download .md",
+        "downloadHtml": "Download .html",
+        "clear": "Clear",
+        "sample": "# Hello, Markdown!\n\nWrite on the left, preview on the right.\n\n- **Bold**, *italic*, ~~strike~~\n- `inline code`\n\n> A quote.\n\n| Feature | Status |\n| --- | --- |\n| Tables | ✓ |\n"
+      }
     }
   }
 }

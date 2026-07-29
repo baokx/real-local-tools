@@ -688,6 +688,179 @@
         "phOriginal": "Pega el texto original…",
         "phModified": "Pega el texto modificado…"
       }
+    },
+    "mortgage-calculator": {
+      "name": "Calculadora de hipoteca",
+      "description": "Calcula la cuota mensual, el interés total y el plan de amortización completo — gratis, privado, en tu navegador.",
+      "seoTitle": "Calculadora de hipoteca — cuota mensual y amortización",
+      "seo": "Estima tu cuota mensual a partir del importe del préstamo, el tipo de interés y el plazo; compara cuota fija (anualidad) y amortización de capital fijo, y descubre cuánto interés pagarás durante la vida del préstamo. Todos los cálculos se ejecutan localmente en tu navegador.",
+      "ui": {
+        "loanAmount": "Importe del préstamo",
+        "annualRate": "Tipo de interés anual (%)",
+        "termYears": "Plazo (años)",
+        "method": "Método de amortización",
+        "annuity": "Cuota fija (anualidad)",
+        "equalPrincipal": "Capital fijo",
+        "monthlyPayment": "Cuota mensual",
+        "firstPayment": "Primera cuota",
+        "lastPayment": "Última cuota",
+        "monthlyDecrease": "disminuye en",
+        "totalInterest": "Interés total",
+        "totalPayment": "Pago total",
+        "principalLabel": "Capital",
+        "interestLabel": "Interés",
+        "show": "Ver plan de amortización",
+        "hide": "Ocultar plan",
+        "colMonth": "N.º",
+        "colPayment": "Cuota",
+        "colPrincipal": "Capital",
+        "colInterest": "Interés",
+        "colBalance": "Saldo",
+        "invalid": "Introduce un importe positivo, un tipo no negativo y un plazo de 1–100 años."
+      }
+    },
+    "age-calculator": {
+      "name": "Calculadora de edad",
+      "description": "Calcula la edad exacta en años, meses y días, con totales, cuenta atrás al próximo cumpleaños y signos del zodiaco — gratis y privado.",
+      "seoTitle": "Calculadora de edad — edad exacta en años, meses y días",
+      "seo": "Descubre tu edad exacta en años, meses y días, consulta los totales en semanas, días, horas y minutos, haz la cuenta atrás hasta tu próximo cumpleaños y conoce tu día de nacimiento, tu signo zodiacal occidental y tu signo del zodiaco chino. Todo se calcula localmente.",
+      "ui": {
+        "birthDate": "Fecha de nacimiento",
+        "asOf": "Edad a fecha de",
+        "exactAge": "Edad exacta",
+        "years": "años",
+        "months": "meses",
+        "days": "días",
+        "totalMonths": "Meses totales",
+        "totalWeeks": "Semanas totales",
+        "totalDays": "Días totales",
+        "totalHours": "Horas totales",
+        "totalMinutes": "Minutos totales",
+        "bornOn": "Naciste un",
+        "zodiacLabel": "Signo zodiacal",
+        "chineseLabel": "Zodiaco chino",
+        "todayIsBirthday": "Hoy es tu cumpleaños — ¡felicidades!",
+        "daysUntil": "días hasta tu próximo cumpleaños",
+        "invalid": "Introduce una fecha de nacimiento válida que no sea posterior a la fecha objetivo.",
+        "weekday": {
+          "sun": "domingo",
+          "mon": "lunes",
+          "tue": "martes",
+          "wed": "miércoles",
+          "thu": "jueves",
+          "fri": "viernes",
+          "sat": "sábado"
+        },
+        "zodiac": {
+          "capricorn": "Capricornio",
+          "aquarius": "Acuario",
+          "pisces": "Piscis",
+          "aries": "Aries",
+          "taurus": "Tauro",
+          "gemini": "Géminis",
+          "cancer": "Cáncer",
+          "leo": "Leo",
+          "virgo": "Virgo",
+          "libra": "Libra",
+          "scorpio": "Escorpio",
+          "sagittarius": "Sagitario"
+        },
+        "chinese": {
+          "rat": "Rata",
+          "ox": "Buey",
+          "tiger": "Tigre",
+          "rabbit": "Conejo",
+          "dragon": "Dragón",
+          "snake": "Serpiente",
+          "horse": "Caballo",
+          "goat": "Cabra",
+          "monkey": "Mono",
+          "rooster": "Gallo",
+          "dog": "Perro",
+          "pig": "Cerdo"
+        }
+      }
+    },
+    "tip-calculator": {
+      "name": "Calculadora de propinas",
+      "description": "Divide la cuenta y calcula propinas en segundos — propina, total y parte por persona. Gratis y privado.",
+      "seoTitle": "Calculadora de propinas — divide la cuenta con propina",
+      "seo": "Introduce el importe de la cuenta, elige un porcentaje de propina y divide entre cualquier número de personas. Ve al instante la propina, el total y la parte por persona — todo calculado en tu navegador.",
+      "ui": {
+        "billAmount": "Importe de la cuenta",
+        "tipPercent": "Porcentaje de propina",
+        "custom": "Personalizado %",
+        "split": "Dividir entre personas",
+        "tipAmount": "Propina",
+        "total": "Total",
+        "perPerson": "Por persona",
+        "summary": "{pct}% de propina sobre {bill} · dividido entre {people}"
+      }
+    },
+    "compound-interest-calculator": {
+      "name": "Calculadora de interés compuesto",
+      "description": "Mira cómo crece tu dinero con el interés compuesto — aportaciones, frecuencia de capitalización y gráfico anual. Gratis y privado.",
+      "seoTitle": "Calculadora de interés compuesto — mira crecer tu dinero",
+      "seo": "Proyecta el valor futuro de un capital inicial con aportaciones periódicas opcionales a cualquier frecuencia de capitalización. Una tabla anual y un gráfico de crecimiento muestran depósitos frente a intereses a lo largo del tiempo — todo calculado localmente.",
+      "ui": {
+        "principal": "Capital inicial",
+        "annualRate": "Tipo anual (%)",
+        "years": "Años",
+        "frequency": "Frecuencia de capitalización",
+        "freq": {
+          "annually": "Anual",
+          "semiannually": "Semestral",
+          "quarterly": "Trimestral",
+          "monthly": "Mensual",
+          "daily": "Diaria"
+        },
+        "contribution": "Aportación por período",
+        "contributionHint": "Se añade al final de cada período de capitalización; 0 para desactivar.",
+        "finalBalance": "Saldo final",
+        "totalDeposits": "Depósitos totales",
+        "totalInterest": "Intereses ganados",
+        "depositsLabel": "Depósitos",
+        "interestLabel": "Intereses",
+        "colYear": "Año",
+        "colDeposits": "Depósitos",
+        "colInterest": "Intereses",
+        "colBalance": "Saldo",
+        "invalid": "Introduce un tipo no negativo, 1–100 años, y un capital o aportación positivos."
+      }
+    },
+    "markdown-editor": {
+      "name": "Editor de Markdown",
+      "description": "Escribe Markdown con vista previa en vivo, barra de herramientas, contador de palabras y exportación a HTML — gratis, privado, con autoguardado local.",
+      "seoTitle": "Editor de Markdown — vista previa en vivo, gratis y privado",
+      "seo": "Un editor de Markdown sin distracciones con vista previa en vivo, barra de formato, tablas compatibles con GitHub, conteo de palabras y caracteres, y exportación a .md o .html con un clic. Tu borrador se guarda automáticamente en tu navegador — nada se sube.",
+      "ui": {
+        "toolbar": {
+          "bold": "Negrita",
+          "italic": "Cursiva",
+          "strike": "Tachado",
+          "h1": "Título 1",
+          "h2": "Título 2",
+          "h3": "Título 3",
+          "link": "Enlace",
+          "image": "Imagen",
+          "code": "Código en línea",
+          "codeblock": "Bloque de código",
+          "quote": "Cita",
+          "ul": "Lista con viñetas",
+          "ol": "Lista numerada",
+          "table": "Tabla",
+          "hr": "Línea horizontal"
+        },
+        "placeholder": "Escribe Markdown aquí…",
+        "words": "palabras",
+        "chars": "caracteres",
+        "copyHtml": "Copiar HTML",
+        "copied": "¡Copiado!",
+        "downloadMd": "Descargar .md",
+        "downloadHtml": "Descargar .html",
+        "clear": "Limpiar",
+        "sample": "# ¡Hola, Markdown!\n\nEscribe a la izquierda, previsualiza a la derecha.\n\n- **Negrita**, *cursiva*, ~~tachado~~\n- `código en línea`\n\n> Una cita.\n\n| Función | Estado |\n| --- | --- |\n| Tablas | ✓ |\n"
+      }
     }
   }
 }

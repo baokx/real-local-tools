@@ -1,0 +1,147 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.tip-calculator.ui.${key}`);
+const presets = [10, 15, 18, 20, 25];
+---
+
+<div id="tip-calculator">
+  <div class="grid gap-5 lg:grid-cols-[320px_1fr]">
+    <section class="space-y-4 rounded-lg border border-line bg-mist/40 p-4">
+      <div>
+        <label for="tc-bill" class="rlt-label">{u('billAmount')}</label>
+        <input id="tc-bill" type="number" min="0" step="0.01" placeholder="86.50" class="rlt-input w-full font-mono" />
+      </div>
+      <div>
+        <span class="rlt-label">{u('tipPercent')}</span>
+        <div class="flex flex-wrap gap-2" id="tc-presets">
+          {
+            presets.map((p) => (
+              <button
+                type="button"
+                data-pct={p}
+                class="tc-preset rounded-md border border-line bg-white px-3 py-1.5 font-mono text-sm transition-colors hover:border-pine hover:text-pine"
+              >
+                {p}%
+              </button>
+            ))
+          }
+        </div>
+        <input
+          id="tc-custom"
+          type="number"
+          min="0"
+          max="100"
+          step="0.5"
+          placeholder={u('custom')}
+          class="rlt-input mt-2 w-full font-mono"
+        />
+      </div>
+      <div>
+        <label for="tc-people" class="rlt-label">{u('split')}</label>
+        <div class="flex items-center gap-2">
+          <button id="tc-minus" type="button" class="rlt-btn px-3 font-mono" aria-label="-">−</button>
+          <input id="tc-people" type="number" min="1" max="99" step="1" value="1" class="rlt-input w-full text-center font-mono" />
+          <button id="tc-plus" type="button" class="rlt-btn px-3 font-mono" aria-label="+">+</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="rounded-lg border border-line bg-white p-4 text-center">
+          <p class="text-xs text-ink-soft">{u('tipAmount')}</p>
+          <p class="mt-1.5 font-mono text-2xl font-semibold text-ink" id="tc-tip">—</p>
+        </div>
+        <div class="rounded-lg border border-line bg-white p-4 text-center">
+          <p class="text-xs text-ink-soft">{u('total')}</p>
+          <p class="mt-1.5 font-mono text-2xl font-semibold text-ink" id="tc-total">—</p>
+        </div>
+        <div class="rounded-lg border border-pine/40 bg-pine/5 p-4 text-center">
+          <p class="text-xs text-ink-soft">{u('perPerson')}</p>
+          <p class="mt-1.5 font-mono text-2xl font-semibold text-pine" id="tc-each">—</p>
+        </div>
+      </div>
+      <p class="mt-4 text-xs text-ink-soft" id="tc-summary" data-template={u('summary')}></p>
+    </section>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('tip-calculator');
+  if (root) {
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) => root.querySelector<T>(`#${id}`)!;
+    const billEl = $<HTMLInputElement>('tc-bill');
+    const customEl = $<HTMLInputElement>('tc-custom');
+    const peopleEl = $<HTMLInputElement>('tc-people');
+    const presets = Array.from(root.querySelectorAll<HTMLButtonElement>('.tc-preset'));
+    const summaryEl = $('tc-summary');
+
+    let pct: number | null = 15;
+
+    const fmt = (n: number): string =>
+      n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const markActive = () => {
+      for (const b of presets) {
+        const active = pct !== null && Number(b.dataset.pct) === pct && customEl.value === '';
+        b.classList.toggle('border-pine', active);
+        b.classList.toggle('bg-pine/10', active);
+        b.classList.toggle('text-pine', active);
+      }
+    };
+
+    const update = () => {
+      const bill = Number(billEl.value);
+      const people = Math.max(1, Math.floor(Number(peopleEl.value) || 1));
+      const valid = bill > 0 && pct !== null && pct >= 0;
+      if (!valid) {
+        $('tc-tip').textContent = '—';
+        $('tc-total').textContent = '—';
+        $('tc-each').textContent = '—';
+        summaryEl.textContent = '';
+        markActive();
+        return;
+      }
+      const tip = (bill * pct) / 100;
+      const total = bill + tip;
+      $('tc-tip').textContent = fmt(tip);
+      $('tc-total').textContent = fmt(total);
+      $('tc-each').textContent = fmt(total / people);
+      summaryEl.textContent = summaryEl.dataset.template!
+        .replace('{pct}', String(pct))
+        .replace('{bill}', fmt(bill))
+        .replace('{people}', String(people));
+      markActive();
+    };
+
+    for (const b of presets) {
+      b.addEventListener('click', () => {
+        pct = Number(b.dataset.pct);
+        customEl.value = '';
+        update();
+      });
+    }
+    customEl.addEventListener('input', () => {
+      pct = customEl.value === '' ? null : Number(customEl.value);
+      update();
+    });
+    $('tc-minus').addEventListener('click', () => {
+      peopleEl.value = String(Math.max(1, (Number(peopleEl.value) || 1) - 1));
+      update();
+    });
+    $('tc-plus').addEventListener('click', () => {
+      peopleEl.value = String(Math.min(99, (Number(peopleEl.value) || 1) + 1));
+      update();
+    });
+    billEl.addEventListener('input', update);
+    peopleEl.addEventListener('input', update);
+    markActive();
+    update();
+  }
+</script>

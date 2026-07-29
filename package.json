@@ -14,11 +14,14 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.1.5",
+    "dompurify": "^3.4.12",
     "jsqr": "^1.4.0",
+    "marked": "^18.0.7",
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "@types/dompurify": "^3.0.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
   }

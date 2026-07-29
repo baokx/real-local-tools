@@ -688,6 +688,179 @@
         "phOriginal": "元のテキストを貼り付け…",
         "phModified": "変更後のテキストを貼り付け…"
       }
+    },
+    "mortgage-calculator": {
+      "name": "住宅ローン計算機",
+      "description": "毎月の返済額・総利息・返済計画表を計算。元利均等と元金均等に対応 — 無料・プライベート・ブラウザ完結。",
+      "seoTitle": "住宅ローン計算機 — 月々の返済額と返済計画表",
+      "seo": "借入額・金利・期間から月々の返済額を試算。元利均等返済と元金均等返済を比較し、返済期間全体の利息総額と毎月の返済明細を確認できます。すべての計算はブラウザ内でローカルに実行されます。",
+      "ui": {
+        "loanAmount": "借入額",
+        "annualRate": "年利 (%)",
+        "termYears": "期間(年)",
+        "method": "返済方法",
+        "annuity": "元利均等返済",
+        "equalPrincipal": "元金均等返済",
+        "monthlyPayment": "毎月の返済額",
+        "firstPayment": "初月の返済額",
+        "lastPayment": "最終月の返済額",
+        "monthlyDecrease": "毎月減少",
+        "totalInterest": "総利息",
+        "totalPayment": "総返済額",
+        "principalLabel": "元金",
+        "interestLabel": "利息",
+        "show": "返済計画表を表示",
+        "hide": "計画表を閉じる",
+        "colMonth": "回数",
+        "colPayment": "返済額",
+        "colPrincipal": "元金",
+        "colInterest": "利息",
+        "colBalance": "残高",
+        "invalid": "正の借入額、0 以上の金利、1〜100 年の期間を入力してください。"
+      }
+    },
+    "age-calculator": {
+      "name": "年齢計算機",
+      "description": "年・月・日で正確な年齢を計算。合計週数・日数・時間、次の誕生日カウントダウン、星座・干支も — 無料でプライベート。",
+      "seoTitle": "年齢計算機 — 年月日で正確に",
+      "seo": "任意の日付時点での正確な年齢(年・月・日)を計算し、月数・週数・日数・時間・分の合計、次の誕生日までのカウントダウン、生まれた曜日、西洋の星座と干支を表示します。すべてローカルで計算されます。",
+      "ui": {
+        "birthDate": "生年月日",
+        "asOf": "基準日",
+        "exactAge": "正確な年齢",
+        "years": "歳",
+        "months": "か月",
+        "days": "日",
+        "totalMonths": "合計月数",
+        "totalWeeks": "合計週数",
+        "totalDays": "合計日数",
+        "totalHours": "合計時間",
+        "totalMinutes": "合計分",
+        "bornOn": "生まれた曜日",
+        "zodiacLabel": "星座",
+        "chineseLabel": "干支",
+        "todayIsBirthday": "今日が誕生日です — おめでとうございます!",
+        "daysUntil": "日後が次の誕生日です",
+        "invalid": "基準日以前の有効な生年月日を入力してください。",
+        "weekday": {
+          "sun": "日曜日",
+          "mon": "月曜日",
+          "tue": "火曜日",
+          "wed": "水曜日",
+          "thu": "木曜日",
+          "fri": "金曜日",
+          "sat": "土曜日"
+        },
+        "zodiac": {
+          "capricorn": "やぎ座",
+          "aquarius": "みずがめ座",
+          "pisces": "うお座",
+          "aries": "おひつじ座",
+          "taurus": "おうし座",
+          "gemini": "ふたご座",
+          "cancer": "かに座",
+          "leo": "しし座",
+          "virgo": "おとめ座",
+          "libra": "てんびん座",
+          "scorpio": "さそり座",
+          "sagittarius": "いて座"
+        },
+        "chinese": {
+          "rat": "子(ねずみ)",
+          "ox": "丑(うし)",
+          "tiger": "寅(とら)",
+          "rabbit": "卯(うさぎ)",
+          "dragon": "辰(たつ)",
+          "snake": "巳(へび)",
+          "horse": "午(うま)",
+          "goat": "未(ひつじ)",
+          "monkey": "申(さる)",
+          "rooster": "酉(とり)",
+          "dog": "戌(いぬ)",
+          "pig": "亥(いのしし)"
+        }
+      }
+    },
+    "tip-calculator": {
+      "name": "チップ計算機",
+      "description": "チップと割り勘を秒速計算 — チップ額、合計、一人あたりの金額。無料でプライベート。",
+      "seoTitle": "チップ計算機 — チップ込みで割り勘",
+      "seo": "会計金額を入力し、チップの割合を選んで人数で割ります。チップ額・総額・一人あたりの金額を即座に表示 — すべてブラウザで計算されます。",
+      "ui": {
+        "billAmount": "会計金額",
+        "tipPercent": "チップの割合",
+        "custom": "カスタム %",
+        "split": "割り勘の人数",
+        "tipAmount": "チップ",
+        "total": "合計",
+        "perPerson": "一人あたり",
+        "summary": "{bill} の {pct}% チップ · {people} 人で割り勘"
+      }
+    },
+    "compound-interest-calculator": {
+      "name": "複利計算機",
+      "description": "複利で資産がどう増えるかを可視化 — 積立、複利頻度、年次グラフ付き。無料でプライベート。",
+      "seoTitle": "複利計算機 — お金の増え方を可視化",
+      "seo": "元本と任意の定期積立について、あらゆる複利頻度での将来価値を試算。年次の内訳表と成長グラフで、元本と利息の推移を確認できます — すべてローカルで計算されます。",
+      "ui": {
+        "principal": "元本",
+        "annualRate": "年利 (%)",
+        "years": "年数",
+        "frequency": "複利頻度",
+        "freq": {
+          "annually": "年複利",
+          "semiannually": "半年複利",
+          "quarterly": "四半期複利",
+          "monthly": "月複利",
+          "daily": "日複利"
+        },
+        "contribution": "各期の積立額",
+        "contributionHint": "各複利期間の終わりに追加されます。0 で無効。",
+        "finalBalance": "最終残高",
+        "totalDeposits": "総入金額",
+        "totalInterest": "利息収益",
+        "depositsLabel": "入金",
+        "interestLabel": "利息",
+        "colYear": "年",
+        "colDeposits": "累計入金",
+        "colInterest": "累計利息",
+        "colBalance": "年末残高",
+        "invalid": "0 以上の金利、1〜100 年を入力し、元本か積立額のどちらかを正の値にしてください。"
+      }
+    },
+    "markdown-editor": {
+      "name": "Markdown エディター",
+      "description": "ライブプレビュー付きの Markdown エディター。ツールバー、文字数カウント、HTML エクスポート、ローカル自動保存 — 無料でプライベート。",
+      "seoTitle": "Markdown エディター — ライブプレビュー・無料・プライベート",
+      "seo": "集中できる Markdown エディター:ライブプレビュー、書式ツールバー、GFM テーブル、単語数・文字数カウント、.md / .html へのワンクリック書き出し。下書きはブラウザに自動保存され、アップロードされることはありません。",
+      "ui": {
+        "toolbar": {
+          "bold": "太字",
+          "italic": "斜体",
+          "strike": "取り消し線",
+          "h1": "見出し 1",
+          "h2": "見出し 2",
+          "h3": "見出し 3",
+          "link": "リンク",
+          "image": "画像",
+          "code": "インラインコード",
+          "codeblock": "コードブロック",
+          "quote": "引用",
+          "ul": "箇条書き",
+          "ol": "番号付きリスト",
+          "table": "表",
+          "hr": "水平線"
+        },
+        "placeholder": "ここに Markdown を入力…",
+        "words": "語",
+        "chars": "文字",
+        "copyHtml": "HTML をコピー",
+        "copied": "コピーしました!",
+        "downloadMd": ".md をダウンロード",
+        "downloadHtml": ".html をダウンロード",
+        "clear": "クリア",
+        "sample": "# こんにちは、Markdown!\n\n左で書いて、右でプレビュー。\n\n- **太字**、*斜体*、~~取り消し線~~\n- `インラインコード`\n\n> 引用文。\n\n| 機能 | 状態 |\n| --- | --- |\n| テーブル | ✓ |\n"
+      }
     }
   }
 }

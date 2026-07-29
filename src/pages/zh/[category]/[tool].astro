@@ -42,6 +42,11 @@ import ScientificCalculator from '../../../components/tools/ScientificCalculator
 import HashGenerator from '../../../components/tools/HashGenerator.astro';
 import JwtDecoder from '../../../components/tools/JwtDecoder.astro';
 import TextDiff from '../../../components/tools/TextDiff.astro';
+import MortgageCalculator from '../../../components/tools/MortgageCalculator.astro';
+import AgeCalculator from '../../../components/tools/AgeCalculator.astro';
+import TipCalculator from '../../../components/tools/TipCalculator.astro';
+import CompoundInterestCalculator from '../../../components/tools/CompoundInterestCalculator.astro';
+import MarkdownEditor from '../../../components/tools/MarkdownEditor.astro';
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -93,6 +98,11 @@ const implementations = {
   'hash-generator': HashGenerator,
   'jwt-decoder': JwtDecoder,
   'text-diff': TextDiff,
+  'mortgage-calculator': MortgageCalculator,
+  'age-calculator': AgeCalculator,
+  'tip-calculator': TipCalculator,
+  'compound-interest-calculator': CompoundInterestCalculator,
+  'markdown-editor': MarkdownEditor,
 } as const;
 
 const ToolImpl = implementations[tool.slug as keyof typeof implementations];

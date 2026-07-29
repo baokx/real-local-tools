@@ -688,6 +688,179 @@
         "phOriginal": "粘贴原始文本…",
         "phModified": "粘贴修改后文本…"
       }
+    },
+    "mortgage-calculator": {
+      "name": "抵押贷款计算器",
+      "description": "计算月供、总利息与完整还款计划表,支持等额本息与等额本金——免费、私密、纯本地。",
+      "seoTitle": "抵押贷款计算器 — 月供与还款计划表",
+      "seo": "输入贷款金额、利率与期限,估算月供;支持等额本息与等额本金两种方式对比,查看贷款期内的利息总额与逐月摊还明细。所有计算均在浏览器本地完成。",
+      "ui": {
+        "loanAmount": "贷款金额",
+        "annualRate": "年利率 (%)",
+        "termYears": "期限(年)",
+        "method": "还款方式",
+        "annuity": "等额本息",
+        "equalPrincipal": "等额本金",
+        "monthlyPayment": "月供",
+        "firstPayment": "首月月供",
+        "lastPayment": "末月月供",
+        "monthlyDecrease": "每月递减",
+        "totalInterest": "总利息",
+        "totalPayment": "还款总额",
+        "principalLabel": "本金",
+        "interestLabel": "利息",
+        "show": "查看完整还款计划",
+        "hide": "收起还款计划",
+        "colMonth": "期数",
+        "colPayment": "月供",
+        "colPrincipal": "本金",
+        "colInterest": "利息",
+        "colBalance": "剩余本金",
+        "invalid": "请输入正数贷款金额、非负利率和 1–100 年的期限。"
+      }
+    },
+    "age-calculator": {
+      "name": "年龄计算器",
+      "description": "精确计算年龄(年月日),还有总周数/天数/小时、下次生日倒计时、星座生肖——免费且私密。",
+      "seoTitle": "年龄计算器 — 精确到年月日",
+      "seo": "精确计算你在任意日期的年龄(年、月、日),查看总月数、周数、天数、小时与分钟,倒计时到下一个生日,并了解出生星期、西方星座与生肖。一切计算均在本地进行。",
+      "ui": {
+        "birthDate": "出生日期",
+        "asOf": "计算到",
+        "exactAge": "周岁",
+        "years": "岁",
+        "months": "个月",
+        "days": "天",
+        "totalMonths": "总月数",
+        "totalWeeks": "总周数",
+        "totalDays": "总天数",
+        "totalHours": "总小时",
+        "totalMinutes": "总分钟",
+        "bornOn": "出生星期",
+        "zodiacLabel": "星座",
+        "chineseLabel": "生肖",
+        "todayIsBirthday": "今天是你的生日——生日快乐!",
+        "daysUntil": "天后是你的生日",
+        "invalid": "请输入有效且不晚于目标日期的出生日期。",
+        "weekday": {
+          "sun": "周日",
+          "mon": "周一",
+          "tue": "周二",
+          "wed": "周三",
+          "thu": "周四",
+          "fri": "周五",
+          "sat": "周六"
+        },
+        "zodiac": {
+          "capricorn": "摩羯座",
+          "aquarius": "水瓶座",
+          "pisces": "双鱼座",
+          "aries": "白羊座",
+          "taurus": "金牛座",
+          "gemini": "双子座",
+          "cancer": "巨蟹座",
+          "leo": "狮子座",
+          "virgo": "处女座",
+          "libra": "天秤座",
+          "scorpio": "天蝎座",
+          "sagittarius": "射手座"
+        },
+        "chinese": {
+          "rat": "鼠",
+          "ox": "牛",
+          "tiger": "虎",
+          "rabbit": "兔",
+          "dragon": "龙",
+          "snake": "蛇",
+          "horse": "马",
+          "goat": "羊",
+          "monkey": "猴",
+          "rooster": "鸡",
+          "dog": "狗",
+          "pig": "猪"
+        }
+      }
+    },
+    "tip-calculator": {
+      "name": "小费计算器",
+      "description": "秒算小费与账单分摊:小费金额、总额与人均——免费且私密。",
+      "seoTitle": "小费计算器 — 账单分摊与小费",
+      "seo": "输入账单金额、选择小费比例、按人数分摊,即时查看小费金额、账单总额与人均应付——全部在浏览器中计算。",
+      "ui": {
+        "billAmount": "账单金额",
+        "tipPercent": "小费比例",
+        "custom": "自定义 %",
+        "split": "分摊人数",
+        "tipAmount": "小费",
+        "total": "总额",
+        "perPerson": "人均",
+        "summary": "{bill} 的 {pct}% 小费 · {people} 人分摊"
+      }
+    },
+    "compound-interest-calculator": {
+      "name": "复利计算器",
+      "description": "直观展示复利增长:定期投入、复利频率、逐年图表——免费且私密。",
+      "seoTitle": "复利计算器 — 见证财富增长",
+      "seo": "测算本金在任意复利频率下、可选定期追加投入后的未来价值;逐年明细表与增长图展示投入与利息的变化——一切在本地计算。",
+      "ui": {
+        "principal": "初始本金",
+        "annualRate": "年利率 (%)",
+        "years": "年数",
+        "frequency": "复利频率",
+        "freq": {
+          "annually": "每年",
+          "semiannually": "每半年",
+          "quarterly": "每季度",
+          "monthly": "每月",
+          "daily": "每日"
+        },
+        "contribution": "每期追加投入",
+        "contributionHint": "在每个复利周期末投入;填 0 表示不追加。",
+        "finalBalance": "期末总额",
+        "totalDeposits": "总投入",
+        "totalInterest": "利息收益",
+        "depositsLabel": "投入",
+        "interestLabel": "利息",
+        "colYear": "年份",
+        "colDeposits": "累计投入",
+        "colInterest": "累计利息",
+        "colBalance": "年末余额",
+        "invalid": "请输入非负利率、1–100 年,且本金或追加投入至少一项为正数。"
+      }
+    },
+    "markdown-editor": {
+      "name": "Markdown 编辑器",
+      "description": "实时预览的 Markdown 编辑器:工具栏、字数统计、HTML 导出、本地自动保存——免费且私密。",
+      "seoTitle": "Markdown 编辑器 — 实时预览,免费私密",
+      "seo": "简洁无干扰的 Markdown 编辑器:实时预览、格式化工具栏、GFM 表格、字数统计,一键导出 .md 或 .html。草稿自动保存在你的浏览器中,内容绝不上传。",
+      "ui": {
+        "toolbar": {
+          "bold": "加粗",
+          "italic": "斜体",
+          "strike": "删除线",
+          "h1": "标题 1",
+          "h2": "标题 2",
+          "h3": "标题 3",
+          "link": "链接",
+          "image": "图片",
+          "code": "行内代码",
+          "codeblock": "代码块",
+          "quote": "引用",
+          "ul": "无序列表",
+          "ol": "有序列表",
+          "table": "表格",
+          "hr": "分割线"
+        },
+        "placeholder": "在此输入 Markdown…",
+        "words": "词",
+        "chars": "字符",
+        "copyHtml": "复制 HTML",
+        "copied": "已复制!",
+        "downloadMd": "下载 .md",
+        "downloadHtml": "下载 .html",
+        "clear": "清空",
+        "sample": "# 你好,Markdown!\n\n左边写作,右边预览。\n\n- **加粗**、*斜体*、~~删除线~~\n- `行内代码`\n\n> 一段引用。\n\n| 功能 | 状态 |\n| --- | --- |\n| 表格 | ✓ |\n"
+      }
     }
   }
 }

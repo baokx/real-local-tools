@@ -1,0 +1,191 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.age-calculator.ui.${key}`);
+
+const weekdayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
+const weekdays = JSON.stringify(weekdayKeys.map((k) => u(`weekday.${k}`)));
+const zodiacKeys = [
+  'capricorn', 'aquarius', 'pisces', 'aries', 'taurus', 'gemini',
+  'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius',
+] as const;
+const zodiacs = JSON.stringify(zodiacKeys.map((k) => u(`zodiac.${k}`)));
+const chineseKeys = [
+  'rat', 'ox', 'tiger', 'rabbit', 'dragon', 'snake',
+  'horse', 'goat', 'monkey', 'rooster', 'dog', 'pig',
+] as const;
+const chineseZodiacs = JSON.stringify(chineseKeys.map((k) => u(`chinese.${k}`)));
+---
+
+<div
+  id="age-calculator"
+  data-weekdays={weekdays}
+  data-zodiacs={zodiacs}
+  data-chinese={chineseZodiacs}
+  data-years={u('years')}
+  data-months={u('months')}
+  data-days={u('days')}
+  data-today-is={u('todayIsBirthday')}
+  data-days-until={u('daysUntil')}
+>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <label for="ac-birth" class="rlt-label">{u('birthDate')}</label>
+      <input id="ac-birth" type="date" class="rlt-input w-full font-mono" />
+    </section>
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <label for="ac-end" class="rlt-label">{u('asOf')}</label>
+      <input id="ac-end" type="date" class="rlt-input w-full font-mono" />
+    </section>
+  </div>
+
+  <p id="ac-invalid" class="rlt-status mt-4 hidden">{u('invalid')}</p>
+
+  <div id="ac-result" class="mt-5 hidden">
+    <section class="rounded-lg border border-line bg-mist/40 p-5 text-center">
+      <p class="text-sm text-ink-soft">{u('exactAge')}</p>
+      <p class="mt-2 font-display text-3xl font-bold text-pine" id="ac-exact">—</p>
+      <p class="mt-3 text-sm text-ink-soft" id="ac-birthday-line">—</p>
+    </section>
+
+    <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-t-months">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('totalMonths')}</p>
+      </div>
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-t-weeks">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('totalWeeks')}</p>
+      </div>
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-t-days">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('totalDays')}</p>
+      </div>
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-t-hours">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('totalHours')}</p>
+      </div>
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-t-minutes">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('totalMinutes')}</p>
+      </div>
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-t-weekday">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('bornOn')}</p>
+      </div>
+    </div>
+
+    <div class="mt-3 grid grid-cols-2 gap-3">
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-zodiac">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('zodiacLabel')}</p>
+      </div>
+      <div class="rounded-lg border border-line bg-mist/40 p-3 text-center">
+        <p class="font-mono text-xl font-semibold text-ink" id="ac-chinese">—</p>
+        <p class="mt-1 text-xs text-ink-soft">{u('chineseLabel')}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('age-calculator');
+  if (root) {
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) => root.querySelector<T>(`#${id}`)!;
+    const birthEl = $<HTMLInputElement>('ac-birth');
+    const endEl = $<HTMLInputElement>('ac-end');
+    const invalidEl = $('ac-invalid');
+    const resultEl = $('ac-result');
+
+    const weekdays: string[] = JSON.parse(root.dataset.weekdays!);
+    const zodiacs: string[] = JSON.parse(root.dataset.zodiacs!);
+    const chinese: string[] = JSON.parse(root.dataset.chinese!);
+    const L = {
+      years: root.dataset.years!,
+      months: root.dataset.months!,
+      days: root.dataset.days!,
+      todayIs: root.dataset.todayIs!,
+      daysUntil: root.dataset.daysUntil!,
+    };
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const toInput = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    const parse = (v: string): { y: number; m: number; d: number } | null => {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+      if (!m) return null;
+      const y = +m[1], mo = +m[2], d = +m[3];
+      if (mo < 1 || mo > 12 || d < 1 || d > new Date(y, mo, 0).getDate()) return null;
+      return { y, m: mo, d };
+    };
+
+    const utcDay = (y: number, m: number, d: number) => Date.UTC(y, m - 1, d) / 86400000;
+
+    // Western zodiac by (month, day); index into zodiacs where 0 = Capricorn.
+    const zodiacIndex = (m: number, d: number): number => {
+      const cutoffs = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22];
+      return d < cutoffs[m - 1] ? (m + 11) % 12 : m % 12;
+    };
+
+    const update = () => {
+      const b = parse(birthEl.value);
+      const e = parse(endEl.value);
+      const ok = b !== null && e !== null && utcDay(e.y, e.m, e.d) >= utcDay(b.y, b.m, b.d);
+      invalidEl.classList.toggle('hidden', ok || (!birthEl.value && !endEl.value));
+      resultEl.classList.toggle('hidden', !ok);
+      if (!ok) return;
+
+      // relativedelta-style: advance whole calendar months from the birth date
+      // (clamping to month end, e.g. Jan 31 -> Feb 28), then count leftover days.
+      let months = (e.y - b.y) * 12 + (e.m - b.m);
+      const anchorAt = (mm: number) => {
+        const total = b.m - 1 + mm;
+        const y = b.y + Math.floor(total / 12);
+        const m = (total % 12) + 1;
+        return { y, m, d: Math.min(b.d, new Date(y, m, 0).getDate()) };
+      };
+      let anchor = anchorAt(months);
+      if (utcDay(anchor.y, anchor.m, anchor.d) > utcDay(e.y, e.m, e.d)) {
+        months--;
+        anchor = anchorAt(months);
+      }
+      const days = Math.floor(utcDay(e.y, e.m, e.d) - utcDay(anchor.y, anchor.m, anchor.d));
+      const years = Math.floor(months / 12);
+      const remMonths = months % 12;
+
+      $('ac-exact').textContent = `${years} ${L.years} ${remMonths} ${L.months} ${days} ${L.days}`;
+
+      const totalDays = Math.floor(utcDay(e.y, e.m, e.d) - utcDay(b.y, b.m, b.d));
+      $('ac-t-months').textContent = months.toLocaleString('en-US');
+      $('ac-t-weeks').textContent = Math.floor(totalDays / 7).toLocaleString('en-US');
+      $('ac-t-days').textContent = totalDays.toLocaleString('en-US');
+      $('ac-t-hours').textContent = (totalDays * 24).toLocaleString('en-US');
+      $('ac-t-minutes').textContent = (totalDays * 24 * 60).toLocaleString('en-US');
+      $('ac-t-weekday').textContent = weekdays[new Date(Date.UTC(b.y, b.m - 1, b.d)).getUTCDay()];
+
+      $('ac-zodiac').textContent = zodiacs[zodiacIndex(b.m, b.d)];
+      $('ac-chinese').textContent = chinese[(((b.y - 4) % 12) + 12) % 12];
+
+      // Next birthday countdown; Feb 29 birthdays fall back to Feb 28 in common years.
+      const birthdayIn = (year: number): number => {
+        const maxD = new Date(year, b.m, 0).getDate();
+        return utcDay(year, b.m, Math.min(b.d, maxD));
+      };
+      let next = birthdayIn(e.y);
+      if (next < utcDay(e.y, e.m, e.d)) next = birthdayIn(e.y + 1);
+      const until = Math.floor(next - utcDay(e.y, e.m, e.d));
+      $('ac-birthday-line').textContent = until === 0 ? L.todayIs : `${until} ${L.daysUntil}`;
+    };
+
+    const today = new Date();
+    endEl.value = toInput(today);
+    birthEl.value = `${today.getFullYear() - 30}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+    root.addEventListener('input', update);
+    update();
+  }
+</script>

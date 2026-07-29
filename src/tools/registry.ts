@@ -55,6 +55,7 @@ export const tools: ToolDef[] = [
   { slug: 'text-reverser', category: 'text', icon: '↩ab' },
   { slug: 'remove-duplicate-lines', category: 'text', icon: '≡≠' },
   { slug: 'text-diff', category: 'text', icon: '±↕' },
+  { slug: 'markdown-editor', category: 'text', icon: 'M↓' },
 
   // Calculators
   { slug: 'percentage-calculator', category: 'calculator', icon: '％' },
@@ -63,6 +64,10 @@ export const tools: ToolDef[] = [
   { slug: 'random-number-generator', category: 'calculator', icon: '∴#' },
   { slug: 'unit-converter', category: 'calculator', icon: '⇄cm' },
   { slug: 'scientific-calculator', category: 'calculator', icon: '∑xy' },
+  { slug: 'mortgage-calculator', category: 'calculator', icon: '⌂%' },
+  { slug: 'age-calculator', category: 'calculator', icon: 'y/m/d' },
+  { slug: 'tip-calculator', category: 'calculator', icon: '$+%' },
+  { slug: 'compound-interest-calculator', category: 'calculator', icon: '↑∑' },
 ];
 
 export function getTool(slug: string): ToolDef | undefined {
