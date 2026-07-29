@@ -1,0 +1,58 @@
+---
+import { t, localePath, type Locale } from '../../i18n/utils';
+import { categories, toolsByCategory, type CategorySlug } from '../../tools/registry';
+import ToolCard from '../ToolCard.astro';
+
+interface Props {
+  lang: Locale;
+  category: CategorySlug;
+}
+
+const { lang, category } = Astro.props;
+const name = t(lang, `categories.${category}`);
+const tools = toolsByCategory(category);
+const otherCategories = categories.filter((c) => c !== category && toolsByCategory(c).length > 0);
+---
+
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+  <nav class="mb-6 flex items-center gap-2 text-sm text-ink-soft" aria-label="Breadcrumb">
+    <a href={localePath(lang, '/')} class="hover:text-pine">{t(lang, 'common.home')}</a>
+    <span aria-hidden="true">/</span>
+    <span class="text-ink">{name}</span>
+  </nav>
+
+  <header class="mb-8">
+    <div class="flex flex-wrap items-center gap-3">
+      <h1 class="font-display text-3xl font-bold tracking-tight text-ink">{name}</h1>
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-pine/30 bg-mist px-2.5 py-1 font-mono text-xs text-pine">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-pine"></span>
+        {t(lang, 'common.runsLocally')}
+      </span>
+    </div>
+    <p class="mt-3 max-w-2xl leading-relaxed text-ink-soft">{t(lang, `categoryPages.${category}.description`)}</p>
+  </header>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {tools.map((tool) => <ToolCard tool={tool} lang={lang} />)}
+  </div>
+
+  <p class="mt-10 max-w-3xl text-sm leading-relaxed text-ink-soft">{t(lang, `categoryPages.${category}.intro`)}</p>
+
+  <nav class="mt-10 border-t border-line pt-6" aria-label={t(lang, 'common.moreCategories')}>
+    <h2 class="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">
+      {t(lang, 'common.moreCategories')}
+    </h2>
+    <div class="flex flex-wrap gap-2">
+      {
+        otherCategories.map((c) => (
+          <a
+            href={localePath(lang, `/${c}/`)}
+            class="rounded-full border border-line bg-white px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-pine hover:text-pine"
+          >
+            {t(lang, `categories.${c}`)}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</div>

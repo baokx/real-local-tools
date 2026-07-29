@@ -1,5 +1,6 @@
 ---
-import { t, type Locale } from '../i18n/utils';
+import { t, localePath, type Locale } from '../i18n/utils';
+import { categories } from '../tools/registry';
 
 interface Props {
   lang: Locale;
@@ -13,6 +14,10 @@ const links = [
   { href: `${prefix}/privacy/`, label: t(lang, 'pages.privacy.title') },
   { href: `${prefix}/terms/`, label: t(lang, 'pages.terms.title') },
 ];
+const categoryLinks = categories.map((c) => ({
+  href: localePath(lang, `/${c}/`),
+  label: t(lang, `categories.${c}`),
+}));
 ---
 
 <footer class="mt-16 border-t border-line">
@@ -29,7 +34,16 @@ const links = [
           contact@real-local-tools.com
         </a>
       </p>
-      <nav class="mt-2.5 flex flex-wrap gap-x-4 gap-y-1" aria-label="Site pages">
+      <nav class="mt-2.5 flex flex-wrap gap-x-4 gap-y-1" aria-label="Tool categories">
+        {
+          categoryLinks.map((l) => (
+            <a href={l.href} class="underline-offset-2 transition-colors hover:text-ink hover:underline">
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+      <nav class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1" aria-label="Site pages">
         {
           links.map((l) => (
             <a href={l.href} class="underline-offset-2 transition-colors hover:text-ink hover:underline">

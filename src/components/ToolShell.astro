@@ -17,7 +17,7 @@ const seoText = t(lang, `tools.${tool.slug}.seo`);
   <nav class="mb-6 flex items-center gap-2 text-sm text-ink-soft" aria-label="Breadcrumb">
     <a href={localePath(lang, '/')} class="hover:text-pine">{t(lang, 'common.home')}</a>
     <span aria-hidden="true">/</span>
-    <a href={`${localePath(lang, '/')}#${tool.category}`} class="hover:text-pine">{categoryName}</a>
+    <a href={localePath(lang, `/${tool.category}/`)} class="hover:text-pine">{categoryName}</a>
     <span aria-hidden="true">/</span>
     <span class="text-ink">{name}</span>
   </nav>

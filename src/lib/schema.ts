@@ -30,6 +30,28 @@ export function websiteSchema(lang: Locale): Record<string, unknown> {
   };
 }
 
+export function categorySchemas(lang: Locale, category: CategorySlug): Record<string, unknown>[] {
+  const homeUrl = siteUrl(localePath(lang, '/'));
+  const name = t(lang, `categories.${category}`);
+  return [
+    {
+      '@type': 'CollectionPage',
+      name,
+      description: t(lang, `categoryPages.${category}.description`),
+      url: siteUrl(localePath(lang, `/${category}/`)),
+      inLanguage: htmlLang[lang],
+      isPartOf: { '@type': 'WebSite', name: t(lang, 'site.name'), url: homeUrl },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: t(lang, 'common.home'), item: homeUrl },
+        { '@type': 'ListItem', position: 2, name },
+      ],
+    },
+  ];
+}
+
 export function toolSchemas(lang: Locale, tool: ToolDef): Record<string, unknown>[] {
   const homeUrl = siteUrl(localePath(lang, '/'));
   const name = t(lang, `tools.${tool.slug}.name`);
@@ -54,7 +76,7 @@ export function toolSchemas(lang: Locale, tool: ToolDef): Record<string, unknown
           '@type': 'ListItem',
           position: 2,
           name: t(lang, `categories.${tool.category}`),
-          item: `${homeUrl}#${tool.category}`,
+          item: siteUrl(localePath(lang, `/${tool.category}/`)),
         },
         { '@type': 'ListItem', position: 3, name },
       ],

@@ -25,6 +25,33 @@
     "security": "Herramientas de seguridad",
     "text": "Herramientas de texto"
   },
+  "categoryPages": {
+    "developer": {
+      "title": "Herramientas para desarrolladores — utilidades gratuitas que funcionan localmente",
+      "description": "Un kit gratuito para el desarrollo diario: formatea JSON, convierte Base64, prueba regex, decodifica JWTs y más — todo funciona localmente en tu navegador.",
+      "intro": "Todo desarrollador mantiene algunas de estas utilidades en pestañas fijadas. Esta colección cubre el trabajo diario: formatear y validar JSON, codificar Base64 y URLs, generar UUIDs, convertir marcas de tiempo y bases numéricas, probar expresiones regulares y decodificar JWTs. Pega tus datos y obtén resultados al instante; como todo funciona en tu navegador, incluso los secretos de producción y los datos sensibles nunca salen de tu equipo."
+    },
+    "image": {
+      "title": "Herramientas de imagen — comprime, convierte y edita imágenes localmente",
+      "description": "Herramientas de imagen gratuitas que funcionan en tu navegador: comprimir, redimensionar, recortar, convertir formatos, eliminar metadatos y más — tus archivos nunca se suben.",
+      "intro": "Tus fotos y diseños permanecen en tu dispositivo. Comprime imágenes para la web, convierte entre PNG, JPEG y WebP, redimensiona y recorta, genera favicons y códigos QR, inspecciona datos EXIF, elimina metadatos, selecciona colores y aplica filtros: todo se procesa localmente con el canvas de tu navegador, así que ni los archivos más grandes tocan un servidor."
+    },
+    "calculator": {
+      "title": "Calculadoras en línea gratuitas — hipoteca, IMC, porcentaje y más",
+      "description": "Calculadoras cotidianas que funcionan al instante en tu navegador: porcentaje, IMC, hipoteca, propina, interés compuesto, fechas, unidades y más.",
+      "intro": "Respuestas rápidas sin hojas de cálculo ni registros. Calcula porcentajes y propinas, planifica una hipoteca o el interés compuesto, calcula el IMC y la edad, convierte unidades, compara fechas o genera números aleatorios. Cada calculadora se actualiza mientras escribes y funciona por completo en tu dispositivo."
+    },
+    "security": {
+      "title": "Herramientas de seguridad — generador de contraseñas y de hashes",
+      "description": "Herramientas de seguridad gratuitas que funcionan localmente: genera contraseñas seguras y calcula hashes MD5, SHA-1, SHA-256 y SHA-512 en tu navegador.",
+      "intro": "Las utilidades de seguridad nunca deberían ver tus secretos. Genera contraseñas criptográficamente seguras con la fuente aleatoria de tu propio navegador y calcula hashes MD5, SHA-1, SHA-256 y SHA-512 localmente: nada de lo que escribas se transmite a ninguna parte."
+    },
+    "text": {
+      "title": "Herramientas de texto — contador de palabras, conversor de mayúsculas y más",
+      "description": "Utilidades de texto gratuitas que funcionan en tu navegador: contar palabras, convertir mayúsculas, invertir texto, eliminar líneas duplicadas, comparar textos y editar Markdown.",
+      "intro": "Utilidades prácticas para escritores, editores y cualquiera que trabaje con texto. Cuenta palabras y caracteres (con soporte completo para caracteres CJK), convierte entre mayúsculas, minúsculas y estilo título, invierte cadenas, elimina líneas duplicadas, compara dos textos uno al lado del otro o escribe Markdown con vista previa en vivo, todo sin enviar tu texto a ningún lado."
+    }
+  },
   "common": {
     "copy": "Copiar",
     "copied": "Copiado al portapapeles",
@@ -36,7 +63,8 @@
     "home": "Inicio",
     "sample": "Cargar ejemplo",
     "swap": "Intercambiar",
-    "recentlyUsed": "Usados recientemente"
+    "recentlyUsed": "Usados recientemente",
+    "moreCategories": "Más categorías"
   },
   "pages": {
     "about": {

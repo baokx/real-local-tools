@@ -25,6 +25,33 @@
     "security": "Security Tools",
     "text": "Text Tools"
   },
+  "categoryPages": {
+    "developer": {
+      "title": "Developer Tools — free utilities that run locally",
+      "description": "A free toolkit for everyday development: format JSON, convert Base64, test regex, decode JWTs and more — all running locally in your browser.",
+      "intro": "Every developer keeps a handful of these utilities open in pinned tabs. This collection covers the daily grind — formatting and validating JSON, encoding Base64 and URLs, generating UUIDs, converting timestamps and number bases, testing regular expressions and decoding JWTs. Paste your data and get instant results; because everything runs in your browser, even production secrets and sensitive payloads never leave your machine."
+    },
+    "image": {
+      "title": "Image Tools — compress, convert & edit images locally",
+      "description": "Free image tools that run entirely in your browser: compress, resize, crop, convert formats, remove metadata and more — your files are never uploaded.",
+      "intro": "Your photos and designs stay on your device. Compress images for the web, convert between PNG, JPEG and WebP, resize and crop, generate favicons and QR codes, inspect EXIF data, strip metadata, pick colors and apply filters — all processed locally with your browser's canvas, so even large files never touch a server."
+    },
+    "calculator": {
+      "title": "Free Online Calculators — mortgage, BMI, percentage & more",
+      "description": "Everyday calculators that work instantly in your browser: percentage, BMI, mortgage, tip, compound interest, dates, units and more.",
+      "intro": "Quick answers without spreadsheets or signups. Work out percentages and tips, plan a mortgage or compound interest, calculate BMI and age, convert units, compare dates or generate random numbers. Each calculator updates as you type and runs entirely on your device."
+    },
+    "security": {
+      "title": "Security Tools — password generator & hash generator",
+      "description": "Free security tools that run locally: generate strong random passwords and compute MD5, SHA-1, SHA-256 and SHA-512 hashes in your browser.",
+      "intro": "Security utilities should never see your secrets. Generate cryptographically strong passwords with your browser's own random source, and compute MD5, SHA-1, SHA-256 and SHA-512 hashes locally — nothing you type is transmitted anywhere."
+    },
+    "text": {
+      "title": "Text Tools — word counter, case converter & more",
+      "description": "Free text utilities that run in your browser: count words, convert case, reverse text, remove duplicate lines, diff texts and edit Markdown.",
+      "intro": "Handy utilities for writers, editors and anyone wrangling text. Count words and characters (with proper CJK support), convert between upper, lower and title case, reverse strings, deduplicate lines, compare two texts side by side, or write Markdown with live preview — all without sending your text anywhere."
+    }
+  },
   "common": {
     "copy": "Copy",
     "copied": "Copied to clipboard",
@@ -36,7 +63,8 @@
     "home": "Home",
     "sample": "Load sample",
     "swap": "Swap",
-    "recentlyUsed": "Recently used"
+    "recentlyUsed": "Recently used",
+    "moreCategories": "More categories"
   },
   "pages": {
     "about": {
