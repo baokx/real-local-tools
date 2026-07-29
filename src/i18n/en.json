@@ -35,7 +35,8 @@
     "runsLocally": "Runs locally",
     "home": "Home",
     "sample": "Load sample",
-    "swap": "Swap"
+    "swap": "Swap",
+    "recentlyUsed": "Recently used"
   },
   "footer": {
     "tagline": "Your data never leaves your device.",

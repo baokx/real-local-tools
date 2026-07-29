@@ -35,7 +35,8 @@
     "runsLocally": "本地运行",
     "home": "首页",
     "sample": "载入示例",
-    "swap": "互换"
+    "swap": "互换",
+    "recentlyUsed": "最近使用"
   },
   "footer": {
     "tagline": "您的数据永远不会离开您的设备。",

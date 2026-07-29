@@ -22,6 +22,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 <html lang={htmlLang[lang]}>
   <head>
     <meta charset="UTF-8" />
+    <!-- Remembered locale: only the bare root home page redirects, before first paint.
+         Crawlers never carry localStorage, so SEO is unaffected. Keep the list in
+         sync with the non-default locales in src/i18n/utils.ts. -->
+    <script is:inline>
+      (function () {
+        try {
+          var raw = localStorage.getItem('rlt:lang');
+          if (!raw) return;
+          var lang = JSON.parse(raw);
+          if (lang === 'en' || window.location.pathname !== '/') return;
+          if (['zh', 'es', 'ja'].indexOf(lang) === -1) return;
+          window.location.replace('/' + lang + '/');
+        } catch (e) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
 

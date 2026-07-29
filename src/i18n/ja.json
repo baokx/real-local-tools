@@ -35,7 +35,8 @@
     "runsLocally": "ローカルで動作",
     "home": "ホーム",
     "sample": "サンプルを読み込む",
-    "swap": "入れ替え"
+    "swap": "入れ替え",
+    "recentlyUsed": "最近使ったツール"
   },
   "footer": {
     "tagline": "あなたのデータはデバイスから出ません。",

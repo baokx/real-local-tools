@@ -61,6 +61,7 @@ const alts = otherLocales(lang).map((l) => ({ l, url: alternateUrl(Astro.url, l)
             <a
               href={a.url}
               hreflang={a.l}
+              data-locale={a.l}
               class="block px-3.5 py-1.5 text-ink-soft transition-colors hover:bg-mist hover:text-pine"
             >
               {localeNames[a.l]}
@@ -73,9 +74,15 @@ const alts = otherLocales(lang).map((l) => ({ l, url: alternateUrl(Astro.url, l)
 </header>
 
 <script>
+  import { write } from '../lib/prefs';
+
   const menu = document.getElementById('lang-menu') as HTMLDetailsElement | null;
   document.addEventListener('click', (e) => {
     if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('#lang-menu a[data-locale]').forEach((a) => {
+    a.addEventListener('click', () => write('lang', a.dataset.locale));
   });
 </script>
 

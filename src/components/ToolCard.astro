@@ -17,6 +17,7 @@ const href = localePath(lang, `/${tool.category}/${tool.slug}/`);
   href={href}
   class="tool-card group flex flex-col gap-2 rounded-xl border border-line bg-white/60 p-4 transition-all hover:-translate-y-0.5 hover:border-pine hover:shadow-[0_8px_24px_-12px_rgba(20,83,45,0.35)]"
   data-search={`${name} ${description} ${tool.slug}`.toLowerCase()}
+  data-slug={tool.slug}
 >
   <div class="flex items-start justify-between">
     <span class="font-mono text-sm font-medium text-pine" aria-hidden="true">{tool.icon}</span>

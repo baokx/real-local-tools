@@ -25,6 +25,15 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
   </div>
 </section>
 
+<section id="recent-section" class="hidden border-b border-line">
+  <div class="mx-auto max-w-5xl px-4 py-5 sm:px-6">
+    <h2 class="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-ink-soft">
+      {t(lang, 'common.recentlyUsed')}
+    </h2>
+    <div id="recent-list" class="flex flex-wrap gap-2"></div>
+  </div>
+</section>
+
 <div class="mx-auto max-w-5xl px-4 sm:px-6">
   <p id="search-empty" class="hidden py-16 text-center text-ink-soft">{t(lang, 'search.empty')}</p>
   {
@@ -69,5 +78,35 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
   if (preset && input) {
     input.value = preset;
     input.dispatchEvent(new Event('input'));
+  }
+</script>
+
+<script>
+  import { read } from '../lib/prefs';
+
+  const recent = read<string[]>('recent', []);
+  const recentSection = document.getElementById('recent-section');
+  const recentList = document.getElementById('recent-list');
+  if (recentSection && recentList && recent.length > 0) {
+    const bySlug = new Map<string, HTMLAnchorElement>();
+    document.querySelectorAll<HTMLAnchorElement>('.tool-card[data-slug]').forEach((c) => {
+      bySlug.set(c.dataset.slug!, c);
+    });
+    const frag = document.createDocumentFragment();
+    for (const slug of recent) {
+      const card = bySlug.get(slug);
+      const href = card?.getAttribute('href');
+      if (!card || !href) continue;
+      const chip = document.createElement('a');
+      chip.href = href;
+      chip.textContent = card.querySelector('h3')?.textContent ?? slug;
+      chip.className =
+        'rounded-full border border-line bg-white px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-pine hover:text-pine';
+      frag.appendChild(chip);
+    }
+    recentList.appendChild(frag);
+    if (recentList.childElementCount > 0) {
+      recentSection.classList.remove('hidden');
+    }
   }
 </script>

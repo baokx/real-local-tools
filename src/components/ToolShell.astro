@@ -13,7 +13,7 @@ const categoryName = t(lang, `categories.${tool.category}`);
 const seoText = t(lang, `tools.${tool.slug}.seo`);
 ---
 
-<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+<div id="tool-shell" data-slug={tool.slug} class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
   <nav class="mb-6 flex items-center gap-2 text-sm text-ink-soft" aria-label="Breadcrumb">
     <a href={localePath(lang, '/')} class="hover:text-pine">{t(lang, 'common.home')}</a>
     <span aria-hidden="true">/</span>
@@ -39,3 +39,9 @@ const seoText = t(lang, `tools.${tool.slug}.seo`);
 
   <p class="mt-10 max-w-3xl text-sm leading-relaxed text-ink-soft">{seoText}</p>
 </div>
+
+<script>
+  import { pushRecent } from '../lib/prefs';
+  const shell = document.getElementById('tool-shell');
+  if (shell?.dataset.slug) pushRecent(shell.dataset.slug);
+</script>

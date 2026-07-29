@@ -35,7 +35,8 @@
     "runsLocally": "Funciona localmente",
     "home": "Inicio",
     "sample": "Cargar ejemplo",
-    "swap": "Intercambiar"
+    "swap": "Intercambiar",
+    "recentlyUsed": "Usados recientemente"
   },
   "footer": {
     "tagline": "Tus datos nunca abandonan tu dispositivo.",
