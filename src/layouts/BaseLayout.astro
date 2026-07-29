@@ -57,5 +57,7 @@ const altUrl = new URL(alternateUrl(Astro.url, altLang), Astro.site);
       <slot />
     </main>
     <Footer lang={lang} />
+    <!-- Cloudflare Web Analytics: cookieless, no personal data collected -->
+    <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4b7e81251e054b71a1093eaf820d79c2"}'></script>
   </body>
 </html>
