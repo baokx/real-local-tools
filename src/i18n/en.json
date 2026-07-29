@@ -96,6 +96,213 @@
         "needOne": "Select at least one character set.",
         "placeholder": "Click regenerate to create a password"
       }
+    },
+    "url-converter": {
+      "name": "URL Encoder / Decoder",
+      "description": "Encode and decode URLs and URI components safely — instantly, in your browser.",
+      "seoTitle": "URL Encoder & Decoder — free, runs locally",
+      "seo": "Encode special characters so they survive inside URLs and query parameters, or decode percent-encoded strings back to readable text. Choose component mode for parameter values or full-URL mode for whole links. Everything runs locally in your browser.",
+      "ui": {
+        "modeComponent": "Component (query values)",
+        "modeFull": "Full URL",
+        "inputLabel": "Text",
+        "outputLabel": "Encoded / decoded",
+        "inputPlaceholder": "Type or paste text, or a percent-encoded string…",
+        "invalid": "That doesn't look like a percent-encoded string."
+      }
+    },
+    "uuid-generator": {
+      "name": "UUID Generator",
+      "description": "Generate random v4 UUIDs in bulk — cryptographically random, right in your browser.",
+      "seoTitle": "UUID / GUID Generator — bulk v4, cryptographically random",
+      "seo": "Generate up to 100 RFC 4122 version-4 UUIDs with one click, using your browser's cryptographically secure random source. Toggle uppercase or remove dashes, then copy them all. Nothing is sent anywhere.",
+      "ui": {
+        "count": "How many",
+        "generate": "Generate UUIDs",
+        "uppercase": "Uppercase",
+        "noDashes": "No dashes",
+        "copyAll": "Copy all"
+      }
+    },
+    "timestamp-converter": {
+      "name": "Unix Timestamp Converter",
+      "description": "Convert Unix epoch timestamps to human-readable dates and back — with live current time.",
+      "seoTitle": "Unix Timestamp Converter — epoch to date, local & UTC",
+      "seo": "Paste a Unix timestamp (seconds or milliseconds — auto-detected) to see the corresponding date in your local timezone and UTC, or pick a date to get its timestamp. A live clock shows the current epoch time. All conversion happens in your browser.",
+      "ui": {
+        "now": "Current Unix time",
+        "seconds": "s",
+        "milliseconds": "ms",
+        "tsToDate": "Timestamp → Date",
+        "dateToTs": "Date → Timestamp",
+        "timestamp": "Unix timestamp",
+        "dateTime": "Date & time",
+        "localLabel": "Local",
+        "utcLabel": "UTC",
+        "invalid": "Invalid timestamp"
+      }
+    },
+    "html-entity-converter": {
+      "name": "HTML Entity Encoder / Decoder",
+      "description": "Encode special characters to HTML entities and decode them back — safe for pasting code into pages.",
+      "seoTitle": "HTML Entity Encoder & Decoder — runs locally",
+      "seo": "Convert characters like <, >, & and quotes into their HTML entity equivalents so code snippets render safely in web pages, or decode entities back to plain text. Named entities are used where they exist. Runs entirely in your browser.",
+      "ui": {
+        "textLabel": "Text",
+        "encodedLabel": "Entities",
+        "textPlaceholder": "Paste text or code…",
+        "encodedPlaceholder": "Paste entities…"
+      }
+    },
+    "color-converter": {
+      "name": "Color Converter",
+      "description": "Convert colors between HEX, RGB and HSL — with a visual picker and one-click copy.",
+      "seoTitle": "Color Converter — HEX, RGB, HSL with visual picker",
+      "seo": "Pick a color visually or paste a HEX, RGB or HSL value and see every format update in sync. Copy any representation with one click for your CSS. Everything runs locally.",
+      "ui": {
+        "pick": "Pick a color",
+        "invalid": "Invalid color"
+      }
+    },
+    "number-base-converter": {
+      "name": "Number Base Converter",
+      "description": "Convert numbers between binary, octal, decimal, hexadecimal and any base from 2 to 36.",
+      "seoTitle": "Number Base Converter — binary, octal, hex, base 2-36",
+      "seo": "Enter a number in any base from 2 to 36 and instantly see it in binary, octal, decimal and hexadecimal. Big values are supported exactly thanks to arbitrary-precision integers. Runs entirely in your browser.",
+      "ui": {
+        "valueLabel": "Number",
+        "baseLabel": "From base",
+        "binary": "Binary (2)",
+        "octal": "Octal (8)",
+        "decimal": "Decimal (10)",
+        "hex": "Hexadecimal (16)",
+        "invalid": "Invalid digits for the selected base"
+      }
+    },
+    "word-counter": {
+      "name": "Word & Character Counter",
+      "description": "Count characters, words, sentences and paragraphs in real time — with reading time estimate.",
+      "seoTitle": "Word & Character Counter — real-time text statistics",
+      "seo": "Paste or type text and watch the counts update instantly: characters with and without spaces, words, sentences, paragraphs and lines, plus an estimated reading time. Counting rules work for both English and Chinese text. Everything stays in your browser.",
+      "ui": {
+        "characters": "Characters",
+        "charactersNoSpaces": "No spaces",
+        "words": "Words",
+        "sentences": "Sentences",
+        "paragraphs": "Paragraphs",
+        "lines": "Lines",
+        "readingTime": "Reading time",
+        "readingMin": "≈ {min} min",
+        "placeholder": "Start typing or paste your text…"
+      }
+    },
+    "case-converter": {
+      "name": "Case Converter",
+      "description": "Convert text between lowercase, UPPERCASE, Title Case, camelCase, snake_case and more.",
+      "seoTitle": "Case Converter — camelCase, snake_case, Title Case & more",
+      "seo": "One click converts your text to lowercase, UPPERCASE, Title Case, Sentence case, camelCase, PascalCase, snake_case or kebab-case. Handy when moving between code conventions and prose. Runs locally in your browser.",
+      "ui": {
+        "lower": "lowercase",
+        "upper": "UPPERCASE",
+        "title": "Title Case",
+        "sentence": "Sentence case",
+        "camel": "camelCase",
+        "pascal": "PascalCase",
+        "snake": "snake_case",
+        "kebab": "kebab-case",
+        "placeholder": "Type or paste text…"
+      }
+    },
+    "text-reverser": {
+      "name": "Text Reverser",
+      "description": "Reverse text character by character, word by word, or line by line — instantly.",
+      "seoTitle": "Text Reverser — flip characters, words or lines",
+      "seo": "Flip your text three ways: reverse every character, reverse the order of words, or reverse the order of lines. Unicode-aware, so emoji and accented characters stay intact. Everything runs locally.",
+      "ui": {
+        "byChars": "Reverse characters",
+        "byWords": "Reverse words",
+        "byLines": "Reverse lines",
+        "placeholder": "Type or paste text…"
+      }
+    },
+    "remove-duplicate-lines": {
+      "name": "Remove Duplicate Lines",
+      "description": "Deduplicate lines, strip blank lines and sort — with a live count of what was removed.",
+      "seoTitle": "Remove Duplicate Lines — dedupe, sort & strip blanks",
+      "seo": "Paste line-separated text and remove duplicate lines while keeping the original order, or sort the result alphabetically. Blank lines can be stripped too, and a live summary shows how many lines were removed. Runs entirely in your browser.",
+      "ui": {
+        "dedupe": "Remove duplicates",
+        "sortAZ": "Sort A → Z",
+        "removeEmpty": "Strip blank lines",
+        "summary": "{kept} lines kept · {removed} removed",
+        "placeholder": "Paste lines, one per line…"
+      }
+    },
+    "percentage-calculator": {
+      "name": "Percentage Calculator",
+      "description": "Three everyday percentage questions, answered instantly: X% of Y, X is what % of Y, and % change.",
+      "seoTitle": "Percentage Calculator — percent of, is what %, % change",
+      "seo": "Answer the three percentage questions that come up all the time: What is X% of Y? X is what percent of Y? What is the percentage change from X to Y? Results update as you type. Runs locally in your browser.",
+      "ui": {
+        "mode1a": "What is",
+        "mode1b": "% of",
+        "mode2a": "is what % of",
+        "mode3a": "Change from",
+        "mode3b": "to",
+        "result": "Result",
+        "increase": "increase",
+        "decrease": "decrease"
+      }
+    },
+    "bmi-calculator": {
+      "name": "BMI Calculator",
+      "description": "Calculate your Body Mass Index in metric or imperial units, with WHO category feedback.",
+      "seoTitle": "BMI Calculator — metric & imperial, WHO categories",
+      "seo": "Enter your height and weight in metric or imperial units and get your BMI instantly, along with the WHO weight category it falls into and the healthy weight range for your height. Nothing is stored or sent anywhere.",
+      "ui": {
+        "height": "Height",
+        "weight": "Weight",
+        "metric": "Metric",
+        "imperial": "Imperial",
+        "yourBmi": "Your BMI",
+        "underweight": "Underweight",
+        "normal": "Normal",
+        "overweight": "Overweight",
+        "obese": "Obese",
+        "healthyRange": "Healthy weight for your height: {range}"
+      }
+    },
+    "date-difference": {
+      "name": "Date Difference Calculator",
+      "description": "Calculate the exact difference between two dates in days, weeks, months and years — plus business days.",
+      "seoTitle": "Date Difference Calculator — days, weeks, business days",
+      "seo": "Pick two dates and see the exact gap expressed in days, weeks, months and years, including a business-day count that skips weekends. The end date can be included or excluded. Everything runs in your browser.",
+      "ui": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "includeEnd": "Include end date",
+        "days": "days",
+        "weeks": "weeks",
+        "months": "months",
+        "years": "years",
+        "businessDays": "business days",
+        "inDays": "= {n} days"
+      }
+    },
+    "random-number-generator": {
+      "name": "Random Number Generator",
+      "description": "Generate random numbers in any range — unique or repeatable, one or in bulk.",
+      "seoTitle": "Random Number Generator — any range, unique picks",
+      "seo": "Pick a minimum and maximum, choose how many numbers you want, and optionally require them to be unique or sorted. Generation uses your browser's cryptographically secure random source. Runs entirely offline.",
+      "ui": {
+        "min": "Min",
+        "max": "Max",
+        "count": "How many",
+        "unique": "No repeats",
+        "sort": "Sort results",
+        "generate": "Generate",
+        "invalid": "Can't pick that many unique values from this range"
+      }
     }
   }
 }

@@ -1,0 +1,144 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.bmi-calculator.ui.${key}`);
+---
+
+<div
+  id="bmi-calculator"
+  data-range-tpl={u('healthyRange')}
+  data-categories={JSON.stringify([u('underweight'), u('normal'), u('overweight'), u('obese')])}
+>
+  <div class="mb-4 flex gap-2">
+    <button data-units="metric" class="rlt-btn rlt-btn-primary bmi-units-btn">{u('metric')}</button>
+    <button data-units="imperial" class="rlt-btn bmi-units-btn">{u('imperial')}</button>
+  </div>
+
+  <div class="flex flex-wrap items-end gap-4">
+    <div id="bmi-metric-fields" class="flex items-end gap-4">
+      <div>
+        <label for="bmi-cm" class="rlt-label">{u('height')} (cm)</label>
+        <input id="bmi-cm" type="number" min="0" placeholder="170" class="rlt-input w-32 font-mono" />
+      </div>
+      <div>
+        <label for="bmi-kg" class="rlt-label">{u('weight')} (kg)</label>
+        <input id="bmi-kg" type="number" min="0" placeholder="65" class="rlt-input w-32 font-mono" />
+      </div>
+    </div>
+    <div id="bmi-imperial-fields" class="hidden items-end gap-4">
+      <div>
+        <label for="bmi-ft" class="rlt-label">{u('height')} (ft / in)</label>
+        <div class="flex gap-2">
+          <input id="bmi-ft" type="number" min="0" placeholder="5" class="rlt-input w-20 font-mono" />
+          <input id="bmi-in" type="number" min="0" placeholder="7" class="rlt-input w-20 font-mono" />
+        </div>
+      </div>
+      <div>
+        <label for="bmi-lb" class="rlt-label">{u('weight')} (lb)</label>
+        <input id="bmi-lb" type="number" min="0" placeholder="150" class="rlt-input w-32 font-mono" />
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 max-w-md">
+    <p class="text-sm text-ink-soft">{u('yourBmi')}</p>
+    <p class="mt-1 flex items-baseline gap-3">
+      <span id="bmi-value" class="font-display text-4xl font-bold text-ink">—</span>
+      <span id="bmi-category" class="font-medium"></span>
+    </p>
+    <div class="mt-3 flex h-2 overflow-hidden rounded-full">
+      <div class="bg-[#5b8def]" style="width: 18.5%"></div>
+      <div class="bg-[#14532d]" style="width: 6.5%"></div>
+      <div class="bg-[#a3a318]" style="width: 5%"></div>
+      <div class="bg-[#b45309]" style="width: 70%"></div>
+    </div>
+    <div class="relative mt-1 h-4">
+      <div id="bmi-marker" class="absolute top-0 h-3 w-0.5 -translate-x-1/2 bg-ink transition-all" style="left: 0%"></div>
+    </div>
+    <p id="bmi-range" class="mt-2 text-sm text-ink-soft"></p>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('bmi-calculator');
+  if (root) {
+    const categories: string[] = JSON.parse(root.dataset.categories!);
+    const rangeTpl = root.dataset.rangeTpl!;
+    let units = 'metric';
+
+    const metricFields = root.querySelector('#bmi-metric-fields')!;
+    const imperialFields = root.querySelector('#bmi-imperial-fields')!;
+
+    const setUnits = (next: string) => {
+      units = next;
+      metricFields.classList.toggle('hidden', units !== 'metric');
+      metricFields.classList.toggle('flex', units === 'metric');
+      imperialFields.classList.toggle('hidden', units !== 'imperial');
+      imperialFields.classList.toggle('flex', units === 'imperial');
+      root.querySelectorAll<HTMLButtonElement>('.bmi-units-btn').forEach((btn) => {
+        btn.classList.toggle('rlt-btn-primary', btn.dataset.units === units);
+      });
+      update();
+    };
+
+    const categoryFor = (bmi: number): { label: string; color: string } => {
+      if (bmi < 18.5) return { label: categories[0], color: '#5b8def' };
+      if (bmi < 25) return { label: categories[1], color: '#14532d' };
+      if (bmi < 30) return { label: categories[2], color: '#a3a318' };
+      return { label: categories[3], color: '#b45309' };
+    };
+
+    const update = () => {
+      let kg = 0, meters = 0;
+      if (units === 'metric') {
+        kg = Number(root.querySelector<HTMLInputElement>('#bmi-kg')!.value);
+        meters = Number(root.querySelector<HTMLInputElement>('#bmi-cm')!.value) / 100;
+      } else {
+        const ft = Number(root.querySelector<HTMLInputElement>('#bmi-ft')!.value);
+        const inch = Number(root.querySelector<HTMLInputElement>('#bmi-in')!.value);
+        kg = Number(root.querySelector<HTMLInputElement>('#bmi-lb')!.value) * 0.45359237;
+        meters = (ft * 12 + inch) * 0.0254;
+      }
+
+      const valueEl = root.querySelector('#bmi-value')!;
+      const catEl = root.querySelector('#bmi-category')!;
+      const rangeEl = root.querySelector('#bmi-range')!;
+      const marker = root.querySelector<HTMLDivElement>('#bmi-marker')!;
+
+      if (!kg || !meters) {
+        valueEl.textContent = '—';
+        catEl.textContent = '';
+        rangeEl.textContent = '';
+        marker.style.left = '0%';
+        return;
+      }
+
+      const bmi = kg / (meters * meters);
+      const { label, color } = categoryFor(bmi);
+      valueEl.textContent = (Math.round(bmi * 10) / 10).toString();
+      catEl.textContent = label;
+      catEl.style.color = color;
+
+      // Scale bar spans BMI 0-40.
+      marker.style.left = `${Math.min(100, (bmi / 40) * 100)}%`;
+
+      const low = 18.5 * meters * meters;
+      const high = 24.9 * meters * meters;
+      const fmt = (v: number) => (units === 'metric'
+        ? `${Math.round(v * 10) / 10} kg`
+        : `${Math.round(v * 2.20462)} lb`);
+      rangeEl.textContent = rangeTpl.replace('{range}', `${fmt(low)} – ${fmt(high)}`);
+    };
+
+    root.addEventListener('input', update);
+    root.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-units]');
+      if (btn) setUnits(btn.dataset.units!);
+    });
+  }
+</script>

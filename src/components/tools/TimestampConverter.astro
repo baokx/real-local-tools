@@ -1,0 +1,131 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.timestamp-converter.ui.${key}`);
+---
+
+<div id="timestamp-converter" data-invalid={u('invalid')} data-copied={t(lang, 'common.copied')}>
+  <div class="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-line bg-mist/60 px-4 py-3">
+    <span class="text-sm text-ink-soft">{u('now')}</span>
+    <span id="ts-now" class="font-mono text-lg font-medium text-pine"></span>
+    <button data-copy-now class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+    <span class="ml-auto font-mono text-xs text-ink-soft" id="ts-now-ms"></span>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <section>
+      <h3 class="rlt-label">{u('tsToDate')}</h3>
+      <div class="flex gap-2">
+        <input id="ts-input" type="text" inputmode="numeric" placeholder="1753..." class="rlt-input flex-1 font-mono" />
+        <button data-action="ts2date" class="rlt-btn rlt-btn-primary">→</button>
+      </div>
+      <dl class="mt-3 grid gap-2 text-sm">
+        <div class="flex items-center gap-2">
+          <dt class="w-14 font-mono text-xs uppercase text-ink-soft">{u('localLabel')}</dt>
+          <dd id="ts-local" class="font-mono text-ink"></dd>
+        </div>
+        <div class="flex items-center gap-2">
+          <dt class="w-14 font-mono text-xs uppercase text-ink-soft">{u('utcLabel')}</dt>
+          <dd id="ts-utc" class="font-mono text-ink"></dd>
+        </div>
+      </dl>
+      <p id="ts-error" role="status" class="rlt-status mt-2 text-amber"></p>
+    </section>
+
+    <section>
+      <h3 class="rlt-label">{u('dateToTs')}</h3>
+      <div class="flex gap-2">
+        <input id="date-input" type="datetime-local" step="1" class="rlt-input flex-1 font-mono" />
+        <button data-action="date2ts" class="rlt-btn rlt-btn-primary">→</button>
+      </div>
+      <dl class="mt-3 grid gap-2 text-sm">
+        <div class="flex items-center gap-2">
+          <dt class="w-14 font-mono text-xs uppercase text-ink-soft">{u('seconds')}</dt>
+          <dd id="date-ts-s" class="font-mono text-ink"></dd>
+        </div>
+        <div class="flex items-center gap-2">
+          <dt class="w-14 font-mono text-xs uppercase text-ink-soft">{u('milliseconds')}</dt>
+          <dd id="date-ts-ms" class="font-mono text-ink"></dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('timestamp-converter');
+  if (root) {
+    const nowEl = root.querySelector<HTMLSpanElement>('#ts-now')!;
+    const nowMsEl = root.querySelector<HTMLSpanElement>('#ts-now-ms')!;
+    const tsInput = root.querySelector<HTMLInputElement>('#ts-input')!;
+    const dateInput = root.querySelector<HTMLInputElement>('#date-input')!;
+    const localEl = root.querySelector<HTMLElement>('#ts-local')!;
+    const utcEl = root.querySelector<HTMLElement>('#ts-utc')!;
+    const tsS = root.querySelector<HTMLElement>('#date-ts-s')!;
+    const tsMs = root.querySelector<HTMLElement>('#date-ts-ms')!;
+    const errorEl = root.querySelector<HTMLParagraphElement>('#ts-error')!;
+
+    const tick = () => {
+      const ms = Date.now();
+      nowEl.textContent = String(Math.floor(ms / 1000));
+      nowMsEl.textContent = `${ms} ms`;
+    };
+    tick();
+    setInterval(tick, 1000);
+
+    const fmt = (d: Date) => d.toLocaleString(undefined, { hour12: false });
+
+    const ts2date = () => {
+      errorEl.textContent = '';
+      const raw = tsInput.value.trim();
+      if (!raw) return;
+      const num = Number(raw);
+      if (!Number.isFinite(num)) {
+        errorEl.textContent = root.dataset.invalid!;
+        return;
+      }
+      // Auto-detect: values past year 33658 in seconds are almost surely milliseconds.
+      const ms = Math.abs(num) > 1e12 ? num : num * 1000;
+      const d = new Date(ms);
+      if (Number.isNaN(d.getTime())) {
+        errorEl.textContent = root.dataset.invalid!;
+        return;
+      }
+      localEl.textContent = fmt(d);
+      utcEl.textContent = d.toISOString().replace('T', ' ').replace('Z', ' UTC');
+    };
+
+    const date2ts = () => {
+      if (!dateInput.value) return;
+      const ms = new Date(dateInput.value).getTime();
+      tsS.textContent = String(Math.floor(ms / 1000));
+      tsMs.textContent = String(ms);
+    };
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-action], [data-copy-now]');
+      if (!btn) return;
+      if (btn.dataset.action === 'ts2date') ts2date();
+      else if (btn.dataset.action === 'date2ts') date2ts();
+      else if ('copyNow' in btn.dataset) {
+        await navigator.clipboard.writeText(nowEl.textContent!);
+        const original = btn.textContent!;
+        btn.textContent = root.dataset.copied!;
+        setTimeout(() => (btn.textContent = original), 1500);
+      }
+    });
+
+    tsInput.addEventListener('input', ts2date);
+    dateInput.addEventListener('input', date2ts);
+
+    const now = new Date();
+    now.setSeconds(0, 0);
+    dateInput.value = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 19);
+    date2ts();
+  }
+</script>

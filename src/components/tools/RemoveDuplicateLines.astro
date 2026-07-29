@@ -1,0 +1,84 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.remove-duplicate-lines.ui.${key}`);
+---
+
+<div id="remove-duplicate-lines" data-copied={t(lang, 'common.copied')} data-summary-tpl={u('summary')}>
+  <div class="mb-3 flex flex-wrap items-center gap-4">
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="checkbox" id="dl-dedupe" checked class="rlt-check" />{u('dedupe')}
+    </label>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="checkbox" id="dl-sort" class="rlt-check" />{u('sortAZ')}
+    </label>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="checkbox" id="dl-empty" class="rlt-check" />{u('removeEmpty')}
+    </label>
+    <button data-copy class="rlt-btn ml-auto">{t(lang, 'common.copy')}</button>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="dl-input" class="rlt-label">{t(lang, 'common.input')}</label>
+      <textarea id="dl-input" rows="10" spellcheck="false" placeholder={u('placeholder')} class="rlt-textarea"></textarea>
+    </div>
+    <div>
+      <label for="dl-output" class="rlt-label">{t(lang, 'common.output')}</label>
+      <textarea id="dl-output" rows="10" spellcheck="false" readonly class="rlt-textarea bg-mist/50"></textarea>
+    </div>
+  </div>
+
+  <p id="dl-summary" role="status" class="rlt-status mt-3 text-pine"></p>
+</div>
+
+<script>
+  const root = document.getElementById('remove-duplicate-lines');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#dl-input')!;
+    const output = root.querySelector<HTMLTextAreaElement>('#dl-output')!;
+    const summary = root.querySelector<HTMLParagraphElement>('#dl-summary')!;
+    const dedupeEl = root.querySelector<HTMLInputElement>('#dl-dedupe')!;
+    const sortEl = root.querySelector<HTMLInputElement>('#dl-sort')!;
+    const emptyEl = root.querySelector<HTMLInputElement>('#dl-empty')!;
+
+    const run = () => {
+      const lines = input.value.split('\n');
+      let result = lines;
+
+      if (emptyEl.checked) result = result.filter((line) => line.trim() !== '');
+      if (dedupeEl.checked) result = [...new Set(result)];
+      if (sortEl.checked) result = [...result].sort((a, b) => a.localeCompare(b));
+
+      output.value = result.join('\n');
+
+      if (input.value) {
+        const removed = lines.length - result.length;
+        summary.textContent = root.dataset.summaryTpl!
+          .replace('{kept}', String(result.length))
+          .replace('{removed}', String(removed));
+      } else {
+        summary.textContent = '';
+      }
+    };
+
+    input.addEventListener('input', run);
+    dedupeEl.addEventListener('change', run);
+    sortEl.addEventListener('change', run);
+    emptyEl.addEventListener('change', run);
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+      if (!btn || !output.value) return;
+      await navigator.clipboard.writeText(output.value);
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+  }
+</script>

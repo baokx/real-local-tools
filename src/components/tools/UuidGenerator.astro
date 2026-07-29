@@ -1,0 +1,74 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.uuid-generator.ui.${key}`);
+---
+
+<div id="uuid-generator" data-copied={t(lang, 'common.copied')}>
+  <div class="mb-4 flex flex-wrap items-center gap-3">
+    <label class="flex items-center gap-2 text-sm text-ink">
+      {u('count')}
+      <select id="uuid-count" class="rlt-input">
+        <option value="1">1</option>
+        <option value="5" selected>5</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </label>
+    <button id="uuid-generate" class="rlt-btn rlt-btn-primary">{u('generate')}</button>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink-soft">
+      <input type="checkbox" id="uuid-uppercase" class="rlt-check" />{u('uppercase')}
+    </label>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink-soft">
+      <input type="checkbox" id="uuid-nodashes" class="rlt-check" />{u('noDashes')}
+    </label>
+    <button id="uuid-copy" class="rlt-btn">{u('copyAll')}</button>
+  </div>
+
+  <textarea id="uuid-output" rows="10" readonly spellcheck="false" class="rlt-textarea bg-mist/50"></textarea>
+</div>
+
+<script>
+  const root = document.getElementById('uuid-generator');
+  if (root) {
+    const countEl = root.querySelector<HTMLSelectElement>('#uuid-count')!;
+    const uppercaseEl = root.querySelector<HTMLInputElement>('#uuid-uppercase')!;
+    const noDashesEl = root.querySelector<HTMLInputElement>('#uuid-nodashes')!;
+    const output = root.querySelector<HTMLTextAreaElement>('#uuid-output')!;
+
+    const generate = () => {
+      const count = Number(countEl.value);
+      const uuids: string[] = [];
+      for (let i = 0; i < count; i++) {
+        let id = crypto.randomUUID();
+        if (noDashesEl.checked) id = id.replaceAll('-', '');
+        if (uppercaseEl.checked) id = id.toUpperCase();
+        uuids.push(id);
+      }
+      output.value = uuids.join('\n');
+    };
+
+    root.querySelector('#uuid-generate')!.addEventListener('click', generate);
+    countEl.addEventListener('change', generate);
+    uppercaseEl.addEventListener('change', generate);
+    noDashesEl.addEventListener('change', generate);
+
+    root.querySelector('#uuid-copy')!.addEventListener('click', async (event) => {
+      if (!output.value) return;
+      await navigator.clipboard.writeText(output.value);
+      const btn = event.currentTarget as HTMLButtonElement;
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+
+    generate();
+  }
+</script>

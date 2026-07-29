@@ -1,0 +1,78 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.word-counter.ui.${key}`);
+const stats = [
+  ['characters', 'wc-chars'],
+  ['charactersNoSpaces', 'wc-chars-ns'],
+  ['words', 'wc-words'],
+  ['sentences', 'wc-sentences'],
+  ['paragraphs', 'wc-paragraphs'],
+  ['lines', 'wc-lines'],
+] as const;
+---
+
+<div id="word-counter" data-reading-tpl={u('readingMin')}>
+  <textarea id="wc-input" rows="10" spellcheck="false" placeholder={u('placeholder')} class="rlt-textarea"></textarea>
+
+  <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    {
+      stats.map(([key, id]) => (
+        <div class="rounded-lg border border-line bg-mist/50 px-3 py-2.5 text-center">
+          <div id={id} class="font-display text-xl font-bold text-pine">0</div>
+          <div class="mt-0.5 text-xs text-ink-soft">{u(key)}</div>
+        </div>
+      ))
+    }
+  </div>
+
+  <p class="mt-3 text-sm text-ink-soft">
+    {u('readingTime')}: <span id="wc-reading" class="font-mono text-ink">0</span>
+  </p>
+</div>
+
+<script>
+  const root = document.getElementById('word-counter');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#wc-input')!;
+    const tpl = root.dataset.readingTpl!;
+
+    const countWords = (text: string): number => {
+      // CJK characters count as one word each; Latin runs count per word.
+      const cjk = text.match(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af]/g);
+      const latin = text
+        .replace(/[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3040-\u30ff\uac00-\ud7af]/g, ' ')
+        .match(/[A-Za-z0-9'’_-]+/g);
+      return (cjk?.length ?? 0) + (latin?.length ?? 0);
+    };
+
+    const update = () => {
+      const text = input.value;
+      const chars = [...text].length;
+      const noSpaces = [...text.replace(/\s/g, '')].length;
+      const words = text.trim() ? countWords(text) : 0;
+      const sentences = (text.match(/[^.!?。!?\n]+[.!?。!?]+/g) ?? []).length || (text.trim() ? 1 : 0);
+      const paragraphs = text.trim() ? text.trim().split(/\n\s*\n/).length : 0;
+      const lines = text ? text.split('\n').length : 0;
+
+      root.querySelector('#wc-chars')!.textContent = String(chars);
+      root.querySelector('#wc-chars-ns')!.textContent = String(noSpaces);
+      root.querySelector('#wc-words')!.textContent = String(words);
+      root.querySelector('#wc-sentences')!.textContent = String(sentences);
+      root.querySelector('#wc-paragraphs')!.textContent = String(paragraphs);
+      root.querySelector('#wc-lines')!.textContent = String(lines);
+
+      // ~200 wpm for Latin prose, ~300 chars/min for CJK.
+      const cjkCount = (text.match(/[\u4e00-\u9fff]/g) ?? []).length;
+      const minutes = words > 0 ? Math.max(1, Math.round(((words - cjkCount) / 200 + cjkCount / 300) * 10) / 10) : 0;
+      root.querySelector('#wc-reading')!.textContent = tpl.replace('{min}', String(minutes));
+    };
+
+    input.addEventListener('input', update);
+  }
+</script>

@@ -96,6 +96,213 @@
         "needOne": "请至少选择一种字符集。",
         "placeholder": "点击\"重新生成\"创建密码"
       }
+    },
+    "url-converter": {
+      "name": "URL 编码 / 解码",
+      "description": "安全地编码和解码 URL 及 URI 组件——即时完成,全部在浏览器中。",
+      "seoTitle": "URL 编码 / 解码 — 免费,本地运行",
+      "seo": "将特殊字符编码为可在 URL 和查询参数中安全传输的形式,或将百分号编码的字符串解码回可读文本。参数值请选择组件模式,完整链接请选择完整 URL 模式。一切尽在浏览器本地运行。",
+      "ui": {
+        "modeComponent": "组件(查询参数值)",
+        "modeFull": "完整 URL",
+        "inputLabel": "文本",
+        "outputLabel": "编码 / 解码结果",
+        "inputPlaceholder": "输入或粘贴文本,或百分号编码的字符串…",
+        "invalid": "这不是有效的百分号编码字符串。"
+      }
+    },
+    "uuid-generator": {
+      "name": "UUID 生成器",
+      "description": "批量生成随机 v4 UUID——加密级随机,就在您的浏览器中。",
+      "seoTitle": "UUID / GUID 生成器 — 批量 v4,加密级随机",
+      "seo": "一键生成多达 100 个符合 RFC 4122 的 v4 UUID,使用浏览器加密级安全随机源。可切换大写或去除连字符,然后一键全部复制。不会发送任何数据。",
+      "ui": {
+        "count": "生成数量",
+        "generate": "生成 UUID",
+        "uppercase": "大写",
+        "noDashes": "去除连字符",
+        "copyAll": "全部复制"
+      }
+    },
+    "timestamp-converter": {
+      "name": "Unix 时间戳转换器",
+      "description": "Unix 时间戳与人类可读日期互转——带实时当前时间。",
+      "seoTitle": "Unix 时间戳转换器 — 本地时间与 UTC",
+      "seo": "粘贴 Unix 时间戳(自动识别秒或毫秒),即可看到对应的本地时区日期和 UTC 日期;也可以选择日期时间获取时间戳。实时时钟显示当前时间戳。全部转换在浏览器中完成。",
+      "ui": {
+        "now": "当前 Unix 时间",
+        "seconds": "秒",
+        "milliseconds": "毫秒",
+        "tsToDate": "时间戳 → 日期",
+        "dateToTs": "日期 → 时间戳",
+        "timestamp": "Unix 时间戳",
+        "dateTime": "日期时间",
+        "localLabel": "本地",
+        "utcLabel": "UTC",
+        "invalid": "无效的时间戳"
+      }
+    },
+    "html-entity-converter": {
+      "name": "HTML 实体编码 / 解码",
+      "description": "特殊字符与 HTML 实体互转——代码片段贴入网页更安全。",
+      "seoTitle": "HTML 实体编码 / 解码 — 本地运行",
+      "seo": "将 <、>、& 和引号等字符转换为 HTML 实体,使代码片段在网页中安全渲染;或将实体解码回纯文本。优先使用命名实体。完全在浏览器中运行。",
+      "ui": {
+        "textLabel": "文本",
+        "encodedLabel": "实体",
+        "textPlaceholder": "粘贴文本或代码…",
+        "encodedPlaceholder": "粘贴实体…"
+      }
+    },
+    "color-converter": {
+      "name": "颜色转换器",
+      "description": "HEX、RGB、HSL 颜色格式互转——可视化取色,一键复制。",
+      "seoTitle": "颜色转换器 — HEX / RGB / HSL,可视化取色",
+      "seo": "通过取色器选择颜色,或粘贴 HEX、RGB、HSL 任意格式,所有格式实时同步更新。一键复制任意表示形式用于您的 CSS。全部本地运行。",
+      "ui": {
+        "pick": "选择颜色",
+        "invalid": "无效的颜色值"
+      }
+    },
+    "number-base-converter": {
+      "name": "进制转换器",
+      "description": "在二进制、八进制、十进制、十六进制及任意 2-36 进制之间转换数字。",
+      "seoTitle": "进制转换器 — 二/八/十/十六进制,支持 2-36 进制",
+      "seo": "以 2 到 36 任意进制输入数字,即时查看其二进制、八进制、十进制和十六进制表示。借助任意精度整数,超大数值也能精确转换。完全在浏览器中运行。",
+      "ui": {
+        "valueLabel": "数字",
+        "baseLabel": "源进制",
+        "binary": "二进制 (2)",
+        "octal": "八进制 (8)",
+        "decimal": "十进制 (10)",
+        "hex": "十六进制 (16)",
+        "invalid": "对于所选进制,数字包含无效字符"
+      }
+    },
+    "word-counter": {
+      "name": "字数与字符统计器",
+      "description": "实时统计字符数、单词数、句子数和段落数——附阅读时长估算。",
+      "seoTitle": "字数与字符统计器 — 实时文本统计",
+      "seo": "粘贴或输入文本,统计即时更新:含空格与不含空格字符数、单词数、句子数、段落数、行数,以及预计阅读时长。统计规则同时适用于中英文文本。一切数据都留在您的浏览器中。",
+      "ui": {
+        "characters": "字符数",
+        "charactersNoSpaces": "不含空格",
+        "words": "单词数",
+        "sentences": "句子数",
+        "paragraphs": "段落数",
+        "lines": "行数",
+        "readingTime": "阅读时长",
+        "readingMin": "约 {min} 分钟",
+        "placeholder": "开始输入或粘贴文本…"
+      }
+    },
+    "case-converter": {
+      "name": "大小写转换器",
+      "description": "文本在 lowercase、UPPERCASE、Title Case、camelCase、snake_case 等格式间转换。",
+      "seoTitle": "大小写转换器 — camelCase、snake_case、Title Case 等",
+      "seo": "一键将文本转换为 lowercase、UPPERCASE、Title Case、Sentence case、camelCase、PascalCase、snake_case 或 kebab-case。在代码命名规范与文字书写之间切换时特别顺手。本地运行。",
+      "ui": {
+        "lower": "lowercase",
+        "upper": "UPPERCASE",
+        "title": "Title Case",
+        "sentence": "Sentence case",
+        "camel": "camelCase",
+        "pascal": "PascalCase",
+        "snake": "snake_case",
+        "kebab": "kebab-case",
+        "placeholder": "输入或粘贴文本…"
+      }
+    },
+    "text-reverser": {
+      "name": "文本反转器",
+      "description": "按字符、按单词或按行反转文本——即时完成。",
+      "seoTitle": "文本反转器 — 字符 / 单词 / 行反转",
+      "seo": "三种方式翻转您的文本:逐字符反转、反转单词顺序、反转行顺序。支持 Unicode,emoji 和带重音字符保持完好。全部本地运行。",
+      "ui": {
+        "byChars": "按字符反转",
+        "byWords": "按单词反转",
+        "byLines": "按行反转",
+        "placeholder": "输入或粘贴文本…"
+      }
+    },
+    "remove-duplicate-lines": {
+      "name": "去除重复行工具",
+      "description": "去除重复行、清除空行并排序——实时显示移除了多少行。",
+      "seoTitle": "去除重复行工具 — 去重、排序、清除空行",
+      "seo": "粘贴按行分隔的文本,在保留原始顺序的同时去除重复行,或将结果按字母排序。也可以清除空行,实时统计显示移除了多少行。完全在浏览器中运行。",
+      "ui": {
+        "dedupe": "去除重复行",
+        "sortAZ": "按 A → Z 排序",
+        "removeEmpty": "清除空行",
+        "summary": "保留 {kept} 行 · 移除 {removed} 行",
+        "placeholder": "粘贴文本,每行一条…"
+      }
+    },
+    "percentage-calculator": {
+      "name": "百分比计算器",
+      "description": "即时回答三种最常见的百分比问题:X 的 Y%、X 是 Y 的百分之几、百分比变化。",
+      "seoTitle": "百分比计算器 — 占比、百分比、变化率",
+      "seo": "回答日常最常遇到的三种百分比问题:X 的 Y% 是多少?X 是 Y 的百分之几?从 X 到 Y 的百分比变化是多少?输入即出结果。本地运行。",
+      "ui": {
+        "mode1a": "",
+        "mode1b": "% 的",
+        "mode2a": "是",
+        "mode3a": "从",
+        "mode3b": "到",
+        "result": "结果",
+        "increase": "增长",
+        "decrease": "下降"
+      }
+    },
+    "bmi-calculator": {
+      "name": "BMI 身体质量指数计算器",
+      "description": "用公制或英制单位计算 BMI,附 WHO 健康分类反馈。",
+      "seoTitle": "BMI 计算器 — 公制/英制,WHO 健康分类",
+      "seo": "输入身高体重(公制或英制),即时获得 BMI 数值、所属的 WHO 体重分类,以及您身高对应的健康体重范围。不会存储或发送任何数据。",
+      "ui": {
+        "height": "身高",
+        "weight": "体重",
+        "metric": "公制",
+        "imperial": "英制",
+        "yourBmi": "您的 BMI",
+        "underweight": "偏瘦",
+        "normal": "正常",
+        "overweight": "超重",
+        "obese": "肥胖",
+        "healthyRange": "您身高的健康体重范围:{range}"
+      }
+    },
+    "date-difference": {
+      "name": "日期差计算器",
+      "description": "计算两个日期之间的精确差值:天数、周数、月数、年数——含工作日。",
+      "seoTitle": "日期差计算器 — 天数、周数、工作日",
+      "seo": "选择两个日期,即可看到以天数、周数、月数和年数表示的精确间隔,以及跳过周末的工作日数量。结束日期可选择是否计入。全部在浏览器中运行。",
+      "ui": {
+        "startDate": "开始日期",
+        "endDate": "结束日期",
+        "includeEnd": "包含结束日期",
+        "days": "天",
+        "weeks": "周",
+        "months": "个月",
+        "years": "年",
+        "businessDays": "个工作日",
+        "inDays": "= {n} 天"
+      }
+    },
+    "random-number-generator": {
+      "name": "随机数生成器",
+      "description": "在任意范围内生成随机数——可唯一、可重复、可批量。",
+      "seoTitle": "随机数生成器 — 任意范围,不重复抽取",
+      "seo": "设定最小值和最大值,选择生成数量,可选不重复或排序输出。使用浏览器加密级安全随机源生成。完全离线运行。",
+      "ui": {
+        "min": "最小值",
+        "max": "最大值",
+        "count": "生成数量",
+        "unique": "不允许重复",
+        "sort": "结果排序",
+        "generate": "生成",
+        "invalid": "该范围内无法抽取这么多不重复的值"
+      }
     }
   }
 }

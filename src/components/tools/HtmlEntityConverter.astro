@@ -1,0 +1,86 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.html-entity-converter.ui.${key}`);
+---
+
+<div id="html-entity-converter" data-copied={t(lang, 'common.copied')}>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <div class="mb-1.5 flex items-center justify-between">
+        <label for="he-text" class="rlt-label mb-0">{u('textLabel')}</label>
+        <button data-copy="he-text" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <textarea id="he-text" rows="10" spellcheck="false" placeholder={u('textPlaceholder')} class="rlt-textarea"></textarea>
+    </div>
+    <div>
+      <div class="mb-1.5 flex items-center justify-between">
+        <label for="he-encoded" class="rlt-label mb-0">{u('encodedLabel')}</label>
+        <button data-copy="he-encoded" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <textarea id="he-encoded" rows="10" spellcheck="false" placeholder={u('encodedPlaceholder')} class="rlt-textarea"></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('html-entity-converter');
+  if (root) {
+    const textEl = root.querySelector<HTMLTextAreaElement>('#he-text')!;
+    const encodedEl = root.querySelector<HTMLTextAreaElement>('#he-encoded')!;
+
+    // Prefer named entities where they exist; fall back to numeric references.
+    const named: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    };
+
+    const encode = (str: string): string =>
+      [...str]
+        .map((ch) => {
+          if (named[ch]) return named[ch];
+          const code = ch.codePointAt(0)!;
+          return code > 127 ? `&#${code};` : ch;
+        })
+        .join('');
+
+    const decode = (str: string): string => {
+      const el = document.createElement('textarea');
+      el.innerHTML = str;
+      return el.value;
+    };
+
+    let syncing = false;
+    textEl.addEventListener('input', () => {
+      if (syncing) return;
+      syncing = true;
+      encodedEl.value = encode(textEl.value);
+      syncing = false;
+    });
+    encodedEl.addEventListener('input', () => {
+      if (syncing) return;
+      syncing = true;
+      textEl.value = decode(encodedEl.value);
+      syncing = false;
+    });
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+      if (!btn) return;
+      const target = root.querySelector<HTMLTextAreaElement>(`#${btn.dataset.copy}`)!;
+      if (!target.value) return;
+      await navigator.clipboard.writeText(target.value);
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+  }
+</script>

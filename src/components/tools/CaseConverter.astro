@@ -1,0 +1,62 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.case-converter.ui.${key}`);
+const modes = ['lower', 'upper', 'title', 'sentence', 'camel', 'pascal', 'snake', 'kebab'] as const;
+---
+
+<div id="case-converter" data-copied={t(lang, 'common.copied')}>
+  <div class="mb-3 flex flex-wrap gap-2">
+    {modes.map((mode) => (
+      <button data-mode={mode} class="rlt-btn">{u(mode)}</button>
+    ))}
+    <span class="mx-1 hidden h-5 w-px self-center bg-line sm:block"></span>
+    <button data-copy class="rlt-btn">{t(lang, 'common.copy')}</button>
+  </div>
+
+  <textarea id="cc-input" rows="8" spellcheck="false" placeholder={u('placeholder')} class="rlt-textarea"></textarea>
+</div>
+
+<script>
+  const root = document.getElementById('case-converter');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#cc-input')!;
+
+    const wordsOf = (text: string): string[] =>
+      text
+        .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+        .split(/[^A-Za-z0-9]+/)
+        .filter(Boolean)
+        .map((w) => w.toLowerCase());
+
+    const converters: Record<string, (text: string) => string> = {
+      lower: (t) => t.toLowerCase(),
+      upper: (t) => t.toUpperCase(),
+      title: (t) => t.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()),
+      sentence: (t) => t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, (c) => c.toUpperCase()),
+      camel: (t) => wordsOf(t).map((w, i) => (i === 0 ? w : w[0].toUpperCase() + w.slice(1))).join(''),
+      pascal: (t) => wordsOf(t).map((w) => w[0].toUpperCase() + w.slice(1)).join(''),
+      snake: (t) => wordsOf(t).join('_'),
+      kebab: (t) => wordsOf(t).join('-'),
+    };
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-mode], [data-copy]');
+      if (!btn) return;
+      if (btn.dataset.mode) {
+        input.value = converters[btn.dataset.mode](input.value);
+      } else if ('copy' in btn.dataset) {
+        if (!input.value) return;
+        await navigator.clipboard.writeText(input.value);
+        const original = btn.textContent!;
+        btn.textContent = root.dataset.copied!;
+        setTimeout(() => (btn.textContent = original), 1500);
+      }
+    });
+  }
+</script>

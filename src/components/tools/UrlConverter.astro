@@ -1,0 +1,91 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.url-converter.ui.${key}`);
+---
+
+<div id="url-converter" data-invalid={u('invalid')} data-copied={t(lang, 'common.copied')}>
+  <div class="mb-3 flex flex-wrap items-center gap-4">
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="radio" name="url-mode" value="component" checked class="rlt-check" />
+      {u('modeComponent')}
+    </label>
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
+      <input type="radio" name="url-mode" value="full" class="rlt-check" />
+      {u('modeFull')}
+    </label>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <div class="mb-1.5 flex items-center justify-between">
+        <label for="url-input" class="rlt-label mb-0">{u('inputLabel')}</label>
+        <button data-copy="url-input" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <textarea id="url-input" rows="8" spellcheck="false" placeholder={u('inputPlaceholder')} class="rlt-textarea"></textarea>
+    </div>
+    <div>
+      <div class="mb-1.5 flex items-center justify-between">
+        <label for="url-output" class="rlt-label mb-0">{u('outputLabel')}</label>
+        <button data-copy="url-output" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <textarea id="url-output" rows="8" spellcheck="false" readonly class="rlt-textarea bg-mist/50"></textarea>
+    </div>
+  </div>
+
+  <div class="mt-3 flex items-center gap-3">
+    <button data-action="encode" class="rlt-btn rlt-btn-primary">Encode →</button>
+    <button data-action="decode" class="rlt-btn rlt-btn-primary">Decode →</button>
+    <p id="url-status" role="status" class="rlt-status text-amber"></p>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('url-converter');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#url-input')!;
+    const output = root.querySelector<HTMLTextAreaElement>('#url-output')!;
+    const status = root.querySelector<HTMLParagraphElement>('#url-status')!;
+
+    const mode = () =>
+      (root.querySelector<HTMLInputElement>('input[name="url-mode"]:checked')?.value ?? 'component');
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-action], [data-copy]');
+      if (!btn) return;
+
+      if (btn.dataset.copy) {
+        const target = root.querySelector<HTMLTextAreaElement>(`#${btn.dataset.copy}`)!;
+        if (!target.value) return;
+        await navigator.clipboard.writeText(target.value);
+        const original = btn.textContent!;
+        btn.textContent = root.dataset.copied!;
+        setTimeout(() => (btn.textContent = original), 1500);
+        return;
+      }
+
+      status.textContent = '';
+      const raw = input.value;
+      if (!raw) {
+        output.value = '';
+        return;
+      }
+      try {
+        output.value =
+          btn.dataset.action === 'encode'
+            ? mode() === 'component'
+              ? encodeURIComponent(raw)
+              : encodeURI(raw)
+            : decodeURIComponent(raw.replaceAll('%25', '%'));
+      } catch {
+        output.value = '';
+        status.textContent = root.dataset.invalid!;
+      }
+    });
+  }
+</script>

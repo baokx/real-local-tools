@@ -6,6 +6,20 @@ import { t } from '../../i18n/utils';
 import JsonFormatter from '../../components/tools/JsonFormatter.astro';
 import Base64Converter from '../../components/tools/Base64Converter.astro';
 import PasswordGenerator from '../../components/tools/PasswordGenerator.astro';
+import UrlConverter from '../../components/tools/UrlConverter.astro';
+import UuidGenerator from '../../components/tools/UuidGenerator.astro';
+import TimestampConverter from '../../components/tools/TimestampConverter.astro';
+import HtmlEntityConverter from '../../components/tools/HtmlEntityConverter.astro';
+import ColorConverter from '../../components/tools/ColorConverter.astro';
+import NumberBaseConverter from '../../components/tools/NumberBaseConverter.astro';
+import WordCounter from '../../components/tools/WordCounter.astro';
+import CaseConverter from '../../components/tools/CaseConverter.astro';
+import TextReverser from '../../components/tools/TextReverser.astro';
+import RemoveDuplicateLines from '../../components/tools/RemoveDuplicateLines.astro';
+import PercentageCalculator from '../../components/tools/PercentageCalculator.astro';
+import BmiCalculator from '../../components/tools/BmiCalculator.astro';
+import DateDifference from '../../components/tools/DateDifference.astro';
+import RandomNumberGenerator from '../../components/tools/RandomNumberGenerator.astro';
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -21,6 +35,20 @@ const implementations = {
   'json-formatter': JsonFormatter,
   'base64-converter': Base64Converter,
   'password-generator': PasswordGenerator,
+  'url-converter': UrlConverter,
+  'uuid-generator': UuidGenerator,
+  'timestamp-converter': TimestampConverter,
+  'html-entity-converter': HtmlEntityConverter,
+  'color-converter': ColorConverter,
+  'number-base-converter': NumberBaseConverter,
+  'word-counter': WordCounter,
+  'case-converter': CaseConverter,
+  'text-reverser': TextReverser,
+  'remove-duplicate-lines': RemoveDuplicateLines,
+  'percentage-calculator': PercentageCalculator,
+  'bmi-calculator': BmiCalculator,
+  'date-difference': DateDifference,
+  'random-number-generator': RandomNumberGenerator,
 } as const;
 
 const ToolImpl = implementations[tool.slug as keyof typeof implementations];

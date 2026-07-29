@@ -1,0 +1,107 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.date-difference.ui.${key}`);
+---
+
+<div id="date-difference" data-units={JSON.stringify({
+  days: u('days'), weeks: u('weeks'), months: u('months'), years: u('years'), businessDays: u('businessDays'),
+})} data-in-days={u('inDays')}>
+  <div class="flex flex-wrap items-end gap-4">
+    <div>
+      <label for="dd-start" class="rlt-label">{u('startDate')}</label>
+      <input id="dd-start" type="date" class="rlt-input font-mono" />
+    </div>
+    <div>
+      <label for="dd-end" class="rlt-label">{u('endDate')}</label>
+      <input id="dd-end" type="date" class="rlt-input font-mono" />
+    </div>
+    <label class="flex cursor-pointer items-center gap-2 pb-2 text-sm text-ink">
+      <input type="checkbox" id="dd-include" class="rlt-check" />{u('includeEnd')}
+    </label>
+  </div>
+
+  <div id="dd-results" class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    <div class="rounded-lg border border-line bg-mist/50 px-3 py-2.5 text-center">
+      <div id="dd-days" class="font-display text-xl font-bold text-pine">—</div>
+      <div class="mt-0.5 text-xs text-ink-soft" data-unit-label="days"></div>
+    </div>
+    <div class="rounded-lg border border-line bg-mist/50 px-3 py-2.5 text-center">
+      <div id="dd-weeks" class="font-display text-xl font-bold text-pine">—</div>
+      <div class="mt-0.5 text-xs text-ink-soft" data-unit-label="weeks"></div>
+    </div>
+    <div class="rounded-lg border border-line bg-mist/50 px-3 py-2.5 text-center">
+      <div id="dd-months" class="font-display text-xl font-bold text-pine">—</div>
+      <div class="mt-0.5 text-xs text-ink-soft" data-unit-label="months"></div>
+    </div>
+    <div class="rounded-lg border border-line bg-mist/50 px-3 py-2.5 text-center">
+      <div id="dd-years" class="font-display text-xl font-bold text-pine">—</div>
+      <div class="mt-0.5 text-xs text-ink-soft" data-unit-label="years"></div>
+    </div>
+    <div class="col-span-2 rounded-lg border border-line bg-mist/50 px-3 py-2.5 text-center">
+      <div id="dd-business" class="font-display text-xl font-bold text-pine">—</div>
+      <div class="mt-0.5 text-xs text-ink-soft" data-unit-label="businessDays"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('date-difference');
+  if (root) {
+    const units: Record<string, string> = JSON.parse(root.dataset.units!);
+    root.querySelectorAll<HTMLElement>('[data-unit-label]').forEach((el) => {
+      el.textContent = units[el.dataset.unitLabel!];
+    });
+
+    const startEl = root.querySelector<HTMLInputElement>('#dd-start')!;
+    const endEl = root.querySelector<HTMLInputElement>('#dd-end')!;
+    const includeEl = root.querySelector<HTMLInputElement>('#dd-include')!;
+
+    const DAY_MS = 24 * 60 * 60 * 1000;
+
+    const businessDays = (start: Date, days: number): number => {
+      let count = 0;
+      const step = days >= 0 ? 1 : -1;
+      for (let i = 0; i !== days + step; i += step) {
+        const d = new Date(start.getTime() + i * DAY_MS);
+        const day = d.getDay();
+        if (day !== 0 && day !== 6) count += step;
+      }
+      return count;
+    };
+
+    const update = () => {
+      if (!startEl.value || !endEl.value) return;
+      const start = new Date(`${startEl.value}T00:00:00`);
+      let end = new Date(`${endEl.value}T00:00:00`);
+      if (includeEl.checked) end = new Date(end.getTime() + DAY_MS);
+
+      const diffDays = Math.round((end.getTime() - start.getTime()) / DAY_MS);
+      const sign = diffDays < 0 ? -1 : 1;
+      const absDays = Math.abs(diffDays);
+
+      root.querySelector('#dd-days')!.textContent = String(diffDays);
+      root.querySelector('#dd-weeks')!.textContent =
+        `${sign < 0 ? '-' : ''}${Math.floor(absDays / 7)} + ${absDays % 7} ${units.days}`;
+      root.querySelector('#dd-months')!.textContent = (sign * (absDays / 30.436875)).toFixed(1);
+      root.querySelector('#dd-years')!.textContent = (sign * (absDays / 365.2425)).toFixed(2);
+      root.querySelector('#dd-business')!.textContent = String(businessDays(start, diffDays));
+    };
+
+    startEl.addEventListener('input', update);
+    endEl.addEventListener('input', update);
+    includeEl.addEventListener('change', update);
+
+    const today = new Date();
+    const nextMonth = new Date(today.getTime() + 30 * DAY_MS);
+    const iso = (d: Date) => d.toISOString().slice(0, 10);
+    startEl.value = iso(today);
+    endEl.value = iso(nextMonth);
+    update();
+  }
+</script>

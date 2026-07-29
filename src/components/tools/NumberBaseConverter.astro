@@ -1,0 +1,129 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.number-base-converter.ui.${key}`);
+---
+
+<div id="number-base-converter" data-invalid={u('invalid')} data-copied={t(lang, 'common.copied')}>
+  <div class="flex flex-wrap items-end gap-3">
+    <div class="min-w-56 flex-1">
+      <label for="nb-value" class="rlt-label">{u('valueLabel')}</label>
+      <input id="nb-value" type="text" spellcheck="false" placeholder="255" class="rlt-input w-full font-mono" />
+    </div>
+    <div>
+      <label for="nb-base" class="rlt-label">{u('baseLabel')}</label>
+      <input id="nb-base" type="number" min="2" max="36" value="10" class="rlt-input w-24 font-mono" />
+    </div>
+  </div>
+  <p id="nb-status" role="status" class="rlt-status mt-2 h-5 text-amber"></p>
+
+  <div class="mt-3 grid gap-3 sm:grid-cols-2">
+    <div class="rounded-lg border border-line bg-mist/50 p-3">
+      <div class="mb-1 flex items-center justify-between">
+        <span class="font-mono text-xs uppercase text-ink-soft">{u('binary')}</span>
+        <button data-copy="nb-bin" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <output id="nb-bin" class="block select-all break-all font-mono text-sm text-ink"></output>
+    </div>
+    <div class="rounded-lg border border-line bg-mist/50 p-3">
+      <div class="mb-1 flex items-center justify-between">
+        <span class="font-mono text-xs uppercase text-ink-soft">{u('octal')}</span>
+        <button data-copy="nb-oct" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <output id="nb-oct" class="block select-all break-all font-mono text-sm text-ink"></output>
+    </div>
+    <div class="rounded-lg border border-line bg-mist/50 p-3">
+      <div class="mb-1 flex items-center justify-between">
+        <span class="font-mono text-xs uppercase text-ink-soft">{u('decimal')}</span>
+        <button data-copy="nb-dec" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <output id="nb-dec" class="block select-all break-all font-mono text-sm text-ink"></output>
+    </div>
+    <div class="rounded-lg border border-line bg-mist/50 p-3">
+      <div class="mb-1 flex items-center justify-between">
+        <span class="font-mono text-xs uppercase text-ink-soft">{u('hex')}</span>
+        <button data-copy="nb-hex" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+      </div>
+      <output id="nb-hex" class="block select-all break-all font-mono text-sm text-ink"></output>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('number-base-converter');
+  if (root) {
+    const valueEl = root.querySelector<HTMLInputElement>('#nb-value')!;
+    const baseEl = root.querySelector<HTMLInputElement>('#nb-base')!;
+    const status = root.querySelector<HTMLParagraphElement>('#nb-status')!;
+    const out = {
+      2: root.querySelector<HTMLOutputElement>('#nb-bin')!,
+      8: root.querySelector<HTMLOutputElement>('#nb-oct')!,
+      10: root.querySelector<HTMLOutputElement>('#nb-dec')!,
+      16: root.querySelector<HTMLOutputElement>('#nb-hex')!,
+    };
+
+    const convert = () => {
+      status.textContent = '';
+      for (const el of Object.values(out)) el.textContent = '';
+      const raw = valueEl.value.trim();
+      if (!raw) return;
+      const base = Number(baseEl.value);
+      if (!Number.isInteger(base) || base < 2 || base > 36) {
+        status.textContent = root.dataset.invalid!;
+        return;
+      }
+      // BigInt keeps arbitrarily large values exact; pattern pre-checks digits for the base.
+      const digits = '0123456789abcdefghijklmnopqrstuvwxyz'.slice(0, base);
+      const pattern = new RegExp(`^-?[${digits}]+$`, 'i');
+      if (!pattern.test(raw)) {
+        status.textContent = root.dataset.invalid!;
+        return;
+      }
+      try {
+        const negative = raw.startsWith('-');
+        const value = BigInt(raw.replace(/^-/, ''));
+        const decimal = negative ? -value : value;
+        for (const [targetBase, el] of Object.entries(out)) {
+          el.textContent = decimal.toString(Number(targetBase)).toUpperCase();
+        }
+        // BigInt() parses decimal only; for other bases convert manually.
+        if (base !== 10) {
+          let acc = 0n;
+          for (const ch of raw.replace(/^-/, '').toLowerCase()) {
+            const d = '0123456789abcdefghijklmnopqrstuvwxyz'.indexOf(ch);
+            if (d < 0 || d >= base) throw new Error('bad digit');
+            acc = acc * BigInt(base) + BigInt(d);
+          }
+          const n = negative ? -acc : acc;
+          for (const [targetBase, el] of Object.entries(out)) {
+            el.textContent = n.toString(Number(targetBase)).toUpperCase();
+          }
+        }
+      } catch {
+        status.textContent = root.dataset.invalid!;
+      }
+    };
+
+    valueEl.addEventListener('input', convert);
+    baseEl.addEventListener('input', convert);
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+      if (!btn) return;
+      const target = root.querySelector<HTMLOutputElement>(`#${btn.dataset.copy}`)!;
+      if (!target.textContent) return;
+      await navigator.clipboard.writeText(target.textContent);
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+
+    valueEl.value = '255';
+    convert();
+  }
+</script>

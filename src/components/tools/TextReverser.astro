@@ -1,0 +1,69 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.text-reverser.ui.${key}`);
+---
+
+<div id="text-reverser" data-copied={t(lang, 'common.copied')}>
+  <div class="mb-3 flex flex-wrap gap-2">
+    <button data-mode="chars" class="rlt-btn rlt-btn-primary">{u('byChars')}</button>
+    <button data-mode="words" class="rlt-btn rlt-btn-primary">{u('byWords')}</button>
+    <button data-mode="lines" class="rlt-btn rlt-btn-primary">{u('byLines')}</button>
+    <span class="mx-1 hidden h-5 w-px self-center bg-line sm:block"></span>
+    <button data-copy class="rlt-btn">{t(lang, 'common.copy')}</button>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="tr-input" class="rlt-label">{t(lang, 'common.input')}</label>
+      <textarea id="tr-input" rows="8" spellcheck="false" placeholder={u('placeholder')} class="rlt-textarea"></textarea>
+    </div>
+    <div>
+      <label for="tr-output" class="rlt-label">{t(lang, 'common.output')}</label>
+      <textarea id="tr-output" rows="8" spellcheck="false" readonly class="rlt-textarea bg-mist/50"></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('text-reverser');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#tr-input')!;
+    const output = root.querySelector<HTMLTextAreaElement>('#tr-output')!;
+    let mode = 'chars';
+
+    const run = () => {
+      const text = input.value;
+      if (mode === 'chars') {
+        // Spread keeps surrogate pairs (emoji etc.) intact.
+        output.value = [...text].reverse().join('');
+      } else if (mode === 'words') {
+        output.value = text.split(/(\s+)/).reverse().join('');
+      } else {
+        output.value = text.split('\n').reverse().join('\n');
+      }
+    };
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-mode], [data-copy]');
+      if (!btn) return;
+      if (btn.dataset.mode) {
+        mode = btn.dataset.mode;
+        run();
+      } else if ('copy' in btn.dataset) {
+        if (!output.value) return;
+        await navigator.clipboard.writeText(output.value);
+        const original = btn.textContent!;
+        btn.textContent = root.dataset.copied!;
+        setTimeout(() => (btn.textContent = original), 1500);
+      }
+    });
+
+    input.addEventListener('input', run);
+  }
+</script>

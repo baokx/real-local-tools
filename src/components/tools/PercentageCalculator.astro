@@ -1,0 +1,96 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.percentage-calculator.ui.${key}`);
+---
+
+<div id="percentage-calculator" data-increase={u('increase')} data-decrease={u('decrease')}>
+  <div class="grid gap-4 lg:grid-cols-3">
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <p class="mb-3 text-sm text-ink">
+        {u('mode1a')} <output id="pc-a1v" class="font-mono font-medium">?</output>
+        {u('mode1b')} <output id="pc-b1v" class="font-mono font-medium">?</output> = ?
+      </p>
+      <div class="flex items-center gap-2 text-sm">
+        <input id="pc-a1" type="number" placeholder="25" class="rlt-input w-full font-mono" />
+        <span class="text-ink-soft">%</span>
+        <input id="pc-b1" type="number" placeholder="200" class="rlt-input w-full font-mono" />
+      </div>
+      <p class="mt-3 font-mono text-lg font-medium text-pine" id="pc-r1">—</p>
+    </section>
+
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <p class="mb-3 text-sm text-ink">
+        <output id="pc-a2v" class="font-mono font-medium">?</output> {u('mode2a')}
+        <output id="pc-b2v" class="font-mono font-medium">?</output>
+      </p>
+      <div class="flex items-center gap-2">
+        <input id="pc-a2" type="number" placeholder="50" class="rlt-input w-full font-mono" />
+        <input id="pc-b2" type="number" placeholder="200" class="rlt-input w-full font-mono" />
+      </div>
+      <p class="mt-3 font-mono text-lg font-medium text-pine" id="pc-r2">—</p>
+    </section>
+
+    <section class="rounded-lg border border-line bg-mist/40 p-4">
+      <p class="mb-3 text-sm text-ink">
+        {u('mode3a')} <output id="pc-a3v" class="font-mono font-medium">?</output>
+        {u('mode3b')} <output id="pc-b3v" class="font-mono font-medium">?</output>
+      </p>
+      <div class="flex items-center gap-2">
+        <input id="pc-a3" type="number" placeholder="100" class="rlt-input w-full font-mono" />
+        <input id="pc-b3" type="number" placeholder="125" class="rlt-input w-full font-mono" />
+      </div>
+      <p class="mt-3 font-mono text-lg font-medium text-pine" id="pc-r3">—</p>
+    </section>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('percentage-calculator');
+  if (root) {
+    const val = (id: string): number | null => {
+      const raw = root.querySelector<HTMLInputElement>(`#${id}`)!.value;
+      if (raw === '') return null;
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const fmt = (n: number): string => {
+      const rounded = Math.round(n * 10000) / 10000;
+      return String(rounded);
+    };
+
+    const update = () => {
+      const a1 = val('pc-a1'), b1 = val('pc-b1');
+      root.querySelector('#pc-a1v')!.textContent = a1 === null ? '?' : String(a1);
+      root.querySelector('#pc-b1v')!.textContent = b1 === null ? '?' : String(b1);
+      root.querySelector('#pc-r1')!.textContent =
+        a1 !== null && b1 !== null ? fmt((a1 / 100) * b1) : '—';
+
+      const a2 = val('pc-a2'), b2 = val('pc-b2');
+      root.querySelector('#pc-a2v')!.textContent = a2 === null ? '?' : String(a2);
+      root.querySelector('#pc-b2v')!.textContent = b2 === null ? '?' : String(b2);
+      root.querySelector('#pc-r2')!.textContent =
+        a2 !== null && b2 !== null && b2 !== 0 ? `${fmt((a2 / b2) * 100)}%` : '—';
+
+      const a3 = val('pc-a3'), b3 = val('pc-b3');
+      root.querySelector('#pc-a3v')!.textContent = a3 === null ? '?' : String(a3);
+      root.querySelector('#pc-b3v')!.textContent = b3 === null ? '?' : String(b3);
+      if (a3 !== null && b3 !== null && a3 !== 0) {
+        const change = ((b3 - a3) / Math.abs(a3)) * 100;
+        const direction = change >= 0 ? root.dataset.increase! : root.dataset.decrease!;
+        root.querySelector('#pc-r3')!.textContent = `${fmt(Math.abs(change))}% ${direction}`;
+      } else {
+        root.querySelector('#pc-r3')!.textContent = '—';
+      }
+    };
+
+    root.addEventListener('input', update);
+    update();
+  }
+</script>
