@@ -84,7 +84,9 @@
   "footer": {
     "tagline": "您的数据永远不会离开您的设备。",
     "note": "纯静态站点,零服务器、零追踪器。",
-    "contact": "有疑问或建议？发邮件至"
+    "contact": "有疑问或建议？发邮件至",
+    "tools": "工具",
+    "pages": "站点"
   },
   "tools": {
     "json-formatter": {

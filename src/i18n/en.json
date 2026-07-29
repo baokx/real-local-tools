@@ -84,7 +84,9 @@
   "footer": {
     "tagline": "Your data never leaves your device.",
     "note": "A fully static site with zero servers and zero trackers.",
-    "contact": "Questions or suggestions? Email us at"
+    "contact": "Questions or suggestions? Email us at",
+    "tools": "Tools",
+    "pages": "Site"
   },
   "tools": {
     "json-formatter": {

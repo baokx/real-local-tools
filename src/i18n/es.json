@@ -84,7 +84,9 @@
   "footer": {
     "tagline": "Tus datos nunca abandonan tu dispositivo.",
     "note": "Un sitio completamente estático, sin servidores ni rastreadores.",
-    "contact": "¿Preguntas o sugerencias? Escríbenos a"
+    "contact": "¿Preguntas o sugerencias? Escríbenos a",
+    "tools": "Herramientas",
+    "pages": "Sitio"
   },
   "tools": {
     "json-formatter": {
