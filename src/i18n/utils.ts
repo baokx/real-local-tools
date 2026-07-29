@@ -51,8 +51,9 @@ const prefixRe = new RegExp(`^/(${nonDefault})(?=/|$)`);
 /** Prefix a path with the locale (default locale stays unprefixed). */
 export function localePath(lang: Locale, path: string): string {
   const clean = path.startsWith('/') ? path : `/${path}`;
-  const localized =
-    lang === defaultLocale ? clean : `/${lang}${clean === '/' ? '' : clean}` || `/${lang}/`;
+  // Keep the trailing slash on locale home pages (`/zh/`) so links, hreflang
+  // alternates and the canonical URL all match the `trailingSlash: 'always'` build.
+  const localized = lang === defaultLocale ? clean : `/${lang}${clean === '/' ? '/' : clean}`;
   return `${base}${localized}`;
 }
 
@@ -84,4 +85,12 @@ export const htmlLang: Record<Locale, string> = {
   zh: 'zh-CN',
   es: 'es',
   ja: 'ja',
+};
+
+/** og:locale values (underscore form required by Open Graph). */
+export const ogLocale: Record<Locale, string> = {
+  en: 'en_US',
+  zh: 'zh_CN',
+  es: 'es_ES',
+  ja: 'ja_JP',
 };

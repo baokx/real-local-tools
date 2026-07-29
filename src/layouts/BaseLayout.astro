@@ -2,20 +2,28 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { t, alternateUrl, htmlLang, locales, type Locale } from '../i18n/utils';
+import { t, alternateUrl, htmlLang, ogLocale, locales, otherLocales, type Locale } from '../i18n/utils';
 
 interface Props {
   lang: Locale;
   title?: string;
   description?: string;
+  /** JSON-LD schema.org object(s), rendered into a single script tag. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, schema } = Astro.props;
 const pageTitle = title ? `${title} | ${t(lang, 'site.name')}` : t(lang, 'site.title');
 const pageDescription = description ?? t(lang, 'site.description');
 
 const base = import.meta.env.BASE_URL;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(`${base}og.png`.replace(/^\//, ''), Astro.site);
+const jsonLd = schema
+  ? Array.isArray(schema)
+    ? { '@context': 'https://schema.org', '@graph': schema }
+    : { '@context': 'https://schema.org', ...schema }
+  : undefined;
 ---
 
 <!doctype html>
@@ -53,10 +61,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(`${base}og.svg`.replace(/^\//, ''), Astro.site)} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    {otherLocales(lang).map((l) => <meta property="og:locale:alternate" content={ogLocale[l]} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

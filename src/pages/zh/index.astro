@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HomePage from '../../components/HomePage.astro';
+import { websiteSchema } from '../../lib/schema';
 ---
 
-<BaseLayout lang="zh">
+<BaseLayout lang="zh" schema={websiteSchema('zh')}>
   <HomePage lang="zh" />
 </BaseLayout>

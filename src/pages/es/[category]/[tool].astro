@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ToolShell from '../../../components/ToolShell.astro';
 import { getTool, tools } from '../../../tools/registry';
 import { t } from '../../../i18n/utils';
+import { toolSchemas } from '../../../lib/schema';
 import JsonFormatter from '../../../components/tools/JsonFormatter.astro';
 import Base64Converter from '../../../components/tools/Base64Converter.astro';
 import PasswordGenerator from '../../../components/tools/PasswordGenerator.astro';
@@ -108,7 +109,12 @@ const implementations = {
 const ToolImpl = implementations[tool.slug as keyof typeof implementations];
 ---
 
-<BaseLayout lang={lang} title={t(lang, `tools.${tool.slug}.seoTitle`)} description={t(lang, `tools.${tool.slug}.description`)}>
+<BaseLayout
+  lang={lang}
+  title={t(lang, `tools.${tool.slug}.seoTitle`)}
+  description={t(lang, `tools.${tool.slug}.description`)}
+  schema={toolSchemas(lang, tool)}
+>
   <ToolShell tool={tool} lang={lang}>
     <ToolImpl lang={lang} />
   </ToolShell>

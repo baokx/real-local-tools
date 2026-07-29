@@ -38,7 +38,7 @@ const activeCategories = categories.filter((cat) => toolsByCategory(cat).length 
   <p id="search-empty" class="hidden py-16 text-center text-ink-soft">{t(lang, 'search.empty')}</p>
   {
     activeCategories.map((cat) => (
-      <section class="category-section py-7" data-category={cat}>
+      <section id={cat} class="category-section scroll-mt-20 py-7" data-category={cat}>
         <h2 class="mb-4 flex items-baseline gap-3 font-display text-xl font-bold tracking-tight text-ink">
           {t(lang, `categories.${cat}`)}
           <span class="font-mono text-xs font-normal text-ink-soft">{toolsByCategory(cat).length}</span>
