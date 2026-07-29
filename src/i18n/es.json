@@ -40,7 +40,8 @@
   },
   "footer": {
     "tagline": "Tus datos nunca abandonan tu dispositivo.",
-    "note": "Un sitio completamente estático, sin servidores ni rastreadores."
+    "note": "Un sitio completamente estático, sin servidores ni rastreadores.",
+    "contact": "¿Preguntas o sugerencias? Escríbenos a"
   },
   "tools": {
     "json-formatter": {

@@ -11,11 +11,19 @@ const year = new Date().getFullYear();
 
 <footer class="mt-16 border-t border-line">
   <div class="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between sm:px-6">
-    <p>
-      <span class="mr-1.5 inline-block h-2 w-2 rounded-full bg-pine align-middle"></span>
-      {t(lang, 'footer.tagline')}
-      {t(lang, 'footer.note')}
-    </p>
+    <div>
+      <p>
+        <span class="mr-1.5 inline-block h-2 w-2 rounded-full bg-pine align-middle"></span>
+        {t(lang, 'footer.tagline')}
+        {t(lang, 'footer.note')}
+      </p>
+      <p class="mt-2">
+        {t(lang, 'footer.contact')}
+        <a href="mailto:contact@real-local-tools.com" class="ml-1 font-mono text-pine underline-offset-2 hover:underline">
+          contact@real-local-tools.com
+        </a>
+      </p>
+    </div>
     <p class="font-mono text-xs">© {year} {t(lang, 'site.name')}</p>
   </div>
 </footer>
