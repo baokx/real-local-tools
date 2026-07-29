@@ -39,7 +39,7 @@ const u = (key: string) => t(lang, `tools.image-resizer.ui.${key}`);
           <option value="image/webp">WebP</option>
         </select>
       </div>
-      <div>
+      <div id="rs-quality-wrap">
         <label for="rs-quality" class="rlt-label">{u('quality')}: <output id="rs-quality-view" class="text-ink">90%</output></label>
         <input id="rs-quality" type="range" min="10" max="100" value="90" class="w-32 accent-pine" />
       </div>
@@ -91,6 +91,8 @@ const u = (key: string) => t(lang, `tools.image-resizer.ui.${key}`);
       canvas.getContext('2d')!.drawImage(img, 0, 0, w, h);
 
       const mime = formatEl.value === 'auto' ? (sourceFile.type || 'image/png') : formatEl.value;
+      // PNG output ignores the quality flag — hide the slider to avoid confusion.
+      root.querySelector('#rs-quality-wrap')!.classList.toggle('invisible', mime === 'image/png');
       const target = mime === 'image/jpeg' ? flattenForJpeg(canvas) : canvas;
       outputBlob = await canvasToBlob(target, mime, mime === 'image/png' ? undefined : Number(qualityEl.value) / 100);
 

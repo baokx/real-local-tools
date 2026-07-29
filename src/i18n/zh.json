@@ -379,7 +379,9 @@
         "compressed": "压缩后",
         "savings": "−{pct}%",
         "download": "下载压缩后的图片",
-        "tooBig": "压缩后反而更大了——试试更低的质量。"
+        "tooBig": "压缩后反而更大了——试试更低的质量。",
+        "losslessNote": "PNG 是无损格式,质量滑块对它无效。想缩小体积请选择 WebP 或 JPEG。",
+        "autoWebpNote": "PNG 源图是无损格式,已自动按 WebP 输出以便压缩生效。"
       }
     },
     "image-converter": {

@@ -379,7 +379,9 @@
         "compressed": "Compressed",
         "savings": "−{pct}%",
         "download": "Download compressed image",
-        "tooBig": "Compressed file is larger than the original — try a lower quality."
+        "tooBig": "Compressed file is larger than the original — try a lower quality.",
+        "losslessNote": "PNG is a lossless format — the quality slider has no effect on it. Pick WebP or JPEG to actually shrink the file.",
+        "autoWebpNote": "PNG sources are lossless, so the result is exported as WebP to make compression work."
       }
     },
     "image-converter": {

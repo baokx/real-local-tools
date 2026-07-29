@@ -14,6 +14,8 @@ const u = (key: string) => t(lang, `tools.image-compressor.ui.${key}`);
   id="image-compressor"
   data-savings-tpl={u('savings')}
   data-too-big={u('tooBig')}
+  data-lossless-note={u('losslessNote')}
+  data-auto-webp-note={u('autoWebpNote')}
 >
   <ImageDropzone id="ic-drop" text={u('dropzone')} />
 
@@ -25,7 +27,7 @@ const u = (key: string) => t(lang, `tools.image-compressor.ui.${key}`);
           <dt class="text-ink-soft">{u('original')}</dt>
           <dd class="font-mono text-ink"><span id="ic-orig-size"></span> · <span id="ic-orig-dims"></span></dd>
           <dt class="text-ink-soft">{u('compressed')}</dt>
-          <dd class="font-mono text-pine"><span id="ic-new-size"></span> <span id="ic-savings" class="font-medium"></span></dd>
+          <dd class="font-mono text-pine"><span id="ic-new-size"></span> <span id="ic-new-format" class="text-ink-soft"></span> <span id="ic-savings" class="font-medium"></span></dd>
         </dl>
         <p id="ic-note" role="status" class="rlt-status mt-2 text-amber"></p>
       </div>
@@ -69,19 +71,39 @@ const u = (key: string) => t(lang, `tools.image-compressor.ui.${key}`);
     let outputBlob: Blob | null = null;
     let timer: ReturnType<typeof setTimeout> | undefined;
 
+    /** PNG/GIF are lossless — canvas ignores the quality flag for them, so in
+     *  Auto mode they are exported as WebP; only an explicit PNG choice keeps
+     *  the lossless pipeline (and gets a heads-up in the UI). */
+    const resolveMime = (): { mime: string; autoSwapped: boolean } => {
+      if (formatEl.value !== 'auto') return { mime: formatEl.value, autoSwapped: false };
+      const src = sourceFile?.type ?? '';
+      if (src === 'image/png' || src === 'image/gif' || src === 'image/bmp') {
+        return { mime: 'image/webp', autoSwapped: true };
+      }
+      return { mime: src || 'image/jpeg', autoSwapped: false };
+    };
+
     const recompress = async () => {
       if (!sourceCanvas || !sourceFile) return;
       const quality = Number(qualityEl.value) / 100;
-      const mime = formatEl.value === 'auto' ? (sourceFile.type || 'image/jpeg') : formatEl.value;
+      const { mime, autoSwapped } = resolveMime();
       const canvas = mime === 'image/jpeg' ? flattenForJpeg(sourceCanvas) : sourceCanvas;
-      // PNG ignores the quality flag; JPEG/WebP honor it.
-      outputBlob = await canvasToBlob(canvas, mime, mime === 'image/png' ? undefined : quality);
+      const lossless = mime === 'image/png';
+      outputBlob = await canvasToBlob(canvas, mime, lossless ? undefined : quality);
 
       root.querySelector('#ic-new-size')!.textContent = humanFileSize(outputBlob.size);
+      root.querySelector('#ic-new-format')!.textContent = extForMime(mime).toUpperCase();
       const pct = Math.round((1 - outputBlob.size / sourceFile.size) * 100);
       const savingsEl = root.querySelector('#ic-savings')!;
       savingsEl.textContent = pct > 0 ? root.dataset.savingsTpl!.replace('{pct}', String(pct)) : '';
-      note.textContent = outputBlob.size >= sourceFile.size ? root.dataset.tooBig! : '';
+      note.textContent = lossless
+        ? root.dataset.losslessNote!
+        : outputBlob.size >= sourceFile.size
+          ? root.dataset.tooBig!
+          : autoSwapped
+            ? root.dataset.autoWebpNote!
+            : '';
+      note.style.color = outputBlob.size >= sourceFile.size && !lossless ? 'var(--color-amber)' : 'var(--color-ink-soft)';
     };
 
     const schedule = () => {
