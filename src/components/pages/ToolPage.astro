@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolShell from '../ToolShell.astro';
+import { t, type Locale } from '../../i18n/utils';
+import { toolSchemas } from '../../lib/schema';
+import type { ToolDef } from '../../tools/registry';
+import JsonFormatter from '../tools/JsonFormatter.astro';
+import Base64Converter from '../tools/Base64Converter.astro';
+import PasswordGenerator from '../tools/PasswordGenerator.astro';
+import UrlConverter from '../tools/UrlConverter.astro';
+import UuidGenerator from '../tools/UuidGenerator.astro';
+import TimestampConverter from '../tools/TimestampConverter.astro';
+import HtmlEntityConverter from '../tools/HtmlEntityConverter.astro';
+import ColorConverter from '../tools/ColorConverter.astro';
+import NumberBaseConverter from '../tools/NumberBaseConverter.astro';
+import WordCounter from '../tools/WordCounter.astro';
+import CaseConverter from '../tools/CaseConverter.astro';
+import TextReverser from '../tools/TextReverser.astro';
+import RemoveDuplicateLines from '../tools/RemoveDuplicateLines.astro';
+import PercentageCalculator from '../tools/PercentageCalculator.astro';
+import BmiCalculator from '../tools/BmiCalculator.astro';
+import DateDifference from '../tools/DateDifference.astro';
+import RandomNumberGenerator from '../tools/RandomNumberGenerator.astro';
+import QrCodeGenerator from '../tools/QrCodeGenerator.astro';
+import QrCodeScanner from '../tools/QrCodeScanner.astro';
+import RegexTester from '../tools/RegexTester.astro';
+import ImageCompressor from '../tools/ImageCompressor.astro';
+import ImageConverter from '../tools/ImageConverter.astro';
+import ImageToBase64 from '../tools/ImageToBase64.astro';
+import ImageResizer from '../tools/ImageResizer.astro';
+import ExifViewer from '../tools/ExifViewer.astro';
+import ImageWatermark from '../tools/ImageWatermark.astro';
+import ImageColorPicker from '../tools/ImageColorPicker.astro';
+import FaviconGenerator from '../tools/FaviconGenerator.astro';
+import ImageCropper from '../tools/ImageCropper.astro';
+import ImageFilters from '../tools/ImageFilters.astro';
+import ImageToAscii from '../tools/ImageToAscii.astro';
+import ImageRotator from '../tools/ImageRotator.astro';
+import MetadataRemover from '../tools/MetadataRemover.astro';
+import ColorExtractor from '../tools/ColorExtractor.astro';
+import UnitConverter from '../tools/UnitConverter.astro';
+import ScientificCalculator from '../tools/ScientificCalculator.astro';
+import HashGenerator from '../tools/HashGenerator.astro';
+import JwtDecoder from '../tools/JwtDecoder.astro';
+import TextDiff from '../tools/TextDiff.astro';
+import MortgageCalculator from '../tools/MortgageCalculator.astro';
+import AgeCalculator from '../tools/AgeCalculator.astro';
+import TipCalculator from '../tools/TipCalculator.astro';
+import CompoundInterestCalculator from '../tools/CompoundInterestCalculator.astro';
+import MarkdownEditor from '../tools/MarkdownEditor.astro';
+
+interface Props {
+  lang: Locale;
+  tool: ToolDef;
+}
+
+const { lang, tool } = Astro.props;
+
+const implementations = {
+  'json-formatter': JsonFormatter,
+  'base64-converter': Base64Converter,
+  'password-generator': PasswordGenerator,
+  'url-converter': UrlConverter,
+  'uuid-generator': UuidGenerator,
+  'timestamp-converter': TimestampConverter,
+  'html-entity-converter': HtmlEntityConverter,
+  'color-converter': ColorConverter,
+  'number-base-converter': NumberBaseConverter,
+  'word-counter': WordCounter,
+  'case-converter': CaseConverter,
+  'text-reverser': TextReverser,
+  'remove-duplicate-lines': RemoveDuplicateLines,
+  'percentage-calculator': PercentageCalculator,
+  'bmi-calculator': BmiCalculator,
+  'date-difference': DateDifference,
+  'random-number-generator': RandomNumberGenerator,
+  'qr-code-generator': QrCodeGenerator,
+  'qr-code-scanner': QrCodeScanner,
+  'regex-tester': RegexTester,
+  'image-compressor': ImageCompressor,
+  'image-converter': ImageConverter,
+  'image-to-base64': ImageToBase64,
+  'image-resizer': ImageResizer,
+  'exif-viewer': ExifViewer,
+  'image-watermark': ImageWatermark,
+  'image-color-picker': ImageColorPicker,
+  'favicon-generator': FaviconGenerator,
+  'image-cropper': ImageCropper,
+  'image-filters': ImageFilters,
+  'image-to-ascii': ImageToAscii,
+  'image-rotator': ImageRotator,
+  'metadata-remover': MetadataRemover,
+  'color-extractor': ColorExtractor,
+  'unit-converter': UnitConverter,
+  'scientific-calculator': ScientificCalculator,
+  'hash-generator': HashGenerator,
+  'jwt-decoder': JwtDecoder,
+  'text-diff': TextDiff,
+  'mortgage-calculator': MortgageCalculator,
+  'age-calculator': AgeCalculator,
+  'tip-calculator': TipCalculator,
+  'compound-interest-calculator': CompoundInterestCalculator,
+  'markdown-editor': MarkdownEditor,
+} as const;
+
+const ToolImpl = implementations[tool.slug as keyof typeof implementations];
+---
+
+<BaseLayout
+  lang={lang}
+  title={t(lang, `tools.${tool.slug}.seoTitle`)}
+  description={t(lang, `tools.${tool.slug}.description`)}
+  schema={toolSchemas(lang, tool)}
+>
+  <ToolShell tool={tool} lang={lang}>
+    <ToolImpl lang={lang} />
+  </ToolShell>
+</BaseLayout>
