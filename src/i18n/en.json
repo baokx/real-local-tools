@@ -1,0 +1,101 @@
+{
+  "site": {
+    "name": "Real Local Tools",
+    "title": "Real Local Tools — free tools that run entirely in your browser",
+    "description": "A growing collection of free online tools for developers, designers and everyone else. No uploads, no signups, no tracking — every tool runs locally in your browser.",
+    "tagline": "No uploads. No signups. No tracking. Every tool runs entirely in your browser — they even work offline."
+  },
+  "nav": {
+    "home": "All tools"
+  },
+  "hero": {
+    "eyebrow": "No upload · No signup · No tracking",
+    "title": "Tools that never leave your browser",
+    "subtitle": "Fast, free utilities for developers and everyday work — processed 100% locally on your device. Pull the plug and they still work."
+  },
+  "search": {
+    "label": "Search tools",
+    "placeholder": "Search tools…",
+    "empty": "No tools match your search."
+  },
+  "categories": {
+    "developer": "Developer Tools",
+    "image": "Image Tools",
+    "calculator": "Calculators",
+    "security": "Security Tools",
+    "text": "Text Tools"
+  },
+  "common": {
+    "copy": "Copy",
+    "copied": "Copied to clipboard",
+    "clear": "Clear",
+    "input": "Input",
+    "output": "Output",
+    "runsLocally": "Runs locally",
+    "home": "Home",
+    "sample": "Load sample",
+    "swap": "Swap"
+  },
+  "footer": {
+    "tagline": "Your data never leaves your device.",
+    "note": "A fully static site with zero servers and zero trackers."
+  },
+  "tools": {
+    "json-formatter": {
+      "name": "JSON Formatter & Validator",
+      "description": "Format, validate, beautify or minify JSON instantly — right in your browser.",
+      "seoTitle": "JSON Formatter & Validator — free, local, no upload",
+      "seo": "Paste any JSON and get it formatted with your choice of indentation, minified for production, or validated with precise error positions. The parsing uses your browser's own JSON engine, so even sensitive payloads stay on your device.",
+      "ui": {
+        "format2": "Format · 2 spaces",
+        "format4": "Format · 4 spaces",
+        "minify": "Minify",
+        "inputPlaceholder": "Paste JSON here…",
+        "outputPlaceholder": "Formatted output appears here…",
+        "valid": "Valid JSON",
+        "invalid": "Invalid JSON",
+        "statsTop": "Top-level {kind} with {count} {unit}",
+        "unitKeys": "keys",
+        "unitItems": "items",
+        "kindObject": "object",
+        "kindArray": "array"
+      }
+    },
+    "base64-converter": {
+      "name": "Base64 Encoder / Decoder",
+      "description": "Convert text to Base64 and back, with full Unicode support — all in your browser.",
+      "seoTitle": "Base64 Encoder & Decoder — Unicode-safe, runs locally",
+      "seo": "Encode plain text to Base64 or decode Base64 back to readable text. Unlike naive converters, this tool handles the full Unicode range correctly — Chinese characters, emoji and accented letters all survive the round trip. Conversion happens entirely in your browser.",
+      "ui": {
+        "textLabel": "Text",
+        "base64Label": "Base64",
+        "textPlaceholder": "Type or paste text…",
+        "base64Placeholder": "Paste Base64…",
+        "invalid": "That doesn't look like valid Base64.",
+        "encodeToUrlSafe": "URL-safe output"
+      }
+    },
+    "password-generator": {
+      "name": "Password Generator",
+      "description": "Generate strong random passwords with your browser's crypto engine — nothing is sent anywhere.",
+      "seoTitle": "Password Generator — cryptographically secure, 100% offline",
+      "seo": "Passwords are generated with crypto.getRandomValues(), the same cryptographically secure random source browsers use for TLS keys. Choose length and character sets, watch the entropy estimate update in real time, and copy with one click. The password never leaves this page.",
+      "ui": {
+        "length": "Length",
+        "uppercase": "Uppercase (A-Z)",
+        "lowercase": "Lowercase (a-z)",
+        "numbers": "Numbers (0-9)",
+        "symbols": "Symbols (!@#$…)",
+        "excludeAmbiguous": "Exclude look-alikes (l 1 I O 0)",
+        "regenerate": "Regenerate",
+        "entropy": "{bits} bits of entropy",
+        "weak": "Weak",
+        "fair": "Fair",
+        "strong": "Strong",
+        "excellent": "Excellent",
+        "needOne": "Select at least one character set.",
+        "placeholder": "Click regenerate to create a password"
+      }
+    }
+  }
+}

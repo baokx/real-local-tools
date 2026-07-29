@@ -1,0 +1,37 @@
+---
+import { t, localePath, localeNames, type Locale } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  altUrl: URL;
+  altLang: Locale;
+}
+
+const { lang, altUrl, altLang } = Astro.props;
+---
+
+<header class="border-b border-line bg-paper/90 backdrop-blur-sm sticky top-0 z-20">
+  <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
+    <a href={localePath(lang, '/')} class="flex items-center gap-2.5 font-display font-bold text-ink">
+      <svg width="24" height="24" viewBox="0 0 64 64" aria-hidden="true" class="shrink-0">
+        <rect width="64" height="64" rx="14" fill="#14532d"></rect>
+        <path d="M32 14c-7.2 0-13 5.8-13 13 0 9.8 13 23 13 23s13-13.2 13-23c0-7.2-5.8-13-13-13z" fill="#fbfaf7"></path>
+        <circle cx="32" cy="27" r="5.5" fill="#14532d"></circle>
+      </svg>
+      <span class="text-[15px] tracking-tight">{t(lang, 'site.name')}</span>
+    </a>
+    <nav class="flex items-center gap-5 text-sm">
+      <span class="hidden items-center gap-1.5 text-ink-soft sm:flex" title={t(lang, 'common.runsLocally')}>
+        <span class="inline-block h-2 w-2 rounded-full bg-pine"></span>
+        {t(lang, 'common.runsLocally')}
+      </span>
+      <a
+        href={altUrl}
+        hreflang={altLang}
+        class="rounded-md border border-line px-2.5 py-1 text-ink-soft transition-colors hover:border-pine hover:text-pine"
+      >
+        {localeNames[altLang]}
+      </a>
+    </nav>
+  </div>
+</header>

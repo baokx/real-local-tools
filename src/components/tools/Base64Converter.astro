@@ -1,0 +1,133 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.base64-converter.ui.${key}`);
+---
+
+<div id="base64-converter" data-invalid={u('invalid')} data-copied={t(lang, 'common.copied')}>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <div class="mb-1.5 flex items-center justify-between">
+        <label for="b64-text" class="font-mono text-xs uppercase tracking-wider text-ink-soft">{u('textLabel')}</label>
+        <button data-copy="b64-text" class="b64-copy-btn">{t(lang, 'common.copy')}</button>
+      </div>
+      <textarea
+        id="b64-text"
+        rows="10"
+        spellcheck="false"
+        placeholder={u('textPlaceholder')}
+        class="w-full resize-y rounded-lg border border-line bg-paper p-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-soft/50 focus:border-pine"
+      ></textarea>
+    </div>
+    <div>
+      <div class="mb-1.5 flex items-center justify-between">
+        <label for="b64-code" class="font-mono text-xs uppercase tracking-wider text-ink-soft">{u('base64Label')}</label>
+        <button data-copy="b64-code" class="b64-copy-btn">{t(lang, 'common.copy')}</button>
+      </div>
+      <textarea
+        id="b64-code"
+        rows="10"
+        spellcheck="false"
+        placeholder={u('base64Placeholder')}
+        class="w-full resize-y rounded-lg border border-line bg-paper p-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-soft/50 focus:border-pine"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center gap-4">
+    <label class="flex cursor-pointer items-center gap-2 text-sm text-ink-soft">
+      <input id="b64-urlsafe" type="checkbox" class="h-4 w-4 accent-[#14532d]" />
+      {u('encodeToUrlSafe')}
+    </label>
+    <p id="b64-status" role="status" class="font-mono text-sm text-amber"></p>
+  </div>
+</div>
+
+<style>
+  .b64-copy-btn {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+  }
+  .b64-copy-btn:hover {
+    color: var(--color-pine);
+  }
+</style>
+
+<script>
+  const root = document.getElementById('base64-converter');
+  if (root) {
+    const textEl = root.querySelector<HTMLTextAreaElement>('#b64-text')!;
+    const codeEl = root.querySelector<HTMLTextAreaElement>('#b64-code')!;
+    const urlSafeEl = root.querySelector<HTMLInputElement>('#b64-urlsafe')!;
+    const status = root.querySelector<HTMLParagraphElement>('#b64-status')!;
+    const invalidMsg = root.dataset.invalid!;
+
+    // Unicode-safe: route through UTF-8 bytes instead of relying on btoa/atob directly.
+    const encode = (str: string, urlSafe: boolean): string => {
+      const bytes = new TextEncoder().encode(str);
+      let binary = '';
+      for (const byte of bytes) binary += String.fromCharCode(byte);
+      let b64 = btoa(binary);
+      if (urlSafe) b64 = b64.replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
+      return b64;
+    };
+
+    const decode = (b64: string): string => {
+      let normalized = b64.replaceAll('-', '+').replaceAll('_', '/');
+      while (normalized.length % 4) normalized += '=';
+      const binary = atob(normalized);
+      const bytes = Uint8Array.from(binary, (ch) => ch.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    };
+
+    let syncing = false;
+    const fromText = () => {
+      if (syncing) return;
+      syncing = true;
+      status.textContent = '';
+      codeEl.value = textEl.value ? encode(textEl.value, urlSafeEl.checked) : '';
+      syncing = false;
+    };
+
+    const fromCode = () => {
+      if (syncing) return;
+      syncing = true;
+      const raw = codeEl.value.trim();
+      if (!raw) {
+        textEl.value = '';
+        status.textContent = '';
+      } else {
+        try {
+          textEl.value = decode(raw);
+          status.textContent = '';
+        } catch {
+          textEl.value = '';
+          status.textContent = invalidMsg;
+        }
+      }
+      syncing = false;
+    };
+
+    textEl.addEventListener('input', fromText);
+    codeEl.addEventListener('input', fromCode);
+    urlSafeEl.addEventListener('change', fromText);
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+      if (!btn) return;
+      const target = root.querySelector<HTMLTextAreaElement>(`#${btn.dataset.copy}`)!;
+      if (!target.value) return;
+      await navigator.clipboard.writeText(target.value);
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+  }
+</script>

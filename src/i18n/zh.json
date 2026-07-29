@@ -1,0 +1,101 @@
+{
+  "site": {
+    "name": "Real Local Tools",
+    "title": "Real Local Tools — 完全在浏览器本地运行的免费工具",
+    "description": "为开发者和日常用户打造的免费在线工具集。无需上传、无需注册、无任何追踪——每个工具都在您的浏览器本地运行。",
+    "tagline": "不上传、不注册、不追踪。所有工具完全在您的浏览器中运行——断网也能用。"
+  },
+  "nav": {
+    "home": "全部工具"
+  },
+  "hero": {
+    "eyebrow": "不上传 · 不注册 · 不追踪",
+    "title": "数据不出浏览器的工具箱",
+    "subtitle": "为开发者和日常工作打造的免费工具,100% 在您的设备本地处理。拔掉网线,它们照样工作。"
+  },
+  "search": {
+    "label": "搜索工具",
+    "placeholder": "搜索工具…",
+    "empty": "没有匹配的工具。"
+  },
+  "categories": {
+    "developer": "开发者工具",
+    "image": "图像工具",
+    "calculator": "计算器",
+    "security": "安全工具",
+    "text": "文本工具"
+  },
+  "common": {
+    "copy": "复制",
+    "copied": "已复制到剪贴板",
+    "clear": "清空",
+    "input": "输入",
+    "output": "输出",
+    "runsLocally": "本地运行",
+    "home": "首页",
+    "sample": "载入示例",
+    "swap": "互换"
+  },
+  "footer": {
+    "tagline": "您的数据永远不会离开您的设备。",
+    "note": "纯静态站点,零服务器、零追踪器。"
+  },
+  "tools": {
+    "json-formatter": {
+      "name": "JSON 格式化与校验",
+      "description": "在浏览器中即时格式化、校验、美化或压缩 JSON。",
+      "seoTitle": "JSON 格式化与校验 — 免费、本地、免上传",
+      "seo": "粘贴任意 JSON,即可按您选择的缩进格式化、压缩为生产环境单行,或进行校验并精确定位错误位置。解析直接使用浏览器自带的 JSON 引擎,即使敏感数据也不会离开您的设备。",
+      "ui": {
+        "format2": "格式化 · 2 空格",
+        "format4": "格式化 · 4 空格",
+        "minify": "压缩",
+        "inputPlaceholder": "在此粘贴 JSON…",
+        "outputPlaceholder": "格式化结果将显示在这里…",
+        "valid": "JSON 有效",
+        "invalid": "JSON 无效",
+        "statsTop": "顶层为{kind},共 {count} {unit}",
+        "unitKeys": "个键",
+        "unitItems": "个元素",
+        "kindObject": "对象",
+        "kindArray": "数组"
+      }
+    },
+    "base64-converter": {
+      "name": "Base64 编码 / 解码",
+      "description": "文本与 Base64 互相转换,完整支持 Unicode——全部在浏览器本地完成。",
+      "seoTitle": "Base64 编码 / 解码 — Unicode 安全,本地运行",
+      "seo": "将纯文本编码为 Base64,或将 Base64 解码回可读文本。与简陋的转换器不同,本工具能正确处理全部 Unicode 字符——中文、emoji、带重音的字母都能无损往返。转换完全在您的浏览器中进行。",
+      "ui": {
+        "textLabel": "文本",
+        "base64Label": "Base64",
+        "textPlaceholder": "输入或粘贴文本…",
+        "base64Placeholder": "粘贴 Base64…",
+        "invalid": "这不是有效的 Base64。",
+        "encodeToUrlSafe": "URL 安全输出"
+      }
+    },
+    "password-generator": {
+      "name": "密码生成器",
+      "description": "使用浏览器加密引擎在本地生成高强度随机密码——不会发送到任何地方。",
+      "seoTitle": "密码生成器 — 加密级安全,100% 离线",
+      "seo": "密码由 crypto.getRandomValues() 生成,这是浏览器用于 TLS 密钥的同款加密级安全随机源。选择长度和字符集,实时查看熵值估算,一键复制。密码永远不会离开这个页面。",
+      "ui": {
+        "length": "长度",
+        "uppercase": "大写字母 (A-Z)",
+        "lowercase": "小写字母 (a-z)",
+        "numbers": "数字 (0-9)",
+        "symbols": "符号 (!@#$…)",
+        "excludeAmbiguous": "排除易混淆字符 (l 1 I O 0)",
+        "regenerate": "重新生成",
+        "entropy": "熵值 {bits} 位",
+        "weak": "弱",
+        "fair": "一般",
+        "strong": "强",
+        "excellent": "极强",
+        "needOne": "请至少选择一种字符集。",
+        "placeholder": "点击\"重新生成\"创建密码"
+      }
+    }
+  }
+}

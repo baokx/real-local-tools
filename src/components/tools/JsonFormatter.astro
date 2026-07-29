@@ -1,0 +1,161 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.json-formatter.ui.${key}`);
+const sample = JSON.stringify({ name: 'real-local-tools', local: true, tools: ['json', 'base64'], count: 3 });
+---
+
+<div
+  id="json-formatter"
+  data-copied={t(lang, 'common.copied')}
+  data-valid={u('valid')}
+  data-invalid={u('invalid')}
+  data-stats-object={JSON.stringify({ kind: u('kindObject'), unit: u('unitKeys'), tpl: u('statsTop') })}
+  data-stats-array={JSON.stringify({ kind: u('kindArray'), unit: u('unitItems'), tpl: u('statsTop') })}
+>
+  <div class="mb-3 flex flex-wrap items-center gap-2">
+    <button data-action="format2" class="jf-btn jf-btn-primary">{u('format2')}</button>
+    <button data-action="format4" class="jf-btn jf-btn-primary">{u('format4')}</button>
+    <button data-action="minify" class="jf-btn jf-btn-primary">{u('minify')}</button>
+    <span class="mx-1 hidden h-5 w-px bg-line sm:block"></span>
+    <button data-action="sample" class="jf-btn">{t(lang, 'common.sample')}</button>
+    <button data-action="copy" class="jf-btn">{t(lang, 'common.copy')}</button>
+    <button data-action="clear" class="jf-btn">{t(lang, 'common.clear')}</button>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="jf-input" class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-ink-soft">
+        {t(lang, 'common.input')}
+      </label>
+      <textarea
+        id="jf-input"
+        rows="14"
+        spellcheck="false"
+        placeholder={u('inputPlaceholder')}
+        class="w-full resize-y rounded-lg border border-line bg-paper p-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-soft/50 focus:border-pine"
+      >{sample}</textarea>
+    </div>
+    <div>
+      <label for="jf-output" class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-ink-soft">
+        {t(lang, 'common.output')}
+      </label>
+      <textarea
+        id="jf-output"
+        rows="14"
+        readonly
+        spellcheck="false"
+        placeholder={u('outputPlaceholder')}
+        class="w-full resize-y rounded-lg border border-line bg-mist/50 p-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-soft/50"
+      ></textarea>
+    </div>
+  </div>
+
+  <p id="jf-status" role="status" class="mt-3 font-mono text-sm"></p>
+</div>
+
+<style>
+  .jf-btn {
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-line);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    background: white;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .jf-btn:hover {
+    border-color: var(--color-pine);
+    color: var(--color-pine);
+  }
+  .jf-btn-primary {
+    background: var(--color-pine);
+    border-color: var(--color-pine);
+    color: white;
+  }
+  .jf-btn-primary:hover {
+    background: var(--color-pine-dark);
+    color: white;
+  }
+</style>
+
+<script>
+  const root = document.getElementById('json-formatter');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#jf-input')!;
+    const output = root.querySelector<HTMLTextAreaElement>('#jf-output')!;
+    const status = root.querySelector<HTMLParagraphElement>('#jf-status')!;
+    const sampleValue = input.value;
+
+    const d = root.dataset;
+    const statsFor = (parsed: unknown): string => {
+      const meta = JSON.parse(Array.isArray(parsed) ? d.statsArray! : d.statsObject!);
+      const count = Array.isArray(parsed) ? parsed.length : Object.keys(parsed as object).length;
+      return meta.tpl
+        .replace('{kind}', meta.kind)
+        .replace('{count}', String(count))
+        .replace('{unit}', meta.unit);
+    };
+
+    const showError = (err: unknown) => {
+      status.textContent = `${d.invalid}: ${err instanceof Error ? err.message : String(err)}`;
+      status.style.color = '#b45309';
+    };
+
+    const showOk = (parsed: unknown) => {
+      const extra = typeof parsed === 'object' && parsed !== null ? ` · ${statsFor(parsed)}` : '';
+      status.textContent = `✓ ${d.valid}${extra}`;
+      status.style.color = '#14532d';
+    };
+
+    const run = (indent: number | undefined) => {
+      const raw = input.value.trim();
+      output.value = '';
+      if (!raw) {
+        status.textContent = '';
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        output.value = indent === undefined ? JSON.stringify(parsed) : JSON.stringify(parsed, null, indent);
+        showOk(parsed);
+      } catch (err) {
+        showError(err);
+      }
+    };
+
+    root.addEventListener('click', async (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-action]');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (action === 'format2') run(2);
+      else if (action === 'format4') run(4);
+      else if (action === 'minify') run(undefined);
+      else if (action === 'sample') {
+        input.value = sampleValue;
+        run(2);
+      } else if (action === 'clear') {
+        input.value = '';
+        output.value = '';
+        status.textContent = '';
+        input.focus();
+      } else if (action === 'copy') {
+        const text = output.value || input.value;
+        if (!text) return;
+        await navigator.clipboard.writeText(text);
+        const original = btn.textContent!;
+        btn.textContent = d.copied!;
+        setTimeout(() => (btn.textContent = original), 1500);
+      }
+    });
+
+    run(2);
+  }
+</script>

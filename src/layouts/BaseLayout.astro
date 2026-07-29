@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t, alternateUrl, otherLocale, type Locale } from '../i18n/utils';
+
+interface Props {
+  lang: Locale;
+  title?: string;
+  description?: string;
+}
+
+const { lang, title, description } = Astro.props;
+const pageTitle = title ? `${title} | ${t(lang, 'site.name')}` : t(lang, 'site.title');
+const pageDescription = description ?? t(lang, 'site.description');
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const altLang = otherLocale(lang);
+const altUrl = new URL(alternateUrl(Astro.url, altLang), Astro.site);
+---
+
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={new URL(alternateUrl(Astro.url, 'en'), Astro.site)} />
+    <link rel="alternate" hreflang="zh" href={new URL(alternateUrl(Astro.url, 'zh'), Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternateUrl(Astro.url, 'en'), Astro.site)} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={t(lang, 'site.name')} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.svg', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <Header lang={lang} altUrl={altUrl} altLang={altLang} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

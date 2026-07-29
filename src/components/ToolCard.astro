@@ -1,0 +1,27 @@
+---
+import { t, localePath, type Locale } from '../i18n/utils';
+import type { ToolDef } from '../tools/registry';
+
+interface Props {
+  tool: ToolDef;
+  lang: Locale;
+}
+
+const { tool, lang } = Astro.props;
+const name = t(lang, `tools.${tool.slug}.name`);
+const description = t(lang, `tools.${tool.slug}.description`);
+const href = localePath(lang, `/${tool.category}/${tool.slug}/`);
+---
+
+<a
+  href={href}
+  class="tool-card group flex flex-col gap-2 rounded-xl border border-line bg-white/60 p-4 transition-all hover:-translate-y-0.5 hover:border-pine hover:shadow-[0_8px_24px_-12px_rgba(20,83,45,0.35)]"
+  data-search={`${name} ${description} ${tool.slug}`.toLowerCase()}
+>
+  <div class="flex items-start justify-between">
+    <span class="font-mono text-sm font-medium text-pine" aria-hidden="true">{tool.icon}</span>
+    <span class="mt-1 inline-block h-2 w-2 rounded-full bg-pine" title={t(lang, 'common.runsLocally')}></span>
+  </div>
+  <h3 class="font-display text-[15px] font-bold leading-snug text-ink group-hover:text-pine">{name}</h3>
+  <p class="text-sm leading-relaxed text-ink-soft line-clamp-2">{description}</p>
+</a>

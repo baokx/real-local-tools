@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ToolShell from '../../../components/ToolShell.astro';
+import { getTool, tools } from '../../../tools/registry';
+import { t } from '../../../i18n/utils';
+import JsonFormatter from '../../../components/tools/JsonFormatter.astro';
+import Base64Converter from '../../../components/tools/Base64Converter.astro';
+import PasswordGenerator from '../../../components/tools/PasswordGenerator.astro';
+
+export function getStaticPaths() {
+  return tools.map((tool) => ({
+    params: { category: tool.category, tool: tool.slug },
+  }));
+}
+
+const lang = 'zh';
+const { tool: slug } = Astro.params;
+const tool = getTool(slug)!;
+
+const implementations = {
+  'json-formatter': JsonFormatter,
+  'base64-converter': Base64Converter,
+  'password-generator': PasswordGenerator,
+} as const;
+
+const ToolImpl = implementations[tool.slug as keyof typeof implementations];
+---
+
+<BaseLayout lang={lang} title={t(lang, `tools.${tool.slug}.seoTitle`)} description={t(lang, `tools.${tool.slug}.description`)}>
+  <ToolShell tool={tool} lang={lang}>
+    <ToolImpl lang={lang} />
+  </ToolShell>
+</BaseLayout>
