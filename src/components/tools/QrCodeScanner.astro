@@ -1,0 +1,144 @@
+---
+import { t, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.qr-code-scanner.ui.${key}`);
+---
+
+<div
+  id="qr-scanner"
+  data-copied={t(lang, 'common.copied')}
+  data-no-code={u('noCode')}
+  data-decoding={u('decoding')}
+>
+  <input type="file" id="qr-file" accept="image/*" class="hidden" />
+
+  <div
+    id="qr-dropzone"
+    role="button"
+    tabindex="0"
+    class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-line bg-mist/40 px-6 py-12 text-center transition-colors hover:border-pine"
+  >
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-ink-soft">
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <path d="M14 14h3v3h-3zM18 18h3v3h-3z" />
+    </svg>
+    <p class="text-sm text-ink-soft">{u('dropzone')}</p>
+    <p id="qr-status" role="status" class="rlt-status text-amber"></p>
+  </div>
+
+  <div id="qr-result-panel" class="mt-5 hidden">
+    <div class="flex flex-col gap-4 sm:flex-row">
+      <img id="qr-preview" alt="" class="h-32 w-32 rounded-lg border border-line object-contain bg-white" />
+      <div class="flex-1">
+        <div class="mb-1.5 flex items-center justify-between">
+          <span class="rlt-label mb-0">{u('result')}</span>
+          <div class="flex gap-2">
+            <button id="qr-copy" class="rlt-btn rlt-btn-sm">{t(lang, 'common.copy')}</button>
+            <button id="qr-again" class="rlt-btn rlt-btn-sm">{u('scanAnother')}</button>
+          </div>
+        </div>
+        <p id="qr-result" class="select-all break-all rounded-lg border border-line bg-mist/50 p-3 font-mono text-sm text-ink"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import jsQR from 'jsqr';
+
+  const root = document.getElementById('qr-scanner');
+  if (root) {
+    const fileInput = root.querySelector<HTMLInputElement>('#qr-file')!;
+    const dropzone = root.querySelector<HTMLDivElement>('#qr-dropzone')!;
+    const status = root.querySelector<HTMLParagraphElement>('#qr-status')!;
+    const panel = root.querySelector<HTMLDivElement>('#qr-result-panel')!;
+    const preview = root.querySelector<HTMLImageElement>('#qr-preview')!;
+    const resultEl = root.querySelector<HTMLParagraphElement>('#qr-result')!;
+
+    const decodeFile = (file: File) => {
+      if (!file.type.startsWith('image/')) return;
+      status.textContent = root.dataset.decoding!;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        // Downscale huge photos so decoding stays fast; QR codes survive it.
+        const maxDim = 1200;
+        const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        canvas.width = Math.round(img.naturalWidth * scale);
+        canvas.height = Math.round(img.naturalHeight * scale);
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
+        URL.revokeObjectURL(url);
+
+        if (code && code.data) {
+          status.textContent = '';
+          preview.src = canvas.toDataURL('image/png');
+          resultEl.textContent = code.data;
+          panel.classList.remove('hidden');
+        } else {
+          status.textContent = root.dataset.noCode!;
+          panel.classList.add('hidden');
+        }
+      };
+      img.onerror = () => {
+        status.textContent = root.dataset.noCode!;
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    };
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') fileInput.click();
+    });
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) decodeFile(file);
+      fileInput.value = '';
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-pine');
+    });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('border-pine'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-pine');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) decodeFile(file);
+    });
+
+    // Paste a screenshot from the clipboard anywhere on the page.
+    document.addEventListener('paste', (e) => {
+      if (!root.isConnected) return;
+      const file = [...(e.clipboardData?.files ?? [])][0];
+      if (file) decodeFile(file);
+    });
+
+    root.querySelector('#qr-copy')!.addEventListener('click', async (event) => {
+      if (!resultEl.textContent) return;
+      await navigator.clipboard.writeText(resultEl.textContent);
+      const btn = event.currentTarget as HTMLButtonElement;
+      const original = btn.textContent!;
+      btn.textContent = root.dataset.copied!;
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+
+    root.querySelector('#qr-again')!.addEventListener('click', () => {
+      panel.classList.add('hidden');
+      status.textContent = '';
+      fileInput.click();
+    });
+  }
+</script>

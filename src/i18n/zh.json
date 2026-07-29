@@ -303,6 +303,67 @@
         "generate": "生成",
         "invalid": "该范围内无法抽取这么多不重复的值"
       }
+    },
+    "qr-code-generator": {
+      "name": "二维码生成器",
+      "description": "为网址、文本、Wi-Fi 等生成二维码——可自定义尺寸与容错级别。",
+      "seoTitle": "二维码生成器 — 免费、可定制、本地运行",
+      "seo": "输入任意文本或网址,即刻获得清晰的二维码。可调整尺寸和容错级别,然后下载 PNG 图片。二维码完全在您的浏览器中渲染——内容不会离开您的设备。",
+      "ui": {
+        "content": "内容",
+        "placeholder": "输入网址或任意文本…",
+        "size": "尺寸",
+        "errorLevel": "容错级别",
+        "levelL": "L — 7%",
+        "levelM": "M — 15%",
+        "levelQ": "Q — 25%",
+        "levelH": "H — 30%",
+        "download": "下载 PNG",
+        "capacity": "{chars} 个字符"
+      }
+    },
+    "qr-code-scanner": {
+      "name": "二维码解析器",
+      "description": "在浏览器中直接解析图片里的二维码——支持上传、粘贴或拖入图片。",
+      "seoTitle": "二维码在线解析 / 识别 — 图片解码,本地运行",
+      "seo": "上传包含二维码的图片——或直接粘贴截图——即刻读取其内容。解码完全在您的浏览器中进行,图片不会上传到任何服务器。",
+      "ui": {
+        "dropzone": "将图片拖到此处、点击选择,或直接从剪贴板粘贴",
+        "decoding": "解析中…",
+        "noCode": "未在图片中找到二维码,请尝试更清晰或更大的图片。",
+        "result": "解析结果",
+        "scanAnother": "解析下一张"
+      }
+    },
+    "regex-tester": {
+      "name": "正则表达式测试器",
+      "description": "实时高亮测试正则表达式,含匹配分组、替换功能和常用模式速查。",
+      "seoTitle": "正则表达式测试器 — 实时匹配高亮与分组,本地运行",
+      "seo": "编写正则表达式,选择标志位,实时观看匹配高亮。查看每个捕获分组及其位置,尝试替换,并从内置速查表中取用常用模式。一切尽在浏览器本地运行。",
+      "ui": {
+        "pattern": "正则表达式",
+        "flags": "标志位",
+        "testText": "测试文本",
+        "testPlaceholder": "粘贴要测试的文本…",
+        "matches": "{count} 个匹配",
+        "matchesTitle": "匹配结果",
+        "noMatches": "无匹配",
+        "matchNum": "匹配 {n}",
+        "group": "分组 {n}",
+        "replaceLabel": "替换为(支持 $1、$& 等)",
+        "replacePlaceholder": "留空则不替换",
+        "replaceResult": "替换结果",
+        "cheatsheet": "常用模式",
+        "invalid": "无效的正则表达式:{msg}",
+        "cheatEmail": "邮箱",
+        "cheatUrl": "网址",
+        "cheatIpv4": "IPv4 地址",
+        "cheatPhoneCn": "国内手机号",
+        "cheatDate": "日期 YYYY-MM-DD",
+        "cheatHex": "十六进制颜色",
+        "cheatUuid": "UUID",
+        "cheatNumber": "数字"
+      }
     }
   }
 }

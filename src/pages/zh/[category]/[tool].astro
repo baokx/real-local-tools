@@ -20,6 +20,9 @@ import PercentageCalculator from '../../../components/tools/PercentageCalculator
 import BmiCalculator from '../../../components/tools/BmiCalculator.astro';
 import DateDifference from '../../../components/tools/DateDifference.astro';
 import RandomNumberGenerator from '../../../components/tools/RandomNumberGenerator.astro';
+import QrCodeGenerator from '../../../components/tools/QrCodeGenerator.astro';
+import QrCodeScanner from '../../../components/tools/QrCodeScanner.astro';
+import RegexTester from '../../../components/tools/RegexTester.astro';
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -49,6 +52,9 @@ const implementations = {
   'bmi-calculator': BmiCalculator,
   'date-difference': DateDifference,
   'random-number-generator': RandomNumberGenerator,
+  'qr-code-generator': QrCodeGenerator,
+  'qr-code-scanner': QrCodeScanner,
+  'regex-tester': RegexTester,
 } as const;
 
 const ToolImpl = implementations[tool.slug as keyof typeof implementations];

@@ -24,6 +24,11 @@ export const tools: ToolDef[] = [
   { slug: 'html-entity-converter', category: 'developer', icon: '&amp;' },
   { slug: 'color-converter', category: 'developer', icon: '#hex' },
   { slug: 'number-base-converter', category: 'developer', icon: '0x1F' },
+  { slug: 'regex-tester', category: 'developer', icon: '/.*/' },
+
+  // Image tools
+  { slug: 'qr-code-generator', category: 'image', icon: '▦QR' },
+  { slug: 'qr-code-scanner', category: 'image', icon: '▦◉' },
 
   // Security tools
   { slug: 'password-generator', category: 'security', icon: '✳✳✳' },

@@ -303,6 +303,67 @@
         "generate": "Generate",
         "invalid": "Can't pick that many unique values from this range"
       }
+    },
+    "qr-code-generator": {
+      "name": "QR Code Generator",
+      "description": "Create QR codes for URLs, text, Wi-Fi and more — customizable size and error correction.",
+      "seoTitle": "QR Code Generator — free, customizable, runs locally",
+      "seo": "Type any text or URL and get a crisp QR code instantly. Adjust the size and error-correction level, then download it as a PNG. The code is rendered entirely in your browser — your content never leaves your device.",
+      "ui": {
+        "content": "Content",
+        "placeholder": "Enter a URL or any text…",
+        "size": "Size",
+        "errorLevel": "Error correction",
+        "levelL": "L — 7%",
+        "levelM": "M — 15%",
+        "levelQ": "Q — 25%",
+        "levelH": "H — 30%",
+        "download": "Download PNG",
+        "capacity": "{chars} characters"
+      }
+    },
+    "qr-code-scanner": {
+      "name": "QR Code Scanner",
+      "description": "Decode QR codes from images right in your browser — upload, paste or drop a picture.",
+      "seoTitle": "QR Code Scanner / Reader Online — decode from image, locally",
+      "seo": "Upload an image containing a QR code — or simply paste a screenshot — and read its contents instantly. Decoding happens entirely in your browser; the image is never uploaded to any server.",
+      "ui": {
+        "dropzone": "Drop an image here, click to browse, or paste from clipboard",
+        "decoding": "Decoding…",
+        "noCode": "No QR code found in this image. Try a sharper or larger picture.",
+        "result": "Decoded content",
+        "scanAnother": "Scan another"
+      }
+    },
+    "regex-tester": {
+      "name": "Regex Tester",
+      "description": "Test regular expressions with live highlighting, match groups, replacement and a pattern cheat sheet.",
+      "seoTitle": "Regex Tester — live match highlighting & groups, runs locally",
+      "seo": "Write a regular expression, pick your flags, and watch matches highlight in real time. Inspect every capture group with its index, try replacements, and grab common patterns from the built-in cheat sheet. Everything runs locally in your browser.",
+      "ui": {
+        "pattern": "Pattern",
+        "flags": "Flags",
+        "testText": "Test string",
+        "testPlaceholder": "Paste the text to test against…",
+        "matches": "{count} matches",
+        "matchesTitle": "Matches",
+        "noMatches": "No matches",
+        "matchNum": "Match {n}",
+        "group": "Group {n}",
+        "replaceLabel": "Replacement (supports $1, $&…)",
+        "replacePlaceholder": "Leave empty to skip",
+        "replaceResult": "Replace result",
+        "cheatsheet": "Common patterns",
+        "invalid": "Invalid regular expression: {msg}",
+        "cheatEmail": "Email",
+        "cheatUrl": "URL",
+        "cheatIpv4": "IPv4 address",
+        "cheatPhoneCn": "CN mobile",
+        "cheatDate": "Date YYYY-MM-DD",
+        "cheatHex": "Hex color",
+        "cheatUuid": "UUID",
+        "cheatNumber": "Number"
+      }
     }
   }
 }

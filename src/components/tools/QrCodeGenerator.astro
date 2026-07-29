@@ -1,0 +1,104 @@
+---
+import { t, tf, type Locale } from '../../i18n/utils';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const u = (key: string) => t(lang, `tools.qr-code-generator.ui.${key}`);
+---
+
+<div id="qr-generator" data-capacity-tpl={u('capacity')}>
+  <div class="grid gap-6 lg:grid-cols-[1fr_auto]">
+    <div>
+      <label for="qr-input" class="rlt-label">{u('content')}</label>
+      <textarea id="qr-input" rows="5" spellcheck="false" placeholder={u('placeholder')} class="rlt-textarea"></textarea>
+      <p id="qr-capacity" class="mt-1.5 font-mono text-xs text-ink-soft">0</p>
+
+      <div class="mt-4 flex flex-wrap items-end gap-3">
+        <div>
+          <label for="qr-size" class="rlt-label">{u('size')}</label>
+          <select id="qr-size" class="rlt-input">
+            <option value="256" selected>256 px</option>
+            <option value="512">512 px</option>
+            <option value="1024">1024 px</option>
+          </select>
+        </div>
+        <div>
+          <label for="qr-level" class="rlt-label">{u('errorLevel')}</label>
+          <select id="qr-level" class="rlt-input">
+            <option value="L">{u('levelL')}</option>
+            <option value="M" selected>{u('levelM')}</option>
+            <option value="Q">{u('levelQ')}</option>
+            <option value="H">{u('levelH')}</option>
+          </select>
+        </div>
+        <button id="qr-download" class="rlt-btn rlt-btn-primary">{u('download')}</button>
+      </div>
+    </div>
+
+    <div class="flex items-start justify-center">
+      <div class="rounded-xl border border-line bg-white p-4">
+        <canvas id="qr-canvas" class="block max-w-full"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import QRCode from 'qrcode';
+
+  const root = document.getElementById('qr-generator');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('#qr-input')!;
+    const sizeEl = root.querySelector<HTMLSelectElement>('#qr-size')!;
+    const levelEl = root.querySelector<HTMLSelectElement>('#qr-level')!;
+    const canvas = root.querySelector<HTMLCanvasElement>('#qr-canvas')!;
+    const capacity = root.querySelector<HTMLParagraphElement>('#qr-capacity')!;
+    const ctx = canvas.getContext('2d')!;
+
+    let lastDataUrl = '';
+
+    const render = async () => {
+      const text = input.value;
+      capacity.textContent = root.dataset.capacityTpl!.replace('{chars}', String([...text].length));
+      if (!text) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = 0;
+        canvas.height = 0;
+        lastDataUrl = '';
+        return;
+      }
+      try {
+        const width = Number(sizeEl.value);
+        await QRCode.toCanvas(canvas, text, {
+          width,
+          margin: 2,
+          errorCorrectionLevel: levelEl.value as 'L' | 'M' | 'Q' | 'H',
+          color: { dark: '#1b1e1c', light: '#ffffff' },
+        });
+        lastDataUrl = canvas.toDataURL('image/png');
+      } catch {
+        // Content exceeds QR capacity for this error level — shrink silently.
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        lastDataUrl = '';
+      }
+    };
+
+    input.addEventListener('input', render);
+    sizeEl.addEventListener('change', render);
+    levelEl.addEventListener('change', render);
+
+    root.querySelector('#qr-download')!.addEventListener('click', () => {
+      if (!lastDataUrl) return;
+      const a = document.createElement('a');
+      a.href = lastDataUrl;
+      a.download = 'qrcode.png';
+      a.click();
+    });
+
+    input.value = 'https://real-local-tools.com/';
+    render();
+  }
+</script>

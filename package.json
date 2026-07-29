@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^7.1.5"
+    "astro": "^7.1.5",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
